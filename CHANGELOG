@@ -1,0 +1,63 @@
+# /////////////////////////////////////////////////////////////// #
+# !python2.7
+# -*- coding: utf-8 -*-
+# Python Script initially created on 15/03/17
+# Compiled by Aly @ Grasselli's Geomechanics Group, UofT, 2017
+# Base Script by Omid Mahdabi
+# Created using PyCharm 
+# Current Version 11 - Dated Mar 21, 2018
+# /////////////////////////////////////////////////////////////// #
+
+# THINGS TO IMPROVE
+    # 2) Integrate Qi Matlab Code for "seismic tool" <+> Maybe work on returning the file is CSV for Matlab (V#07)? # Needs to be verified
+    # 4) Monitor relative movement of the broken joints => Each Element is not tracked
+    # 5) If the initial model has DFN's. Subtract that from the total.
+
+# UPDATES
+# V01
+    # -  Seismic Clustering Added.
+    # -  Graphical representation of crack type.
+# V02
+    # -  Graphical representation of crack type - Enhanced
+    # -  Input routine enhanced
+    # -  Graphical display detaches as a Child Window
+# V03
+    # -  Added Graphical Display (Failure Mode Type)
+    # -  Code Enhancements & General Cleanup
+    # -  Percentage Materials displayed (takes into account the platens)
+#V04
+    # -  Locate Broken Joint along DFN
+    # -  Added Failure_Mode dictionary & Changed algorithm
+    # -  Added crack type dictionary
+    # -  Time stamp of each output streamlined
+    # -  Color scale for ax3 and ax4 amended
+    # -  Range of Color Scheme rectified
+    # -  dfn_line_list has set to allow only unique values
+    # -  pvpython cycler error highlighted.
+#VO5
+    # -  seismicclustering function updated
+        # 1) To read the #11 (12) ID in the reader
+        # 2) Return the time step as an integer so it can do the max/min operation.
+    # -  Allow error free execution if seismic data is not available
+#V06
+    # - Visualization code runs separately from the rest of the code to overcome pvpython/python limitation on Glass computers.
+#V07
+    # - Optimized Timer Display
+    # - Optimized the pvpython/python Visualization problem
+    # - Better Validations and Terminates if no broken joints
+    # - Checks for missing modules prior to execution to save on processing time
+#V08
+    # - Table name inserted instead of Array Number
+    # - Identifies 2D or 3D Simulation
+    # - Based on 2D or 3D, skip variable added to iterate over points of the broken joints
+    # - Batch processing added
+    # - Return 'Area' instead of length
+
+#V09
+    # - Returns the angle of the crack (orientation)
+    # - WindRose (Radar) Diagram of the crack orientation binned based on failuremode. Bins can be changed to parameter of choice.
+
+#V11
+    # - os.walk() added to collect all entire directory tree.
+    # - gather information on the file being processed
+    # - create a "post_processing" folder that saves all the files to it.
