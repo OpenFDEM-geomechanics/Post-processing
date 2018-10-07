@@ -62,13 +62,13 @@
     # - gather information on the file being processed
     # - create a "post_processing" folder that saves all the files to it.
 
-
 try:
     paraview.simple
 except:
     from paraview.simple import *
 import itertools, operator, csv, argparse, subprocess
-import numpy, os, re, sys, time, math
+import numpy, os, re, sys, time, math, gc
+
 import scipy.spatial as ss
 import paraview.vtk as vtk
 from collections import Counter
@@ -80,6 +80,11 @@ try:
     from cycler import cycler
 except AttributeError:
     print("pvpython and matplotlib may not be linked properly. Try running \n$ sudo apt-get install paraview-python \nElse rebuild matplotlib and cycler, to try to resolve this.")
+
+# Attempt to overcome affinity problem related to numpy (OPENBLAS_MAIN_FREE)
+# by forcing the processes to be binned across CPUS's
+import multiprocessing
+os.system("taskset -cp %d" % (os.getpid()))
 
 # TRY Block for illustrations
 # named_libs = [('matplotlib', 'mpl')]
@@ -196,6 +201,8 @@ def findSubdirectories(dir_path):
         for dir_name in dirs:
             # print (os.path.join(root,name))
             sub_dirs.append(os.path.join(root,dir_name))
+    sub_dirs = sorted(list(set(sub_dirs))) # Sort directories alphabetically in ascending order
+    print("Found \033[1m%s\033[0m sub-directories" % len(sub_dirs))
     return sub_dirs
 
 # /// Create post_processing folder /// #
@@ -366,6 +373,8 @@ def processOutputPropID(dir_path, file_extension, specimen_center, platen_cells_
     start_initial = time.time()
     # if t == 0:
     print(green_text("Starting Initialization"))
+    print(psutil.cpu_count())
+
     dfn_line_list = []  # reset every time step to match dfn lines against respective broken joints
     cluster, failure_modes, crack_types = [], [], []  # reset for noncumulative graphs
 
@@ -710,6 +719,7 @@ def find_sort_points(data_object_output, centre, axis_of_loading, diameter, buff
 def processOutputUCS(dir_path, list_of_files, diameter, height, specimen_center, platen_cells_prop_id, platen_points_prop_id, gauge_length, gauge_width, do_strain_gauge_analysis, modelextend, output_file_name):
     # By default this is a 2D model and analysis
     print(green_text("Processing Started"))
+    start_initial = time.time()
 
     num_dimensions = 2
 
@@ -847,7 +857,8 @@ def processOutputUCS(dir_path, list_of_files, diameter, height, specimen_center,
 
     # Loop over time steps and perform calculations
     for t in time_steps:
-        global areas
+        gc_counter = t
+        # global areas
         # Update/render the view
         view.ViewTime = t
         Render()
@@ -1031,7 +1042,12 @@ def processOutputUCS(dir_path, list_of_files, diameter, height, specimen_center,
 
     datafile.close()
     print "\nFinished writing processed UCS data to:", bold_text(os.path.join(dir_path, 'history.csv'))
+    print ("\nInitialization Complete: %s" % bold_text(calc_timer_values(time.time() - start_initial)))
 
+    # print gc_counter , max(time_steps)
+    if gc_counter == max(time_steps):
+        gc.collect()
+        print "Memory Cleared"
 
 '''
 Loop over platen cells and calculate the average displacements and sum of forces 
@@ -1441,7 +1457,25 @@ def main(argv):
 
 if __name__ == "__main__":
     try:
-        sys.settrace(main(sys.argv[1:]))
+        # for process_idx in range(multiprocessing.cpu_count() / 2):
+        q = sys.argv[1:]
+        p = multiprocessing.Process(target=main, args=(q,))
+        # print(process_idx % multiprocessing.cpu_count())
+        p.start()
+        p.join()
+        # p = psutil.Process(sys.settrace(main(sys.argv[1:])))
+        # p = (target=sys.settrace(main), args=(sys.argv[1:]))
+
+        # reset affinity against all CPUs
+        # all_cpus = list(range(psutil.cpu_count()))
+        # p.cpu_affinity(all_cpus)
+        # q = sys.argv[1:]
+        # pool = multiprocessing.Pool()
+        # p = multiprocessing.Process(target=main, args=(q,))
+        # all_cpus = list(range(psutil.cpu_count()))
+        # # p.cpu_affinity(all_cpus)
+        # p.start()
+        # p.join()
         # print '\n\nfinished!\n\n'
     except KeyboardInterrupt:
         # print("\n\033[1;31;0mTERMINATED BY USER\n")
