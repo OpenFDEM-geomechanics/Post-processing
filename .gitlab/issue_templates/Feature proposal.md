@@ -1,15 +1,11 @@
-### Problem to solve
+### Proposed Feature
+
+(Include what you wish to add here. Preferably one comment per feature)
 
 ### Further details
 
-(Include use cases, benefits, and/or goals)
-
-### Proposal
-
-### What does success look like, and how can we measure that?
-
-(If no way to measure success, link to an issue that will implement a way to measure this)
+(Include usage, cases, instances, and/or expected outputs)
 
 ### Links / references
 
-/label ~"feature proposal"
+/label ~"Feature Proposal"
