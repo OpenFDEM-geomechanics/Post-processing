@@ -61,3 +61,5 @@
     # - os.walk() added to collect all entire directory tree.
     # - gather information on the file being processed
     # - create a "post_processing" folder that saves all the files to it.
+    # - Added outputs for the animation of the fractures.
+    # - Upated the history.csv files.
