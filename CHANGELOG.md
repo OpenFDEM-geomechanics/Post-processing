@@ -11,44 +11,44 @@
 1. Makes the Rosette diagram for the Mesh and Initial DFN if it exists
 1. No user input required, the script identifies everything
 1. Produces animation of the screenshots with the rosette diagrams
-1. Has a histogram showing
-   1.1 ax1 = Histogram chart of broken Phase Interfaces. 
-   1.1 ax2 = Stacked Bar Chart different broken Phase Interfaces based on Time Step. 
-   1.1 ax3 = Stacked Bar Chart of Crack Type (IntER/IntRA granular cracks)
-   1.1 ax4 = Stacked Bar Chart for Fracture Mode Type (Tensile Dominant / Shear Dominant / Mixed Mode)
+1. Has a histogram showing 
+   1. ax1 = Histogram chart of broken Phase Interfaces. 
+   1. ax2 = Stacked Bar Chart different broken Phase Interfaces based on Time Step. 
+   1. ax3 = Stacked Bar Chart of Crack Type (IntER/IntRA granular cracks)
+   1. ax4 = Stacked Bar Chart for Fracture Mode Type (Tensile Dominant / Shear Dominant / Mixed Mode)
 1. CSV => Clusters/consolidates the seismic data is case you want to do some post-processing data
 1. CSV => Clusters/consolidates the broken joints in case you wish to do more post-processing
 
 # UPDATES
 # V01
-1.Seismic Clustering Added.
-1.Graphical representation of crack type.
+1. Seismic Clustering Added.
+1. Graphical representation of crack type.
 
 # V02
-1.Graphical representation of crack type - Enhanced.
-1.Input routine enhanced.
-1.Graphical display detaches as a Child Window.
+1. Graphical representation of crack type - Enhanced.
+1. Input routine enhanced.
+1. Graphical display detaches as a Child Window.
 
 # V03
-1.Added Graphical Display (Failure Mode Type).
-1.Code Enhancements & General Cleanup.
-1.Percentage Materials displayed (takes into account the platens).
+1. Added Graphical Display (Failure Mode Type).
+1. Code Enhancements & General Cleanup.
+1. Percentage Materials displayed (takes into account the platens).
 
 #V04
-1.Locate Broken Joint along DFN.
-1.Added Failure_Mode dictionary & Changed algorithm.
-1.Added crack type dictionary.
-1.Time stamp of each output streamlined.
-1.Color scale for ax3 and ax4 amended.
-1.Range of Color Scheme rectified.
-1.dfn_line_list has set to allow only unique values.
-1.pvpython cycler error highlighted.
+1. Locate Broken Joint along DFN.
+1. Added Failure_Mode dictionary & Changed algorithm.
+1. Added crack type dictionary.
+1. Time stamp of each output streamlined.
+1. Color scale for ax3 and ax4 amended.
+1. Range of Color Scheme rectified.
+1. dfn_line_list has set to allow only unique values.
+1. pvpython cycler error highlighted.
 
 #VO5
-1.seismicclustering function updated:
-        # 1) To read the #11 (12) ID in the reader.
-        # 2) Return the time step as an integer so it can do the max/min operation.
-1.Allow error free execution if seismic data is not available.
+1. seismicclustering function updated:
+    1. read the #11 (12) ID in the reader. 
+    1. Return the time step as an integer so it can do the max/min operation.
+1. Allow error free execution if seismic data is not available.
 
 #V06
 1. Visualization code runs separately from the rest of the code to overcome pvpython/python limitation on Glass computers.
@@ -87,10 +87,10 @@
 1. Debugged the memory loss for the animation.
 1. Updated Algorithm.
 1. Added consistency to terminology usage:
-    1. Mode 1, Mode 2, Mixed Mode = Tensile Dominant, Shear Dominant, Mixed Mode (I - II).
-    1. Mode 1 - Failure = [1.0 to 1.5].
-    1. Mode 2 - Failure = (1.5 to 2.0].
-    1. Mixed Mode = 3.0.
+   1. Mode 1, Mode 2, Mixed Mode = Tensile Dominant, Shear Dominant, Mixed Mode (I - II).
+   1. Mode 1 - Failure = [1.0 to 1.5].
+   1. Mode 2 - Failure = (1.5 to 2.0].
+   1. Mixed Mode = 3.0.
 1. IntER and IntRA granular cracks properly identified.
 1. Uses broken joints to trace cracks and the DFN is used for verification.
 1. Overall code improvements and comments.
