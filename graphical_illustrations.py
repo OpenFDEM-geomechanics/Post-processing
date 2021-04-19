@@ -34,6 +34,9 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy
 import operator
+
+import pandas as pd
+
 import formatting_codes
 from mpl_toolkits.axes_grid1 import host_subplot
 import mpl_toolkits.axisartist as AA
@@ -199,6 +202,14 @@ def single_graph(post_processing, sim_type):
     # Configure name of file (Name of sub_folder)
     pdf_name = os.path.basename(os.path.dirname(post_processing))
     # Read file to obtain necessary data
+
+    df_stress_strain = pd.read_csv(filename)
+    df_stress_strain.columns = df_stress_strain.columns.str.lower()
+
+    if 'strain y (%)' in df_stress_strain:
+        df_stress_strain['Vol from Platen'] = df_stress_strain['strain y from platen (%)'] + (2 * df_stress_strain['strain x (%)'])
+        df_stress_strain['Vol from SG'] = df_stress_strain['strain y (%)'] + (2 * df_stress_strain['strain x (%)'])
+
     with open(filename) as history_file:
         reader = csv.DictReader(history_file, delimiter=',')
         reader.fieldnames = [name.lower() for name in reader.fieldnames]
@@ -213,11 +224,6 @@ def single_graph(post_processing, sim_type):
                 stress.append(float(row['indirect tensile stress (mpa)']))
     history_file.close()
 
-    ind_count = numpy.diff(event_count)
-    ind_count = [0] + ind_count.tolist()
-    print(ind_count)
-    print(type(ind_count))
-
     '''
     DRAW STRESS/STRAIN CURVE
     '''
@@ -225,7 +231,8 @@ def single_graph(post_processing, sim_type):
     fig2 = plt.figure(figsize=[12.8, 7.2])
     ax1 = fig2.add_subplot(1, 1, 1)
 
-    ax1.plot(axial_strain, stress, linestyle="-", label=pdf_name)
+    # print(df_stress_strain)
+    ax1.plot(df_stress_strain['strain y from platen (%)'], df_stress_strain['axial stress (mpa)'], linestyle="-", label=pdf_name)
     ax1.set_title(pdf_name)
     ax1.set_xlabel("Strain (%)")
     ax1.set_xlim(xmin=0)
@@ -238,44 +245,6 @@ def single_graph(post_processing, sim_type):
     fig2.savefig(os.path.join(post_processing, "stress_strain.svg"))
     fig2.savefig(os.path.join(post_processing, "stress_strain.png"), dpi=100)
 
-    '''
-    DRAW STRESS/STRAIN CURVE
-    '''
-
-    fig2 = plt.figure(figsize=[12.8, 7.2])
-    ax1 = fig2.add_subplot(1, 1, 1)
-
-    ax1.plot(axial_strain, stress, linestyle="-", label=pdf_name)
-    ax1.set_title(pdf_name)
-    ax1.set_xlabel("Strain (%)")
-    ax1.set_xlim(xmin=0)
-    ax1.set_ylabel("Stress (MPa)")
-    ax1.set_ylim(ymin=0)
-
-    ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
-    ax2.set_ylabel('Cumulative AE Event Count', color='red')
-    ax2.plot(axial_strain, event_count, color='red')
-    ax2.set_ylim(ymin=0)
-
-    binnings = 10
-    b= [sum(axial_strain[i:i+binnings])/binnings for i in range(0, len(axial_strain), binnings)]
-    bx = [sum(ind_count[i:i+binnings])/binnings for i in range(0, len(ind_count), binnings)]
-
-    ax3 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
-    # right, left, top, bottom
-
-    ax3.set_ylim(ymin=0)
-    ax3.set_ylabel('Individual AE Event Count', color='green')
-    # ax3.plot(axial_strain, ind_count, color='green')
-    ax3.bar(b, bx, color='green', width=0.005, alpha=0.5)
-    ax3.set_ylim(ymin=0, ymax=max(bx)*1.1)
-    ax3.spines['right'].set_position(('outward', 60))
-
-    # Save in the relevant sub-directory directory
-    fig2.savefig(os.path.join(post_processing, "stress_strain_with_count.pdf"))
-    fig2.savefig(os.path.join(post_processing, "stress_strain_with_count.svg"))
-    fig2.savefig(os.path.join(post_processing, "stress_strain_with_count.png"), dpi=100)
-
 
     '''
     DRAW STRESS/VOLUMETRIC STRAIN CURVE
@@ -287,17 +256,26 @@ def single_graph(post_processing, sim_type):
         initial_volume = float(volumetric_strain[0])  # Initialise Initial Volume
         volumetric_strain_calculated = [((i - initial_volume) * 100 / initial_volume) for i in
                                         volumetric_strain]  # Calculate volumetric strain (dV / V0)
-        volumetric_strain_limit = float(max(axial_strain)) * 1.1  # Limit of slice at 110% of max Axial Strain
+        volumetric_strain_limit = int(max(axial_strain)) * 1.1  # Limit of slice at 110% of max Axial Strain
         volumetric_strain_sliced = [(i * -1) for i in volumetric_strain_calculated if
                                     i <= volumetric_strain_limit]  # Slice volumetric strain
         stress_sliced = stress[:len(volumetric_strain_sliced):]  # Slice stress
 
         # Check is Simulation results OR EXP results
         fig1 = plt.figure(figsize=[12.8, 7.2])
-        ax = fig1.add_subplot(1, 1, 1)
+        ax = fig1.add_subplot(2, 1, 1)
 
-        ax.plot(axial_strain, stress, linestyle="-", label=pdf_name)
-        ax.plot(volumetric_strain_sliced, stress_sliced, linestyle=":", c='red')
+        x_axis_lim = max(df_stress_strain['strain y from platen (%)'])
+
+        ax.plot(df_stress_strain['strain y from platen (%)'], df_stress_strain['axial stress (mpa)'], linestyle="-", label="Stress-Strain")
+        ax.plot(df_stress_strain['strain x (%)'], df_stress_strain['axial stress (mpa)'], label="Lateral Strain", linestyle="-")
+
+        ax.plot(df_stress_strain['volumetric strain (%)'] * - 1 , df_stress_strain['axial stress (mpa)'],label="Vol. by Area", linestyle="-")
+        if 'strain y (%)' in df_stress_strain:
+            ax.plot(df_stress_strain['Vol from SG'] , df_stress_strain['axial stress (mpa)'],linestyle="-",  label="Vol. by Strain Gauge Ea + 2El")
+            ax.plot(df_stress_strain['Vol from Platen'] , df_stress_strain['axial stress (mpa)'],linestyle="-",  label="Vol. by Platen and Strain Gauge Ea + 2El")
+
+
         # Manipulate Figure
         ax.set_title(pdf_name)
         ax.spines['left'].set_position('zero')
@@ -308,9 +286,37 @@ def single_graph(post_processing, sim_type):
         ax.spines['bottom'].set_smart_bounds(True)
         ax.xaxis.set_ticks_position('bottom')
         ax.yaxis.set_ticks_position('left')
-        ax.set_xlabel("Strain (%)")
-        ax.set_ylabel("Stress (MPa)")
+        # ax.set_xlabel("Axial Strain (%)")
+        ax.set_ylabel("Axial Stress (MPa)")
+        ax.set_xlim((x_axis_lim *-1), x_axis_lim)
+        ax.legend()
+        ax2 = fig1.add_subplot(2, 1, 2)
 
+        ax2.plot(df_stress_strain['strain y from platen (%)'], df_stress_strain['volumetric strain (%)'] * - 1, label="Vol. by Area",
+                linestyle="-", color='orange')
+
+
+        # df_stress_strain['Vol by area'] = abs(df_stress_strain['strain y (%)']) * abs(df_stress_strain['strain x (%)'])
+        if 'strain y (%)' in df_stress_strain:
+            ax2.plot(df_stress_strain['strain y from platen (%)'], df_stress_strain['Vol from SG'], linestyle="-",  label="Vol. by Strain Gauge Ea + 2El")
+            ax2.plot(df_stress_strain['strain y from platen (%)'], df_stress_strain['Vol from Platen'], linestyle="-",  label="Vol. by Platen and Strain Gauge Ea + 2El")
+        # ax2.plot(df_stress_strain['strain y from platen (%)'], df_stress_strain['Vol by area'], linestyle="-")
+        # Manipulate Figure
+        ax2.spines['left'].set_position('zero')
+        ax2.spines['bottom'].set_position('zero')
+        ax2.spines['right'].set_color('none')
+        ax2.spines['top'].set_color('none')
+        ax2.spines['left'].set_smart_bounds(True)
+        ax2.spines['bottom'].set_smart_bounds(True)
+        ax2.xaxis.set_ticks_position('bottom')
+        ax2.yaxis.set_ticks_position('left')
+        ax2.set_xlabel("Axial Strain (%)")
+        ax2.set_ylabel("Volumetric Strain")
+        ax2.set_xlim((x_axis_lim * -1), x_axis_lim)
+        ax2.set_ylim(0, (min(df_stress_strain['volumetric strain (%)']) * - 1))
+        ax2.legend()
+
+        fig1.tight_layout()
         # Save in the relevant sub-directory directory
         fig1.savefig(os.path.join(post_processing, "stress_vol_strain.pdf"))
         fig1.savefig(os.path.join(post_processing, "stress_vol_strain.svg"))
@@ -322,6 +328,7 @@ def single_graph(post_processing, sim_type):
         elastic_modulus = ((stress[int(max_value_index) / 2]) / (axial_strain[int(max_value_index) / 2]) / 10 )
         print(formatting_codes.green_text("Simulation Results"))
         print("\tMax values at Output No. %s\n\tMax Stress %10.2f\n\tElastic Modulus %10.2f" % (max_value_index, max_values_stress, elastic_modulus))
+        plt.show()
     except ZeroDivisionError:
         print(formatting_codes.red_text("There is a problem in the history.csv file\nThe stress/strain values are extremely low."))
 
