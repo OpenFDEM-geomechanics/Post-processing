@@ -129,7 +129,8 @@ def load_process_file(name_csv):
 
 if __name__ == "__main__":
     try:
-        name_csv = "/external/Ejection_Model/0002.50kPa/post_processing/seismicclustering.csv"
+        folder = "/external/Size_7/post_processing"
+        name_csv = os.path.join(folder, "seismicclustering.csv")
         # ss_name_csv = "/external/Ejection_Model/0002.50kPa/post_processing/history.csv"
         # name_csv = "/hdd/home/aly/Desktop/Dropbox/20170600_AA_JP_GBM_in_FDEM/20170712_MODELS/20170712_statistics/05MPa/seismicclustering.csv"
         load_process_file(name_csv)
