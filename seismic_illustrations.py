@@ -38,10 +38,12 @@ import math
 # plt.rcParams['figure.constrained_layout.use'] = True
 plt.rcParams["figure.figsize"] = [5, 5]
 matplotlib.rcParams['font.family'] = ['arial']
-matplotlib.rcParams['font.size'] = 8
+matplotlib.rcParams['font.size'] = 12
 
 
-def load_process_file(name_csv, ss_name_csv, binnings=10):
+def load_process_file(folder, binnings=10, big_bins=4):
+    name_csv = os.path.join(folder, "seismicclustering.csv")
+    ss_name_csv = os.path.join(folder, "history.csv")
 
 
     # Load seismicclustering file
@@ -135,6 +137,7 @@ def load_process_file(name_csv, ss_name_csv, binnings=10):
     '''
 
     filter_on = ['Group Type', 'CrackType', 'CrackMode']
+    # filter_on = ['CrackMode']
     for filter_criteria in filter_on:
         fig2 = plt.figure(figsize=[12.8, 7.2])
         ax1 = fig2.add_subplot(1, 1, 1)
@@ -158,30 +161,75 @@ def load_process_file(name_csv, ss_name_csv, binnings=10):
             df_combined[i].replace(np.nan, 0, inplace=True)
 
         for idx, var in enumerate(un_crack):
-            width = (b[0]-b[1]) / 2
-            by = [sum(df_combined[var].cumsum()[i:i + binnings]) / binnings for i in range(0, int(x_max), binnings)]
+            by = [df_combined[var].cumsum()[i:i + binnings].iloc[-1] for i in range(0, int(x_max), binnings)]
+
 
             if idx == 0:
+                # print(var, by)
                 ax4.bar(b, by, width=width, label=var, alpha=0.5)
                 ll = by
             else:
+
                 ax4.bar(b, by, bottom=ll, width=width, label=var, alpha=0.5)
                 ll = [x + y for x, y in zip(ll, by)]
 
         ax4.set_ylim(ymin=0)
         ax4.legend(title=filter_criteria)
         plt.tight_layout()
+        plt.savefig(os.path.join(folder, 'stress_strain_' + filter_criteria + '.pdf'))
+        plt.savefig(os.path.join(folder, 'stress_strain_' + filter_criteria + '.svg'))
+        plt.savefig(os.path.join(folder, 'stress_strain_' + filter_criteria + '.png'))
+
         plt.show()
 
-def obtain_names(folder):
-    name_csv = os.path.join(folder, "seismicclustering.csv")
-    ss_name_csv = os.path.join(folder, "history.csv")
-    load_process_file(name_csv, ss_name_csv)
+
+    bb = [sum(df_combined['Time Step (-)'][i:i+big_bins])/big_bins for i in range(0, int(x_max), big_bins)]
+    width = (bb[0] - bb[1]) / 2
+
+    fig11 = plt.figure(figsize=[12.8, 7.2])
+
+    ax_sub = fig11.add_subplot(221)  # General Plot
+    ax_sub.bar(df_seismic['Group Type'].unique(), df_seismic['Group Type'].value_counts(),
+               alpha = 0.5)
+    ax_sub.set_ylabel('Frequency')
+    ax_sub.set_xlabel('Material Contact Group')
+
+    filter_dict = {222:'CrackMode', 223:'CrackType', 224:'Group Type'}
+    for key, filter_criteria in filter_dict.items():
+        ax_sub = fig11.add_subplot(key)  # General Plot
+
+        # ax1.plot(df_combined['Strain y from platen (%)'], df_combined['Axial stress (MPa)'], linestyle="-")
+
+        ax_sub.set_xlabel("Time Step (-)")
+        ax_sub.set_xlim(xmin=0, xmax=x_max)
+        ax_sub.set_ylabel("Cumulative Crack Count")
+
+        un_crack = df_seismic[filter_criteria].unique()
+
+        for idx, var in enumerate(un_crack):
+            by = [df_combined[var].cumsum()[i:i + big_bins].iloc[-1] for i in range(0, int(x_max), big_bins)]
+
+            if idx == 0:
+                ax_sub.bar(bb, by, width=width, label=var, alpha=0.5)
+                ll = by
+            else:
+                ax_sub.bar(bb, by, bottom=ll, width=width, label=var, alpha=0.5)
+                ll = [x + y for x, y in zip(ll, by)]
+
+        ax_sub.set_ylim(ymin=0)
+        ax_sub.legend(title=filter_criteria)
+    fig11.tight_layout()
+    plt.savefig(os.path.join(folder, "histogram.svg"))
+    plt.savefig(os.path.join(folder, "histogram.pdf"))
+    plt.savefig(os.path.join(folder, "histogram.png"), dpi=100)
+    fig11.show()
+
+
 
 if __name__ == "__main__":
     try:
         post_processing_folder_name = "/external/Size_7/post_processing"
-        obtain_names(post_processing_folder_name)
+        load_process_file(post_processing_folder_name, 10, 100)
 
     except KeyboardInterrupt:
         exit("TERMINATED BY USER")

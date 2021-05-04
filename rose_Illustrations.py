@@ -54,20 +54,20 @@ def illus_var(dam):
         inter = 0.1
     return min_range, max_range, inter
 
-def rose_illustration(post_processing, width, height, no_of_lines, reset_scale, fname, fname1, ax=None, dx=0, dy=0):
+def rose_illustration(post_processing, width, height, no_of_lines, reset_scale, fname, fname1, rose_angle, damage, ax=None, dx=0, dy=0, ):
     sub_post_processing = os.path.join(post_processing, "Simulation_Rose_Plot")
-    temp_rose_angle = os.path.join(post_processing, 'temp_rose_angle.csv')
-    temp_str_damage = os.path.join(post_processing, 'temp_str_damage.csv')
-    # reset_scale = float(reset_scale)
-    rose_angle, damage = [], []
-    with open(temp_rose_angle, "r") as f:
-        for line in f:
-            rose_angle.append(float(line.strip()))
-    f.close()
-    with open(temp_str_damage, "r") as f:
-        for line in f:
-            damage.append(float(line.strip()))
-    f.close()
+    # temp_rose_angle = os.path.join(post_processing, 'temp_rose_angle.csv')
+    # temp_str_damage = os.path.join(post_processing, 'temp_str_damage.csv')
+    # # reset_scale = float(reset_scale)
+    # rose_angle, damage = [], []
+    # with open(temp_rose_angle, "r") as f:
+    #     for line in f:
+    #         rose_angle.append(float(line.strip()))
+    # f.close()
+    # with open(temp_str_damage, "r") as f:
+    #     for line in f:
+    #         damage.append(float(line.strip()))
+    # f.close()
     # print(type(rose_angle), len(rose_angle))
     # print(type(damage), len(damage))
     # exit()
@@ -165,7 +165,8 @@ def rose_illustration(post_processing, width, height, no_of_lines, reset_scale, 
         count = (int(math.ceil((reset_scale + divisions) / divisions)) * divisions)
         grid_labels = numpy.linspace(0, count, 11, endpoint=True, dtype=int)
 
-        # print (reset_scale, divisions, count)
+        counts, bins = numpy.histogram(rose_angle, bins=36, range=(0, 180))
+
         ax.bar(rose_angle, damage, normed=False, opening=0.85, edgecolor='white', nsector=36, cmap=viridis,
                    bins=[1., 1.5, 2.01])
 
@@ -216,6 +217,7 @@ def rose_illustration(post_processing, width, height, no_of_lines, reset_scale, 
         # import merge_images
         # merge_images.merge_images(post_processing, rose_name, ffname, fname, fname1)
 
+    # plt.show()
     plt.close('all')
 
     '''

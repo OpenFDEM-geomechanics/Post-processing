@@ -5,7 +5,7 @@
 # Compiled by Aly @ Grasselli's Geomechanics Group, UofT, 2017
 # Base Script by Omid Mahabadi (Courtesy of Geomechanica)
 # B value code courtesy of Qi Zhao
-# Created using PyCharm 
+# Created using PyCharm
 # /////////////////////////////////////////////////////////////// #
 
 global reset_scale
@@ -22,8 +22,14 @@ import numpy, os, re, sys, time, math, gc
 import platform
 import paraview.vtk as vtk
 from collections import Counter
+import json
 
 import formatting_codes
+import rose_Illustrations
+import geometry_calculator
+import graphical_illustrations
+import seismic_illustrations
+import process_b_value
 
 # Displays the pid on the system
 os.system("taskset -cp %d" % (os.getpid()))
@@ -336,7 +342,6 @@ def processOutputPropID(dir_path, file_extension, platen_cells_prop_id, platen_p
         exit("3D Simulation not supported")
 
     # Variables
-    # do_strain_gauge_analysis = []
     top_platen_cellArray = vtk.vtkCellArray()
     bottom_platen_cellArray = vtk.vtkCellArray()
     subId = vtk.mutable(0)  # Dummy for FindCell
@@ -345,6 +350,7 @@ def processOutputPropID(dir_path, file_extension, platen_cells_prop_id, platen_p
     idlist = vtk.vtkIdList() # Dummy for idList
     error_array, cluster, failure_modes = [], [], []  # For QAQC Error & Cluster CrackType
     mineral_bound, combos, breakdown, fail_count, crack_types, crack_count = [], [], [], [], [], []
+    material_combinations ={}
     list_azimuth, list_dip, list_points = [], [], []
     dfn_line_list = []  # reset every time step to match dfn lines against respective broken joints
     cluster, failure_modes, crack_types = [], [], []  # reset for noncumulative graphs
@@ -388,19 +394,17 @@ def processOutputPropID(dir_path, file_extension, platen_cells_prop_id, platen_p
     # Create a list of the material types in the model
     for i in range(0, output.GetNumberOfCells()):
         mineral_bound.append(int(cells.GetArray('material property ID').GetTuple1(i)))
-    # mineral_bound_2 = range((min(mineral_bound)),
-    #                         (max(mineral_bound)) + 1)  # return the max and min in that list
+
     # Return a list of unique material types
     mineral_bound_2 = list(set(mineral_bound))
     const = Counter(mineral_bound)  # counts the frequency of each mineral type
     list_combo = [x for x in itertools.combinations_with_replacement(mineral_bound_2, 2)]  # Creates a list of all possible combinations
-    for key, val in enumerate(list_combo):  # Enumerates the listcombo making it "Group #")
-        combos.append("Group %d" % key)
-        combos.append(val)
+
     # Combines the Groups, creating a dictionary
     global material_combinations
-    material_combinations = dict(
-        itertools.izip_longest(*[iter(combos)] * 2, fillvalue=""))
+    for key, val in enumerate(list_combo):  # Enumerates the listcombo making it "Group #")
+        material_combinations["Group %d" % key] = val
+
     # Display the various elements in the models
     print(formatting_codes.green_text("Model Element Properties:"))
     for key, val in const.iteritems():
@@ -436,6 +440,7 @@ def processOutputPropID(dir_path, file_extension, platen_cells_prop_id, platen_p
         platen_points_prop_id = []
     # else:
     #     platen_status = "defined"
+
 
     ''' HAVE TO LOOP ONCE TO GET EXTENTS THEN LOOP AGAIN TO GET POINTS ON BOUNDARY '''
     for i in xrange(output.GetNumberOfCells()):
@@ -539,7 +544,6 @@ def processOutputPropID(dir_path, file_extension, platen_cells_prop_id, platen_p
         # print cv, ch
         print('\tVertical Gauges\n\t\textends between %s\n\t\tcover cells ID %s' % (pv, cv))
         print('\tHorizontal Gauges\n\t\textends between %s\n\t\tcover cells ID %s' % (ph, ch))
-
 
     '''
     PROCESS THE INITIAL MODEL MESH
@@ -667,9 +671,9 @@ def processOutputPropID(dir_path, file_extension, platen_cells_prop_id, platen_p
     circum_coord = [list(y) for y in set([tuple(x) for x in circum_coord])]
 
     # Calculate initial area using points on boundary and center of model
-    area_calculation(output, modelextend, specimen_center)
+
     global init_area
-    init_area = poly_area
+    init_area = area_calculation(output, modelextend, specimen_center)
 
     '''
     IDENTIFY IF THE MODEL HAS PRE-EXISTING FRACTURES 
@@ -684,7 +688,7 @@ def processOutputPropID(dir_path, file_extension, platen_cells_prop_id, platen_p
     if list_of_files_dfn is None or not list_of_files_dfn:
         print(formatting_codes.red_text("\nNo initial DFN found"))
     else:
-        # Read and obtain the differnt types of ID of the DFN
+        # Read and obtain the different types of ID of the DFN
         for i in range(0, output_dfn.GetNumberOfCells(), 2):
             dfn_output_types.append(dfn_joint_info.GetArray('property ID').GetTuple1(i))
         dfn_output_types = list(set(dfn_output_types))
@@ -764,7 +768,7 @@ def processOutputPropID(dir_path, file_extension, platen_cells_prop_id, platen_p
             global max_scale_angle
             max_scale_angle = []
             for i in range(0, output_broken.GetNumberOfCells(), 2):
-                if 0 < broken_joint_info.GetArray('failure mode').GetTuple1(i) < 4:
+                if broken_joint_info.GetArray('failure mode').GetTuple1(i) not in [0, 4]:
                 # Co-relating Broken Joints TO Basic Cell #
                 # // THIS IS 2D CALCULATIONS! // #
                     ax, ay, az = point_a = output_broken.GetPoint(i * node_skip)
@@ -781,14 +785,18 @@ def processOutputPropID(dir_path, file_extension, platen_cells_prop_id, platen_p
                     #  Calculate the slope of the line in degrees
                     angle_deg = (math.degrees(math.atan2(cen_by - cen_ay, cen_bx - cen_ax)))
                     # print (angle_deg)
-                    if angle_deg < 0:
+                    if angle_deg <= 0:
                         angle_deg = (angle_deg + 180)  # All to Positive
 
                     max_scale_angle.append(angle_deg)
-            counts, bins = numpy.histogram(max_scale_angle, bins=17, range=(5, 175))
+            counts, bins = numpy.histogram(max_scale_angle, bins=18, range=(0, 180))
+
             # Updates the scale for the Rosette of the crack elements
             if reset_scale < max(counts):
                 reset_scale = max(counts)
+
+    # exit("Reset Scale of Rose Diagram")
+
     UpdatePipeline(time_steps[0])
 
     processOutput(dir_path, list_of_files, width, height, specimen_center, platen_cells_prop_id, platen_points_prop_id, gauge_length, gauge_width, do_strain_gauge_analysis, modelextend, output_file_name)
@@ -818,6 +826,8 @@ def processOutput(dir_path, list_of_files, diameter, height, specimen_center, pl
     # By default this is a 2D model and analysis
     print(formatting_codes.green_text("\nProcessing Started"))
     start_initial_process = time.time()
+    broken_time = 0
+    seis_time = 0
 
     num_dimensions = 2
 
@@ -948,7 +958,7 @@ def processOutput(dir_path, list_of_files, diameter, height, specimen_center, pl
 
         # Loop over the nodes on the specimen boundary to obtain their current co-ordinate
         # Calculate area using points on boundary and center of model
-        area_calculation(output, modelextend, specimen_center)
+        poly_area = area_calculation(output, modelextend, specimen_center)
         # Volumetric strain calculation for the entire sample
         d_volume = poly_area - init_area
         if d_volume is not None and initial_volume >= 0.0:
@@ -1059,7 +1069,9 @@ def processOutput(dir_path, list_of_files, diameter, height, specimen_center, pl
                 dfn_line_list.append(output_dfn.GetPoint(f))
         dfn_line_list = [list(y) for y in set([tuple(x) for x in dfn_line_list])]  # reduces list to unique sets
 
+        crack_cluster = time.time()
         for i in range(0, output_broken.GetNumberOfCells(), 2):
+
             # if 0 < broken_joint_info.GetArray('failure mode').GetTuple1(i) < 4:
             if broken_joint_info.GetArray('failure mode').GetTuple1(i) not in [0, 4]:
                 # Co-relating Broken Joints TO Basic Cell #
@@ -1083,6 +1095,7 @@ def processOutput(dir_path, list_of_files, diameter, height, specimen_center, pl
                 ## FIND CELL ID USING POINTS (from basic)
                 cell_1 = output.FindCell(point_a, None, 0, 1e-4, subId, pcoords, w)
                 cell_2 = output.FindCell(point_b, None, 0, 1e-4, subId, pcoords, w)
+
                 if t in alist[:]:
                     fail_angles.append(angle_deg)
 
@@ -1187,13 +1200,19 @@ def processOutput(dir_path, list_of_files, diameter, height, specimen_center, pl
                     if cell_seismic == cell_1 or cell_seismic == cell_2:
                         br_row = [t]
                         br_row.extend([i, int(cell_1), int(cell_2), int(cell_seismic), material_id_cell_1, material_id_cell_2, group_type, crack_type, fail_mode, broken_joint_info.GetArray('area').GetTuple1(i), seismic_point_info.GetArray('event energy').GetTuple1(i / 2), seismic_point_info.GetArray('kinetic energy at failure').GetTuple1(i / 2), seismic_point_info.GetArray('kinetic energy at yielding').GetTuple1(i / 2), angle_deg])
+                        broken_time = time.time()
                         brokenjoint_row.writerow(br_row)
+                        broken_time -= time.time()
+                        # print(seis_time)
                 else:
                     # All Seismic info removed as no Seismic files found.
                     if cell_2 != cell_1:
                         rowData = [t]
                         rowData.extend([i, int(cell_1), int(cell_2), "NA", material_id_cell_1, material_id_cell_2, group_type, crack_type, fail_mode, broken_joint_info.GetArray('area').GetTuple1(i), "NA", "NA", "NA", angle_deg])
+                        broken_time = time.time()
                         brokenjoint_row.writerow(rowData)
+                        broken_time -= time.time()
+                        # print(broken_time)
                     else:
                         print("ERROR in %d: Check Cell contact at # %s # %s" % (t, cell_1, cell_2))
 
@@ -1234,10 +1253,13 @@ def processOutput(dir_path, list_of_files, diameter, height, specimen_center, pl
                              seismic_point_info.GetArray('kinetic energy at yielding').GetTuple1(i / 2),
                              seismic_point_info.GetArray('yielding time step').GetTuple1(i / 2),
                              x_avg, y_avg, z_avg])
+                        seis_time = time.time()
                         source_row.writerow(source_rowData)
+                        seis_time -= time.time()
                     else:
                         print("ERROR in %d: Check Cell contact at # %s # %s # %d" % (t, cell_1, cell_2, cell_seismic))
 
+        # print(time.time() - crack_cluster)
         ###-------------------------
         ### STRESS/STRAIN OUTPUT ###
         ###-------------------------
@@ -1272,7 +1294,10 @@ def processOutput(dir_path, list_of_files, diameter, height, specimen_center, pl
             # print "\nRow data:", rowData
 
             # Append the data to the csv file
+            his_time = time.time()
             row.writerow(rowData)
+            his_time -= time.time()
+
         else:
             disc_area = math.pi * width
             # stress in MPa (force in kN & lengths in mm)
@@ -1300,6 +1325,11 @@ def processOutput(dir_path, list_of_files, diameter, height, specimen_center, pl
                 fail_angles, fail_modes = [], []
 
         # Update progress bar
+        # print("Hist\tBroken\tSiesmic\n")
+        # print((his_time))
+        # print((broken_time))
+        # print(((seis_time)))
+        # print(time.time()-start_initial_process)
         print_progress(int(t) + 1, len(list_of_files), prefix='Progress:', suffix='Complete')
 
     datafile.close()
@@ -1321,15 +1351,26 @@ def processOutput(dir_path, list_of_files, diameter, height, specimen_center, pl
     else:
         if list_of_files_seismic:
             print("Processing Seismic Clustering")
+
             ''' Qi's SEISMIC OUTPUT FORMAT!!! '''
             seismicclustering(post_processing)
+
+
         # import matplotlib.pyplot as plt
         # print Counter(cluster) # Uncomment if you wish to see the histogram results
         if node_skip == 4:
-            plot_bar_from_counter(Counter(cluster), breakdown, fail_count, crack_count, "main_graph")
+            # graphical_illustrations.plot_bar_from_counter(post_processing, str(begin), str(end), str(bin_freq),
+            #                                               "main_graph")
+
+            seismic_illustrations.load_process_file(post_processing, 10, bin_freq)
+            process_b_value.load_process_file(post_processing)
+            # import seismic_illustrations
+
+            # graphical_illustrations.plot_bar_from_counter(Counter(cluster), breakdown, fail_count, crack_count, "main_graph")
 
     # Draw stress/strain graphs
-    single_graph(post_processing)
+    graphical_illustrations.single_graph(post_processing, str(sim_type))
+    # single_graph(post_processing)
 
     ###----------------------------------
     ### COMPLETED PROCESSING FOLDER
@@ -1350,9 +1391,9 @@ PLOT CURVES.
 '''
 
 
-def single_graph(sub_dirs):
-    import graphical_illustrations
-    graphical_illustrations.single_graph(post_processing, str(sim_type))
+# def single_graph(sub_dirs):
+#     # import graphical_illustrations
+#     graphical_illustrations.single_graph(post_processing, str(sim_type))
     # command = "python /hdd/home/aly/Desktop/Dropbox/Python_Codes/irazu_post_processing/graphical_illustrations.py -graphs %s \"%s\"" % (post_processing, str(sim_type))
     # # print(command)
     # os.system(command)
@@ -1374,48 +1415,48 @@ GRAPHICAL REPRESENTATION.
 def plot_bar_from_counter(counter, breaks, failures, types, graph_name, ax1=None):
     import json
 
-    break_series = {}
-    fail_type_series = {}
-    fail_series = {}
+    # break_series = {}
+    # fail_type_series = {}
+    # fail_series = {}
 
     # Temporary files
-    temp_counter = os.path.join(post_processing, 'temp_counter.csv')  # AX1
-    temp_failures = os.path.join(post_processing, 'temp_failures.csv')  # AX2
-    temp_types = os.path.join(post_processing, 'temp_types.csv')  # AX3
-    temp_break = os.path.join(post_processing, 'temp_break.csv')  # AX4
+    # temp_counter = os.path.join(post_processing, 'temp_counter.csv')  # AX1
+    # temp_failures = os.path.join(post_processing, 'temp_failures.csv')  # AX2
+    # temp_types = os.path.join(post_processing, 'temp_types.csv')  # AX3
+    # temp_break = os.path.join(post_processing, 'temp_break.csv')  # AX4
 
     #Write data from files
     # AX1 Data
-    with open(temp_counter, 'w') as writeFile:
-        writer = csv.writer(writeFile)
-        writer.writerows(counter.items())
-    writeFile.close()
+    # with open(temp_counter, 'w') as writeFile:
+    #     writer = csv.writer(writeFile)
+    #     writer.writerows(counter.items())
+    # writeFile.close()
 
     # AX2 Data
-    for key in {key for keys in failures for key in keys}:
-        fail_series[key] = [(0 if key not in item else item[key]) for item in failures]
+    # for key in {key for keys in failures for key in keys}:
+    #     fail_series[key] = [(0 if key not in item else item[key]) for item in failures]
+    #
+    # # with open(temp_failures, 'w') as f:
+    # #     json.dump(fail_series, f)
+    #
+    # # AX3 Data
+    # for key in {key for keys in types for key in keys}:
+    #     fail_type_series[key] = [(0 if key not in item else item[key]) for item in types]
 
-    with open(temp_failures, 'w') as f:
-        json.dump(fail_series, f)
+    # with open(temp_types, 'w') as f:
+    #     json.dump(fail_type_series, f)
 
-    # AX3 Data
-    for key in {key for keys in types for key in keys}:
-        fail_type_series[key] = [(0 if key not in item else item[key]) for item in types]
+    # # AX4 Data
+    # for i in breaks:
+    #     for key in {key for keys in breaks for key in keys}:
+    #         break_series[key] = [(0 if key not in item else item[key]) for item in breaks]
+    #     # Convert the Keys explicitly to Text to enable json handling
+    #     break_series = {str(old_key): val for old_key, val in break_series.items()}
 
-    with open(temp_types, 'w') as f:
-        json.dump(fail_type_series, f)
+    # with open(temp_break, 'w') as f:
+    #     json.dump(break_series, f)
 
-    # AX4 Data
-    for i in breaks:
-        for key in {key for keys in breaks for key in keys}:
-            break_series[key] = [(0 if key not in item else item[key]) for item in breaks]
-        # Convert the Keys explicitly to Text to enable json handling
-        break_series = {str(old_key): val for old_key, val in break_series.items()}
-
-    with open(temp_break, 'w') as f:
-        json.dump(break_series, f)
-
-    import graphical_illustrations
+    # import graphical_illustrations
     graphical_illustrations.plot_bar_from_counter(post_processing, str(begin), str(end), str(bin_freq), str(graph_name))
 
     # command = "python /hdd/home/aly/Desktop/Dropbox/Python_Codes/irazu_post_processing/graphical_illustrations.py -histogram %s %s %s %s %s %s" % (post_processing, str(begin), str(end), str(bin_freq), str(graph_name), str("ax1=None"))
@@ -1482,11 +1523,12 @@ def seismicclustering(post_processing):
                  seismicsortedlist[i][8], seismicsortedlist[i][9], seismicsortedlist[i][11], seismicsortedlist[i][14]])
             rose_mode.append(float(seismicsortedlist[i][9]))
             rose_angle.append(float(seismicsortedlist[i][14]))
-            ostr.close()
+        ostr.close()
 
     ###-------------------------------
     ### source_mat (MATLAB) OUTPUT ###
     ###-------------------------------
+
 
     source_reader = csv.reader(open(os.path.join(post_processing, "sourcejoints.csv")), delimiter=",")
     for TimeStep, node0_x, node0_y, node0_z, node1_x, node1_y, node1_z, node2_x, node2_y, node2_z, node3_x, node3_y, node3_z, event_energy, event_time_step, failure_mode, failure_time_step, kinetic_energy_at_failure, kinetic_energy_at_yielding, yielding_time_step, x_avg, y_avg, z_avg in source_reader:
@@ -1526,8 +1568,7 @@ def seismicclustering(post_processing):
             source_seismicsortedlist[i][17], source_seismicsortedlist[i][18],
             source_seismicsortedlist[i][19], source_seismicsortedlist[i][20],
             source_seismicsortedlist[i][21], source_seismicsortedlist[i][22]])
-        ostr.close()
-
+    ostr.close()
 
 '''
 CLEAR MEMORY
@@ -1603,34 +1644,24 @@ Calculate Area of Polygon
 def area_calculation(output, modelextend, specimen_center):
     # Get the X/Y/Z of the edge co-ordinates
     coordinates = []
-    import json
-    global poly_area
+
+    # global poly_area
     for j in modelextend:
         xs, ys, zs = output.GetPoint(j)
         coordinates.append([xs, ys, zs])
+
     # Sort points in clockwise direction using Origin as sample center
     # Sort on Angle tan(dy/dx); then on radial distance sqrt(dx^2+dy^2)
     coordinates.sort(key=lambda c: (math.atan2(c[1] - specimen_center[1], c[0] - specimen_center[0]),
                                    math.sqrt(
                                        (c[1] - specimen_center[1]) ** 2 + (c[0] - specimen_center[0]) ** 2)) )
     # Create Polygon THEN Calculate Area
-    temp_coor = os.path.join(post_processing, 'temp_coor.csv')
-    with open(temp_coor, 'w') as f:
-        json.dump(coordinates, f)
+    # temp_coor = os.path.join(post_processing, 'temp_coor.csv')
+    # with open(temp_coor, 'w') as f:
+    #     json.dump(coordinates, f)
 
-    # str_coordinates = str(coordinates)
-    # str_coordinates = str_coordinates.replace("[[", '\[[')
-    # str_coordinates = str_coordinates.replace(" ", '')
-    # str_coordinates = str_coordinates.replace("]]", ']\]')
-    # command = "python /hdd/home/aly/Desktop/Dropbox/Python_Codes/irazu_post_processing/geometry_calculator.py -polyarea " + post_processing
-    import geometry_calculator
-    poly_area = geometry_calculator.calculate_polyarea(post_processing)
-    # poly_area = os.system(command)
-    # print (command)
-    # poly_area = subprocess.check_output(command, shell=True)
-    # polygon = Polygon(coordinates)  # create polygon based on Point ID on boundary
-    # poly_area = polygon.area  # calculate area of the polygon
-    poly_area = float(poly_area)
+    poly_area = geometry_calculator.calculate_polyarea(post_processing, coordinates)
+
     return poly_area
 
 
@@ -1812,28 +1843,31 @@ def rose_illustration(rose_angle, damage, fname, dx=0, dy=0, ax=None):
     if fname != "2D_initial_damage_intensity_rosette" and fname != "2D_mesh_rosette":
         screenshot(post_processing, fname)
 
-    temp_rose_angle = os.path.join(post_processing, 'temp_rose_angle.csv')
-    with open(temp_rose_angle, 'w') as writeFile:
-        for s in rose_angle:
-            writeFile.write(str(s) + "\n")
-    writeFile.close()
+    # print(rose_angle)
+    # print(damage)
+    # exit()
+    # temp_rose_angle = os.path.join(post_processing, 'temp_rose_angle.csv')
+    # with open(temp_rose_angle, 'w') as writeFile:
+    #     for s in rose_angle:
+    #         writeFile.write(str(s) + "\n")
+    # writeFile.close()
+    #
+    # temp_str_damage = os.path.join(post_processing, 'temp_str_damage.csv')
+    # with open(temp_str_damage, 'w') as writeFile:
+    #     for s in damage:
+    #         writeFile.write(str(s) + "\n")
+    # writeFile.close()
 
-    temp_str_damage = os.path.join(post_processing, 'temp_str_damage.csv')
-    with open(temp_str_damage, 'w') as writeFile:
-        for s in damage:
-            writeFile.write(str(s) + "\n")
-    writeFile.close()
-    import rose_Illustrations
 
-    rose_Illustrations.rose_illustration(str(post_processing), str(width), str(height), str(len(new_overall_lines)), str(reset_scale), str(fname), str(fname1), str("ax=None"), dx, dy)
-
+    rose_Illustrations.rose_illustration(str(post_processing), str(width), str(height), str(len(new_overall_lines)), str(reset_scale), str(fname), str(fname1), rose_angle, damage, str("ax=None"), dx, dy )
+    # exit()
     # command = (
     #             "python /hdd/home/aly/Desktop/Dropbox/Python_Codes/irazu_post_processing/rose_Illustrations.py %s %s %s %s %s %s %s %s" % (
     #     str(post_processing), str(width), str(height), str(len(new_overall_lines)), str(reset_scale), str(fname), str(fname1), str("ax=None")))
 
     # os.system(command)
-    os.remove(temp_rose_angle)
-    os.remove(temp_str_damage)
+    # os.remove(temp_rose_angle)
+    # os.remove(temp_str_damage)
 
 
 '''
