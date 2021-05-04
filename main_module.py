@@ -350,6 +350,7 @@ def processOutputPropID(dir_path, file_extension, platen_cells_prop_id, platen_p
     idlist = vtk.vtkIdList() # Dummy for idList
     error_array, cluster, failure_modes = [], [], []  # For QAQC Error & Cluster CrackType
     mineral_bound, combos, breakdown, fail_count, crack_types, crack_count = [], [], [], [], [], []
+    global material_combinations
     material_combinations ={}
     list_azimuth, list_dip, list_points = [], [], []
     dfn_line_list = []  # reset every time step to match dfn lines against respective broken joints
@@ -401,7 +402,7 @@ def processOutputPropID(dir_path, file_extension, platen_cells_prop_id, platen_p
     list_combo = [x for x in itertools.combinations_with_replacement(mineral_bound_2, 2)]  # Creates a list of all possible combinations
 
     # Combines the Groups, creating a dictionary
-    global material_combinations
+    # global material_combinations
     for key, val in enumerate(list_combo):  # Enumerates the listcombo making it "Group #")
         material_combinations["Group %d" % key] = val
 
