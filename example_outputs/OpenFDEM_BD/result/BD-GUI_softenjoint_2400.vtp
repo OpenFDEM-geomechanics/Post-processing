@@ -1,0 +1,27 @@
+<?xml version='1.0'?>
+<VTKFile type='PolyData' version='0.1' byte_order='LittleEndian'><PolyData>
+<Piece NumberOfPoints='0' NumberOfVerts='0' NumberOfLines='0' NumberOfStrips='0' NumberOfPolys='0'>
+<Points>
+<DataArray type='Float32' NumberOfComponents='3' format='ascii'>
+
+</DataArray>
+</Points>
+<PointData>
+</PointData>
+<CellData Scalars='yielded_mode_of_failure'>
+<DataArray type='Int32' Name='yielded_mode_of_failure' NumberOfComponents='1' format='ascii'>
+
+</DataArray>
+
+</CellData>
+<Polys>
+<DataArray type='Int32' Name='connectivity' format='ascii'>
+
+</DataArray>
+<DataArray type='Int32' Name='offsets' format='ascii'>
+
+</DataArray>
+</Polys>
+</Piece>
+</PolyData>
+</VTKFile>
