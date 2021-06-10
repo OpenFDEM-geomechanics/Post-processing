@@ -1,14 +1,10 @@
-## b values
+# OpenFDEM Post-Processing
 
-Calculates the Magnitude of the event and produces:
-1. Time step vs. Event Energy colored based on Failure Mode
-1. Histogram of Magnitudes
-1. b-value curve of Cumulative and Individual event counts based on Magnitude.
+Python package for a user-friendly interaction with VTK files produced by FDEM-based codes
 
-
-#UPDATES
-
-In V13 to V14
-1. Understands the failure modes from 1 to 8 based on the new Irazu Manual.
-1. Runs on venv 
-1. Obseleted the specimen center by using modelbounds()
+Project structure
+- **base_code** Original Python code for Irazu output post-processing.
+Requires Paraview installation
+- **docs** Documentation directory
+- **example_outputs** Test outputs for both **base_code** and the new **openfdem** package
+- **openfdem** Source folder
