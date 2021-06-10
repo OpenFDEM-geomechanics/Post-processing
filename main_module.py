@@ -32,10 +32,8 @@ import seismic_illustrations
 import process_b_value
 
 # Displays the pid on the system
-os.system("taskset -cp %d" % (os.getpid()))
 # Check paraview Version before proceeding
 try:
-    assert platform.linux_distribution()[0] >= (14)
     if platform.system()=="Linux":
         print("Computer Running %s, Distribution %s, Release %s" % (platform.system(), platform.linux_distribution()[0], platform.linux_distribution()[1]))
     else:
@@ -50,7 +48,7 @@ except AssertionError:
     exit("Incompatible Python Version 2.7.6+")
 
 try:
-    if (str(GetParaViewVersion())[0]) > 3:
+    if GetParaViewVersion() > 3:
         print("Using Paraview Source Version %s and Paraview Version %s." % (GetParaViewSourceVersion(), GetParaViewVersion()))
     else:
         print("Script may not be compatible")
@@ -370,7 +368,7 @@ def processOutputPropID(dir_path, file_extension, platen_cells_prop_id, platen_p
     else:
         bin_freq = bin_frequency
     begin, end = int(0), int(max(time_steps))
-    alist = range(int(begin), int(end), int(bin_freq))
+    alist = list(range(int(begin), int(end), int(bin_freq)))
     alist.pop(0)  # Remove first element of the list
     alist.append(int(end))  # Add the value "end" to the list
 
@@ -408,7 +406,7 @@ def processOutputPropID(dir_path, file_extension, platen_cells_prop_id, platen_p
 
     # Display the various elements in the models
     print(formatting_codes.green_text("Model Element Properties:"))
-    for key, val in const.iteritems():
+    for key, val in const.items():
         per = "{0:.2f}".format(float(val) / float(output.GetNumberOfCells()) * 100)
         print ("\tElement ID %s - Percentage Composition %s %%" % (formatting_codes.bold_text(key), formatting_codes.bold_text(per)))
     print ("\tPlease be aware of the presence of the Platens in the %'s")
@@ -832,16 +830,16 @@ def processOutput(dir_path, list_of_files, diameter, height, specimen_center, pl
 
     num_dimensions = 2
 
-    datafile = open(os.path.join(post_processing, output_file_name), 'w')
+    datafile = open(os.path.join(post_processing, output_file_name), 'w',newline='')
     row = csv.writer(datafile, delimiter=',')
 
     brokenjoint_file = 'brokenjoints.csv'
-    broken_datafile = open(os.path.join(post_processing, brokenjoint_file), 'w')
+    broken_datafile = open(os.path.join(post_processing, brokenjoint_file), 'w',newline='')
     brokenjoint_row = csv.writer(broken_datafile, delimiter=',')
 
     if list_of_files_seismic:
         source_file = 'sourcejoints.csv'
-        source_datafile = open(os.path.join(post_processing, source_file), 'w')
+        source_datafile = open(os.path.join(post_processing, source_file), 'w',newline='')
         source_row = csv.writer(source_datafile, delimiter=',')
 
     # Data titles for crack type and number of broken elements
@@ -1104,7 +1102,7 @@ def processOutput(dir_path, list_of_files, diameter, height, specimen_center, pl
                 try:
                     if list_of_files_seismic:
                         # print seismic_point_info
-                        seismic_point = seismic_point_info.GetArray('node 0').GetTuple3(i / 2)
+                        seismic_point = seismic_point_info.GetArray('node 0').GetTuple3(i // 2)
                         seismic_point_coordinates = [seismic_point[0], seismic_point[1], seismic_point[2]]
                         cell_seismic = int(output.FindCell(seismic_point_coordinates, None, 0, 1e-4, subId, pcoords, w))
                 except AttributeError:
@@ -1200,7 +1198,7 @@ def processOutput(dir_path, list_of_files, diameter, height, specimen_center, pl
                 if list_of_files_seismic:
                     if cell_seismic == cell_1 or cell_seismic == cell_2:
                         br_row = [t]
-                        br_row.extend([i, int(cell_1), int(cell_2), int(cell_seismic), material_id_cell_1, material_id_cell_2, group_type, crack_type, fail_mode, broken_joint_info.GetArray('area').GetTuple1(i), seismic_point_info.GetArray('event energy').GetTuple1(i / 2), seismic_point_info.GetArray('kinetic energy at failure').GetTuple1(i / 2), seismic_point_info.GetArray('kinetic energy at yielding').GetTuple1(i / 2), angle_deg])
+                        br_row.extend([i, int(cell_1), int(cell_2), int(cell_seismic), material_id_cell_1, material_id_cell_2, group_type, crack_type, fail_mode, broken_joint_info.GetArray('area').GetTuple1(i), seismic_point_info.GetArray('event energy').GetTuple1(i // 2), seismic_point_info.GetArray('kinetic energy at failure').GetTuple1(i // 2), seismic_point_info.GetArray('kinetic energy at yielding').GetTuple1(i // 2), angle_deg])
                         broken_time = time.time()
                         brokenjoint_row.writerow(br_row)
                         broken_time -= time.time()
@@ -1226,33 +1224,33 @@ def processOutput(dir_path, list_of_files, diameter, height, specimen_center, pl
                         x_tot, y_tot, z_tot = 0, 0, 0
                         event_count += 1
                         for n in range(0, node_skip):
-                            x_tot += seismic_point_info.GetArray(n).GetTuple3(i / (node_skip / 2))[0]
-                            y_tot += seismic_point_info.GetArray(n).GetTuple3(i / (node_skip / 2))[1]
-                            z_tot += seismic_point_info.GetArray(n).GetTuple3(i / (node_skip / 2))[2]
+                            x_tot += seismic_point_info.GetArray(n).GetTuple3(i // (node_skip // 2))[0]
+                            y_tot += seismic_point_info.GetArray(n).GetTuple3(i // (node_skip // 2))[1]
+                            z_tot += seismic_point_info.GetArray(n).GetTuple3(i // (node_skip // 2))[2]
                         x_avg = x_tot / node_skip
                         y_avg = y_tot / node_skip
                         z_avg = z_tot / node_skip
                         source_rowData = [t]
                         source_rowData.extend(
-                            [seismic_point_info.GetArray('node 0').GetTuple3(i / 2)[0],
-                             seismic_point_info.GetArray('node 0').GetTuple3(i / 2)[1],
-                             seismic_point_info.GetArray('node 0').GetTuple3(i / 2)[2],
-                             seismic_point_info.GetArray('node 1').GetTuple3(i / 2)[0],
-                             seismic_point_info.GetArray('node 1').GetTuple3(i / 2)[1],
-                             seismic_point_info.GetArray('node 1').GetTuple3(i / 2)[2],
-                             seismic_point_info.GetArray('node 2').GetTuple3(i / 2)[0],
-                             seismic_point_info.GetArray('node 2').GetTuple3(i / 2)[1],
-                             seismic_point_info.GetArray('node 2').GetTuple3(i / 2)[2],
-                             seismic_point_info.GetArray('node 3').GetTuple3(i / 2)[0],
-                             seismic_point_info.GetArray('node 3').GetTuple3(i / 2)[1],
-                             seismic_point_info.GetArray('node 3').GetTuple3(i / 2)[2],
-                             seismic_point_info.GetArray('event energy').GetTuple1(i / 2),
-                             seismic_point_info.GetArray('event time step').GetTuple1(i / 2),
-                             seismic_point_info.GetArray('failure mode').GetTuple1(i / 2),
-                             seismic_point_info.GetArray('failure time step').GetTuple1(i / 2),
-                             seismic_point_info.GetArray('kinetic energy at failure').GetTuple1(i / 2),
-                             seismic_point_info.GetArray('kinetic energy at yielding').GetTuple1(i / 2),
-                             seismic_point_info.GetArray('yielding time step').GetTuple1(i / 2),
+                            [seismic_point_info.GetArray('node 0').GetTuple3(i // 2)[0],
+                             seismic_point_info.GetArray('node 0').GetTuple3(i // 2)[1],
+                             seismic_point_info.GetArray('node 0').GetTuple3(i // 2)[2],
+                             seismic_point_info.GetArray('node 1').GetTuple3(i // 2)[0],
+                             seismic_point_info.GetArray('node 1').GetTuple3(i // 2)[1],
+                             seismic_point_info.GetArray('node 1').GetTuple3(i // 2)[2],
+                             seismic_point_info.GetArray('node 2').GetTuple3(i // 2)[0],
+                             seismic_point_info.GetArray('node 2').GetTuple3(i // 2)[1],
+                             seismic_point_info.GetArray('node 2').GetTuple3(i // 2)[2],
+                             seismic_point_info.GetArray('node 3').GetTuple3(i // 2)[0],
+                             seismic_point_info.GetArray('node 3').GetTuple3(i // 2)[1],
+                             seismic_point_info.GetArray('node 3').GetTuple3(i // 2)[2],
+                             seismic_point_info.GetArray('event energy').GetTuple1(i // 2),
+                             seismic_point_info.GetArray('event time step').GetTuple1(i // 2),
+                             seismic_point_info.GetArray('failure mode').GetTuple1(i // 2),
+                             seismic_point_info.GetArray('failure time step').GetTuple1(i // 2),
+                             seismic_point_info.GetArray('kinetic energy at failure').GetTuple1(i // 2),
+                             seismic_point_info.GetArray('kinetic energy at yielding').GetTuple1(i // 2),
+                             seismic_point_info.GetArray('yielding time step').GetTuple1(i // 2),
                              x_avg, y_avg, z_avg])
                         seis_time = time.time()
                         source_row.writerow(source_rowData)

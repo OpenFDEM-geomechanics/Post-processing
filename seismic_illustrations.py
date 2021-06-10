@@ -183,7 +183,7 @@ def load_process_file(folder, binnings=10, big_bins=4):
         plt.show()
 
 
-    bb = [sum(df_combined['Time Step (-)'][i:i+big_bins])/big_bins for i in range(0, int(x_max), big_bins)]
+    bb = [sum(df_combined['Time Step (-)'][i:i+int(big_bins)])/big_bins for i in range(0, int(x_max), int(big_bins))]
     width = (bb[0] - bb[1]) / 2
 
     fig11 = plt.figure(figsize=[12.8, 7.2])
@@ -207,7 +207,7 @@ def load_process_file(folder, binnings=10, big_bins=4):
         un_crack = df_seismic[filter_criteria].unique()
 
         for idx, var in enumerate(un_crack):
-            by = [df_combined[var].cumsum()[i:i + big_bins].iloc[-1] for i in range(0, int(x_max), big_bins)]
+            by = [df_combined[var].cumsum()[i:i + int(big_bins)].iloc[-1] for i in range(0, int(x_max), int(big_bins))]
 
             if idx == 0:
                 ax_sub.bar(bb, by, width=width, label=var, alpha=0.5)
