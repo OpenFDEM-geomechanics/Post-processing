@@ -189,5 +189,5 @@ def load_file(filename):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    # load_file(os.path.join(cwd, "examples", "ygeo", "BD-GUI_field_0.vtp"))
-    load_file(os.path.join(cwd, "examples", "Irazu", "01_25red_20170718_10strength_25modes_multi_phase_0MPa_femdem_multi_phase_femdem.r2m_basic_0.vtu"))
+    load_file(os.path.join(cwd, "example_outputs", "OpenFDEM_BD", "result", "BD-GUI_field_0.vtp"))
+    # load_file(os.path.join(cwd, "example_outputs", "Irazu_UCS", "UCS_tutorial-Run_1_femdem.r2m_basic_0.vtu"))
