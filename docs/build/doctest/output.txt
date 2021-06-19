@@ -1,0 +1,38 @@
+Results of doctest builder run on 2021-06-19 17:57:24
+=====================================================
+
+Document: OpenFDEM
+------------------
+1 items passed all tests:
+   2 tests in default
+2 tests in 1 items.
+2 passed and 0 failed.
+Test passed.
+
+Document: api
+-------------
+**********************************************************************
+File "api.rst", line ?, in default
+Failed example:
+    data._numericalSort('..\example_outputs\Irazu_UCS\UCS_tutorial-Run_1_femdem.r2m_broken_joint_540000.vtu')
+Exception raised:
+    Traceback (most recent call last):
+      File "C:\Users\emags\AppData\Local\Programs\Python\Python37\Lib\doctest.py", line 1329, in __run
+        compileflags, 1), test.globs)
+      File "x:\python_env\openfdem_post_processing_3.7\lib\site-packages\sphinx\ext\doctest.py", line 482, in compile
+        return compile(code, name, self.type, flags, dont_inherit)
+      File "<doctest default[1]>", line 1
+    SyntaxError: (unicode error) 'unicodeescape' codec can't decode bytes in position 28-30: truncated \UXXXXXXXX escape
+**********************************************************************
+1 items had failures:
+   1 of   8 in default
+8 tests in 1 items.
+7 passed and 1 failed.
+***Test Failed*** 1 failures.
+
+Doctest summary
+===============
+   10 tests
+    1 failure in tests
+    0 failures in setup code
+    0 failures in cleanup code
