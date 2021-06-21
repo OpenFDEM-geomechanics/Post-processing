@@ -7,6 +7,8 @@
 import os, re, glob
 import os.path as path
 
+import pyvista as pv
+
 class Model:
     """Model class collects datafiles into one interface.
     
@@ -98,20 +100,34 @@ class Model:
         """
         self._folder = folder
         self._runfile = runfile
+        self._fdem_engine = fdem_engine
         if runfile is not None:
-            if runfile.endswith(".y"):
-                self._fdem_engine = "OpenFDEM"
-            elif runfile.endswith(".fdem"):
-                self._fdem_engine = "Irazu"
+            if fdem_engine is None:
+                if runfile.endswith(".y"):
+                    self._fdem_engine = "OpenFDEM"
+                elif runfile.endswith(".fdem"):
+                    self._fdem_engine = "Irazu"
+                else:
+                    self._fdem_engine = "OpenFDEM"
         else:
-            self._fdem_engine = "Irazu"
+            if fdem_engine is None:
+                self._fdem_engine = "Irazu"
         if folder is not None:
             extensions = tuple(["vtu","vtp"])
-            self._basic_files = self._find_output_files(folder,extensions,"basic")
-            self._broken_files = self._find_output_files(folder,extensions,"broken_joint")
-            self._soft_files = self._find_output_files(folder,extensions,"soften_joint")
-            self._pstress_dir_files = self._find_output_files(folder,extensions,"principal_stress_direction")
-            self._acoustic_files = self._find_output_files(folder,extensions,"acoustic_emission")
+            self._basic_files = self._findOutputFiles(folder,extensions,"basic")
+            if len(self._basic_files) == 0:
+                raise LookupError('Folder does not appear to exist or does not have valid output files.')
+
+            self._broken_files = self._findOutputFiles(folder,extensions,"broken_joint")
+            self._soft_files = self._findOutputFiles(folder,extensions,"soften_joint")
+            self._pstress_dir_files = self._findOutputFiles(folder,extensions,"principal_stress_direction")
+            self._acoustic_files = self._findOutputFiles(folder,extensions,"acoustic_emission")
+
+            first_file = pv.read(self._basic_files[0])
+            self.n_timesteps = len(self._basic_files)
+            self.n_points = first_file.points.shape[0]
+            self.n_elements = first_file.n_cells
+
     # def __getitem__(self,key):
         # """ For timestep access
         # Timestep accessible by index or string representing timestep
