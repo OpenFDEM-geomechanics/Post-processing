@@ -459,10 +459,20 @@ class Model:
 
     # def generate_seismic_csv(self,output_file):
 
-    # def generate_history_csv(self, output_file):
-    # 
-    #     if self.history_stress:
-    #         print(self.history_stress)
+    def generate_history_csv(self, output_file):
+        '''
+
+        :param output_file:
+        :return:
+        '''
+
+        try:
+            self.history_stress
+        except AttributeError:
+            print("Processing UCS")
+            Model.process_UCS(self)
+
+
     # def generate_seismic_clustering_csv(self,output_file):
 
     def process_UCS(self):
@@ -527,6 +537,7 @@ class Model:
         self.E = [E_tan, E_sec]
 
         return self.UCS, self.history_stress, self.history_strain, self.E
+
 
     def E_mod(self, stress, strain, range_min, range_max):
         '''
