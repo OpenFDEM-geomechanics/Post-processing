@@ -4,10 +4,16 @@
 # import _modelling_func
 # import _data_func
 
-import os, re, glob
+import glob
+import os
 import os.path as path
+import re
 
 import pyvista as pv
+import time
+import concurrent.futures
+from multiprocessing import Process
+from threading import Thread
 
 
 class Model:
@@ -379,22 +385,54 @@ class Model:
             print("Simulation appears to be not for compressive strength")
 
         # Load each timestep
-        for openfdem_model_ts in self:
+        def stress_thresholding():
+            for openfdem_model_ts in self:
 
-            platen = (openfdem_model_ts.threshold([self.platen_cells_elem_id, self.platen_cells_elem_id],
-                                                  self.var_data["mineral_type"]))
-            top, bottom = (platen.get_data_range(self.var_data["boundary"]))
+                platen = (openfdem_model_ts.threshold([self.platen_cells_elem_id, self.platen_cells_elem_id],
+                                                      self.var_data["mineral_type"]))
+                top, bottom = (platen.get_data_range(self.var_data["boundary"]))
 
-            top_platen_force_list = self.platen_info(openfdem_model_ts, top, self.var_data["platen_force"])
-            bot_platen_force_list = self.platen_info(openfdem_model_ts, bottom, self.var_data["platen_force"])
+                top_platen_force_list = self.platen_info(openfdem_model_ts, top, self.var_data["platen_force"])
+                bot_platen_force_list = self.platen_info(openfdem_model_ts, bottom, self.var_data["platen_force"])
 
-            for i in range(0, self.number_of_points_per_cell):
-                # Convert forces from microN to kN and get the average forces
-                avg_platen_force[i] = 0.5 * (abs(top_platen_force_list[i]) + abs(bot_platen_force_list[i])) / 1.0e9
+                for i in range(0, self.number_of_points_per_cell):
+                    # Convert forces from microN to kN and get the average forces
+                    avg_platen_force[i] = 0.5 * (abs(top_platen_force_list[i]) + abs(bot_platen_force_list[i])) / 1.0e9
 
-            # stress in MPa (force in kN & area in mm^2)
-            stress = avg_platen_force[axis_of_loading] / self.sample_width * 1.0e3
-            history_stress.append(stress)
+                # stress in MPa (force in kN & area in mm^2)
+                stress = avg_platen_force[axis_of_loading] / self.sample_width * 1.0e3
+                history_stress.append(stress)
+
+        if __name__=='__main__':
+            processes=[]
+            num_processes = os.cpu_count()
+
+            for i in range(num_processes):
+                process = Process(target=stress_thresholding)
+                processes.append(process)
+
+            for process in processes:
+                process.start()
+
+            for process in processes:
+                process.join()
+
+        # for openfdem_model_ts in self:
+        #
+        #     platen = (openfdem_model_ts.threshold([self.platen_cells_elem_id, self.platen_cells_elem_id],
+        #                                           self.var_data["mineral_type"]))
+        #     top, bottom = (platen.get_data_range(self.var_data["boundary"]))
+        #
+        #     top_platen_force_list = self.platen_info(openfdem_model_ts, top, self.var_data["platen_force"])
+        #     bot_platen_force_list = self.platen_info(openfdem_model_ts, bottom, self.var_data["platen_force"])
+        #
+        #     for i in range(0, self.number_of_points_per_cell):
+        #         # Convert forces from microN to kN and get the average forces
+        #         avg_platen_force[i] = 0.5 * (abs(top_platen_force_list[i]) + abs(bot_platen_force_list[i])) / 1.0e9
+        #
+        #     # stress in MPa (force in kN & area in mm^2)
+        #     stress = avg_platen_force[axis_of_loading] / self.sample_width * 1.0e3
+        #     history_stress.append(stress)
 
         return history_stress
 
@@ -427,6 +465,8 @@ class Model:
             print("Simulation appears to be not for compressive strength")
 
         # Load each timestep
+        #backup copy compressed below
+
         for openfdem_model_ts in self:
 
             platen = (openfdem_model_ts.threshold([self.platen_cells_elem_id, self.platen_cells_elem_id],
