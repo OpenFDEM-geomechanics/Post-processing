@@ -467,22 +467,37 @@ class Model:
         # Load each timestep
         #backup copy compressed below
 
-        for openfdem_model_ts in self:
+        def strain_thresholding():
+            for openfdem_model_ts in self:
 
-            platen = (openfdem_model_ts.threshold([self.platen_cells_elem_id, self.platen_cells_elem_id],
-                                                  self.var_data["mineral_type"]))
-            top, bottom = (platen.get_data_range(self.var_data["boundary"]))
+                platen = (openfdem_model_ts.threshold([self.platen_cells_elem_id, self.platen_cells_elem_id],
+                                                      self.var_data["mineral_type"]))
+                top, bottom = (platen.get_data_range(self.var_data["boundary"]))
 
-            avg_top_platen_disp = self.platen_info(openfdem_model_ts, top, self.var_data["platen_displacement"])
-            avg_bottom_platen_disp = self.platen_info(openfdem_model_ts, bottom, self.var_data["platen_displacement"])
+                avg_top_platen_disp = self.platen_info(openfdem_model_ts, top, self.var_data["platen_displacement"])
+                avg_bottom_platen_disp = self.platen_info(openfdem_model_ts, bottom, self.var_data["platen_displacement"])
 
 
-            for i in range(0, self.number_of_points_per_cell):
-                avg_platen_disp[i] = abs(avg_top_platen_disp[i]) + abs(avg_bottom_platen_disp[i])
+                for i in range(0, self.number_of_points_per_cell):
+                    avg_platen_disp[i] = abs(avg_top_platen_disp[i]) + abs(avg_bottom_platen_disp[i])
 
-            strain_from_platen = avg_platen_disp[axis_of_loading] / self.sample_height * 100.0
+                strain_from_platen = avg_platen_disp[axis_of_loading] / self.sample_height * 100.0
 
-            history_strain.append(strain_from_platen)
+                history_strain.append(strain_from_platen)
+
+        if __name__ == '__main__':
+            threads = []
+            num_threads = 100 #we can make num_threads increase up to 4 or 5 digits of threads
+
+            for i in range(num_threads):
+                thread = Thread(target=strain_thresholding)
+                threads.append(thread)
+
+            for thread in threads:
+                thread.start()
+
+            for thread in threads:
+                thread.join()
 
         return history_strain
 
