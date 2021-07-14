@@ -403,19 +403,19 @@ class Model:
                 stress = avg_platen_force[axis_of_loading] / self.sample_width * 1.0e3
                 history_stress.append(stress)
 
-        if __name__=='__main__':
-            processes=[]
-            num_processes = os.cpu_count()
 
-            for i in range(num_processes):
-                process = Process(target=stress_thresholding)
-                processes.append(process)
+        processes=[]
+        num_processes = os.cpu_count()
 
-            for process in processes:
-                process.start()
+        for i in range(num_processes):
+            process = Process(target=stress_thresholding)
+            processes.append(process)
 
-            for process in processes:
-                process.join()
+        for process in processes:
+            process.start()
+
+        for process in processes:
+            process.join()
 
         # for openfdem_model_ts in self:
         #
