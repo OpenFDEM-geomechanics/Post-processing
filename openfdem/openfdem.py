@@ -485,19 +485,19 @@ class Model:
 
                 history_strain.append(strain_from_platen)
 
-        if __name__ == '__main__':
-            threads = []
-            num_threads = 100 #we can make num_threads increase up to 4 or 5 digits of threads
 
-            for i in range(num_threads):
-                thread = Thread(target=strain_thresholding)
-                threads.append(thread)
+        threads = []
+        num_threads = 100 #we can make num_threads increase up to 4 or 5 digits of threads
 
-            for thread in threads:
-                thread.start()
+        for i in range(num_threads):
+            thread = Thread(target=strain_thresholding)
+            threads.append(thread)
 
-            for thread in threads:
-                thread.join()
+        for thread in threads:
+            thread.start()
+
+        for thread in threads:
+            thread.join()
 
         return history_strain
 
