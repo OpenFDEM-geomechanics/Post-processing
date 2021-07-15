@@ -20,7 +20,7 @@ matplotlib.rcParams['font.family'] = ['arial']
 matplotlib.rcParams['font.size'] = 8
 
 ## Model attributes
-model = fd.Model("../../example_outputs/Irazu_UCS")
+model = fd.Model(os.path.join(my_path,"../../example_outputs/Irazu_UCS"))
 
 # Get Model information
 print("Number of Timesteps:\t", model.n_timesteps)
