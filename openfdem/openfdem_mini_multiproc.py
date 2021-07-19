@@ -34,5 +34,8 @@ def main():
 
 if __name__ == '__main__':
     main()
+    print(results)
 
-print(results)
+#parfor loop??
+#start the loop in parallel when go over time steps
+#ask each thread to process portion of output files
