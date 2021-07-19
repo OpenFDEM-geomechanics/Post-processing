@@ -182,6 +182,28 @@ handles temporal manipulations</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">E_mod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stress</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strain</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range_max</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Calculate Elastic modulus between two extents (data points)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stress</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – Stress in MPa</p></li>
+<li><p><strong>strain</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – Strain in %</p></li>
+<li><p><strong>range_min</strong> (<em>int</em>) – Index of the lower end of range</p></li>
+<li><p><strong>range_max</strong> (<em>int</em>) – Index of the upper end of range</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Elastic Modulus in GPa = delta stress / delta strain</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">_findOutputFiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_type</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Find the collection of vtk files that belong to a specific group</p>
 <dl class="field-list simple">
@@ -196,7 +218,8 @@ handles temporal manipulations</p>
 </dd>
 </dl>
 <dl>
-<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">fdem</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="s2">&quot;../example_outputs/Irazu_UCS&quot;</span><span class="p">)</span>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openfdem</span> <span class="k">as</span> <span class="nn">fdem</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">fdem</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="s2">&quot;../example_outputs/Irazu_UCS&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">_findOutputFiles</span><span class="p">(</span><span class="s2">&quot;../example_outputs/Irazu_UCS/&quot;</span><span class="p">,</span><span class="nb">tuple</span><span class="p">([</span><span class="s2">&quot;vtu&quot;</span><span class="p">,</span><span class="s2">&quot;vtp&quot;</span><span class="p">]),</span><span class="s2">&quot;basic&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
 <span class="go">[&#39;..\\example_outputs\\Irazu_UCS\\UCS_tutorial-Run_1_femdem.r2m_basic_0.vtu&#39;, &#39;..\\example_outputs\\Irazu_UCS\\UCS_tutorial-Run_1_femdem.r2m_basic_20000.vtu&#39;, &#39;..\\example_outputs\\Irazu_UCS\\UCS_tutorial-Run_1_femdem.r2m_basic_40000.vtu&#39;]</span>
 </pre></div>
@@ -222,7 +245,8 @@ handles temporal manipulations</p>
 </dd>
 </dl>
 <dl>
-<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">fdem</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="s2">&quot;../example_outputs/Irazu_UCS&quot;</span><span class="p">)</span>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openfdem</span> <span class="k">as</span> <span class="nn">fdem</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">fdem</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="s2">&quot;../example_outputs/Irazu_UCS&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">_numericalSort</span><span class="p">(</span><span class="s1">&#39;..\example_outputs\Irazu_UCS\UCS_tutorial-Run_1_femdem.r2m_broken_joint_540000.vtu&#39;</span><span class="p">)</span>
 <span class="go">[&#39;..\example_outputs\Irazu_UCS\UCS_tutorial-Run_&#39;,</span>
 <span class="go"> 1,</span>
@@ -233,6 +257,186 @@ handles temporal manipulations</p>
 <span class="go"> &#39;.vtu&#39;]</span>
 </pre></div>
 </div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">filter_material</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">material_id</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Filter based on the material id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>material_id</strong> (<em>int</em>) – material id to be threshold</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dataset of the threshold</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Union[MultiBlock, UnstructuredGrid]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">generate_history_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_file</span></span></em><span class="sig-paren">)</span></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>output_file</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">model_dimensions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mat_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Function to get the “INITIAL” model bounds and returns the width, height, thickness</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mat_id</strong> (<em>int</em>) – Optional, if a threshold is specific to a material type</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>model width, model height, model thickness</p>
+</dd>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>tuple[float, float, float]</p>
+</dd>
+</dl>
+<dl>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;../example_outputs/Irazu_UCS&quot;</span><span class="p">)</span>
+<span class="go"># Returns the overall model dimensions</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">model_dimensions</span>
+<span class="go">(56.0, 116.0, 0.0)</span>
+<span class="go"># Returns the model dimensions based on material id 1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">model_dimensions</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">(52.0, 108.0, 0.0)</span>
+<span class="go"># Error when material is not found</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">model_dimensions</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">Material ID specified out of range</span>
+<span class="go">Process finished with exit code 1</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">model_domain</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Identifies the model domain if 2D (3 Points - Triangle) or 3D (4 Points - Tetrahedral) by confirming the simulation cell vertex.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>number of nodes to skip in analysis</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">platen_displacement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">material_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_condition_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Checks if Compression Simulations.
+Calculate the strain based on the displacement in the platens.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>strain (%) = displacement / height of sample</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+<dl>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;../example_outputs/Irazu_UCS&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">axial_disp</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">platen_displacement</span><span class="p">()</span>
+<span class="go">[0.0, 0.009259259235881877, 0.018518518471763754, 0.02777777770764563, 0.03703703694352751, 0.046296296179409384, 0.05555555541529126, 0.06481481465117314, 0.07407407388705502, 0.08333333312293689, 0.09259259235881877, 0.10185185159470064, 0.11111111083058252, 0.1203703700664644, 0.12962962930234628, 0.13888888853822817, 0.14814814777411003, 0.15740740700999192, 0.16666666624587378, 0.17592592548175565, 0.18518518471763754, 0.1944444439535194, 0.2037037031894013, 0.21296296242528318, 0.22222222166116504, 0.23148148089704693, 0.2407407401329288, 0.24999999936881068, 0.25925925860469257, 0.2685185178405744, 0.27777777707645634]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">platen_force</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">material_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_condition_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Checks if Compression Simulations.
+Calculate the stress based on the force in the platens.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>stress (MPa) = force / width of sample</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+<dl>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;../example_outputs/Irazu_UCS&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">axial_stress</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">platen_force</span><span class="p">()</span>
+<span class="go">[0.0, 4.825237206318255, 9.628822864052236, 14.414373164820148, 19.191640765444546, 23.95880093999921, 28.711674236346393, 33.44027814633586, 38.03245444023052, 13.266469715550484, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">platen_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pv_cells</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">platen_boundary_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_property</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>This function thresholds cells based on boundary condition and sums them based on the defined parameter var_property</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pv_cells</strong> (<em>pyvista.core.pointset.UnstructuredGrid</em>) – </p></li>
+<li><p><strong>platen_boundary_id</strong> (<em>float</em>) – boundary id that the threshold should be based on</p></li>
+<li><p><strong>var_property</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – name of the property (array to b returned)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>array of the property based on the threshold</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">process_UCS</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Process model as UCS model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>UCS, stress_hist, strain_hist, Elastic_moduli</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple[float, list[float, list[float, list[float]]</p>
+</dd>
+</dl>
+<dl>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;../example_outputs/Irazu_UCS&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">UCS</span><span class="p">,</span> <span class="n">stress_hist</span><span class="p">,</span> <span class="n">strain_hist</span><span class="p">,</span> <span class="n">Elastic_moduli</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">process_UCS</span><span class="p">()</span>
+<span class="go">(38.03245444023052, [0.0, 4.825237206318255, 9.628822864052236, 14.414373164820148, 19.191640765444546, 23.95880093999921, 28.711674236346393, 33.44027814633586, 38.03245444023052, 13.266469715550484, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30], [0.0, 0.009259259235881877, 0.018518518471763754, 0.02777777770764563, 0.03703703694352751, 0.046296296179409384, 0.05555555541529126, 0.06481481465117314, 0.07407407388705502, 0.08333333312293689, 0.09259259235881877, 0.10185185159470064, 0.11111111083058252, 0.1203703700664644, 0.12962962930234628, 0.13888888853822817, 0.14814814777411003, 0.15740740700999192, 0.16666666624587378, 0.17592592548175565, 0.18518518471763754, 0.1944444439535194, 0.2037037031894013, 0.21296296242528318, 0.22222222166116504, 0.23148148089704693, 0.2407407401329288, 0.24999999936881068, 0.25925925860469257, 0.2685185178405744, 0.27777777707645634], [5.15399101160927, 5.181743019752671])</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">rock_sample_dimensions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dd><p>Lookup cell element ID on the top center and then trace points Using this information, we obtain the platen prop ID</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>sample width, sample height, sample thickness</p>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p>tuple[float, float, float]</p>
 </dd>
 </dl>
 </dd></dl>
