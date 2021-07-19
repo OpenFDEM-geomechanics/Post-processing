@@ -385,31 +385,37 @@ class Model:
             print("Simulation appears to be not for compressive strength")
 
         # Load each timestep
-        def stress_thresholding(self, openfdem_model_ts):
-            platen = (openfdem_model_ts.threshold([self.platen_cells_elem_id, self.platen_cells_elem_id],
+        def stress_thresholding():
+            for openfdem_model_ts in self:
+
+                platen = (openfdem_model_ts.threshold([self.platen_cells_elem_id, self.platen_cells_elem_id],
                                                       self.var_data["mineral_type"]))
-            top, bottom = (platen.get_data_range(self.var_data["boundary"]))
+                top, bottom = (platen.get_data_range(self.var_data["boundary"]))
 
-            top_platen_force_list = self.platen_info(openfdem_model_ts, top, self.var_data["platen_force"])
-            bot_platen_force_list = self.platen_info(openfdem_model_ts, bottom, self.var_data["platen_force"])
+                top_platen_force_list = self.platen_info(openfdem_model_ts, top, self.var_data["platen_force"])
+                bot_platen_force_list = self.platen_info(openfdem_model_ts, bottom, self.var_data["platen_force"])
 
-            for i in range(0, self.number_of_points_per_cell):
-                # Convert forces from microN to kN and get the average forces
-                avg_platen_force[i] = 0.5 * (abs(top_platen_force_list[i]) + abs(bot_platen_force_list[i])) / 1.0e9
+                for i in range(0, self.number_of_points_per_cell):
+                    # Convert forces from microN to kN and get the average forces
+                    avg_platen_force[i] = 0.5 * (abs(top_platen_force_list[i]) + abs(bot_platen_force_list[i])) / 1.0e9
 
-            # stress in MPa (force in kN & area in mm^2)
-            stress = avg_platen_force[axis_of_loading] / self.sample_width * 1.0e3
-            history_stress.append(stress)
-            return history_stress
+                # stress in MPa (force in kN & area in mm^2)
+                stress = avg_platen_force[axis_of_loading] / self.sample_width * 1.0e3
+                history_stress.append(stress)
 
-        #issue - needs to be implemented in testing script*; need to have main.py and then import openfdem.py
-        with concurrent.futures.ProcessPoolExecutor() as executor:
-            resutlt executor.map(stress_thresholding,self) #help here
 
-        if __name__ == '__main__':
-            main()
+        processes=[]
+        num_processes = os.cpu_count()
 
-        #if publishing this as a package -> issue with having multi processing then*
+        for i in range(num_processes):
+            process = Process(target=stress_thresholding)
+            processes.append(process)
+
+        for process in processes:
+            process.start()
+
+        for process in processes:
+            process.join()
 
         # for openfdem_model_ts in self:
         #
@@ -461,30 +467,37 @@ class Model:
         # Load each timestep
         #backup copy compressed below
 
-        def history_strain_func(openfdem_model_ts):
-            platen = (openfdem_model_ts.threshold([self.platen_cells_elem_id, self.platen_cells_elem_id],
-                                                          self.var_data["mineral_type"]))
-            top, bottom = (platen.get_data_range(self.var_data["boundary"]))
+        def strain_thresholding():
+            for openfdem_model_ts in self:
 
-            avg_top_platen_disp = self.platen_info(openfdem_model_ts, top, self.var_data["platen_displacement"])
-            avg_bottom_platen_disp = self.platen_info(openfdem_model_ts, bottom,
-                                                              self.var_data["platen_displacement"])
+                platen = (openfdem_model_ts.threshold([self.platen_cells_elem_id, self.platen_cells_elem_id],
+                                                      self.var_data["mineral_type"]))
+                top, bottom = (platen.get_data_range(self.var_data["boundary"]))
 
-            for i in range(0, self.number_of_points_per_cell):
-                avg_platen_disp[i] = abs(avg_top_platen_disp[i]) + abs(avg_bottom_platen_disp[i])
-
-            strain_from_platen = avg_platen_disp[axis_of_loading] / self.sample_height * 100.0
-            history_strain.append(strain_from_platen)
-            return strain_from_platen
+                avg_top_platen_disp = self.platen_info(openfdem_model_ts, top, self.var_data["platen_displacement"])
+                avg_bottom_platen_disp = self.platen_info(openfdem_model_ts, bottom, self.var_data["platen_displacement"])
 
 
-        def main():
-            with concurrent.futures.ProcessPoolExecutor() as executor:
-                results = executor.map(history_strain_func, self) #is self the list we are iterating over
-            return results
+                for i in range(0, self.number_of_points_per_cell):
+                    avg_platen_disp[i] = abs(avg_top_platen_disp[i]) + abs(avg_bottom_platen_disp[i])
 
-        if __name__ == '__main__':
-            main()
+                strain_from_platen = avg_platen_disp[axis_of_loading] / self.sample_height * 100.0
+
+                history_strain.append(strain_from_platen)
+
+
+        threads = []
+        num_threads = 100 #we can make num_threads increase up to 4 or 5 digits of threads
+
+        for i in range(num_threads):
+            thread = Thread(target=strain_thresholding)
+            threads.append(thread)
+
+        for thread in threads:
+            thread.start()
+
+        for thread in threads:
+            thread.join()
 
         return history_strain
 
