@@ -1,15 +1,5 @@
 import concurrent.futures
-import math
-
-PRIMES = [
-    112272535095293,
-    112582705942171,
-    112272535095293,
-    115280095190773,
-    115797848077099,
-    1099726899285419]
-
-results =[]
+import math 
 
 def is_prime(n):
     if n < 2:
@@ -25,17 +15,13 @@ def is_prime(n):
             return False
     return True
 
-def main():
+def run_checker(PRIMES):
+    results =[]
+
     with concurrent.futures.ProcessPoolExecutor() as executor:
-        results = executor.map(is_prime, PRIMES)
-        for number, prime in zip(PRIMES, results):
+        futures = executor.map(is_prime, PRIMES)
+        for number, prime in zip(PRIMES, futures):
             print('%d is prime: %s' % (number, prime))
             results.append(number)
 
-if __name__ == '__main__':
-    main()
     print(results)
-
-#parfor loop??
-#start the loop in parallel when go over time steps
-#ask each thread to process portion of output files

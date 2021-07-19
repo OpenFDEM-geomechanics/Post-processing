@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0,'./')
+
 import openfdem as fd
 import time
 import os
@@ -20,7 +23,7 @@ matplotlib.rcParams['font.family'] = ['arial']
 matplotlib.rcParams['font.size'] = 8
 
 ## Model attributes
-model = fd.Model("../../example_outputs/Irazu_UCS")
+model = fd.Model("example_outputs/Irazu_UCS")
 
 # Get Model information
 print("Number of Timesteps:\t", model.n_timesteps)
