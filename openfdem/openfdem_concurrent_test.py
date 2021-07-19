@@ -17,8 +17,11 @@ def main():
         for result in results:
             print(result)
 
+#idea - the user has the main function, they call the class
+#and another function for the multi processing
+
 if __name__ == '__main__':
-    main()
+     main()
 
 #print(results)
 
