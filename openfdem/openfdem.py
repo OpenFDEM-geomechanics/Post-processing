@@ -385,7 +385,7 @@ class Model:
             print("Simulation appears to be not for compressive strength")
 
         # Load each timestep
-        def stress_thresholding(self,openfdem_model_ts):
+        def stress_thresholding(openfdem_model_ts):
             platen = (openfdem_model_ts.threshold([self.platen_cells_elem_id, self.platen_cells_elem_id],
                                                       self.var_data["mineral_type"]))
             top, bottom = (platen.get_data_range(self.var_data["boundary"]))
@@ -403,7 +403,7 @@ class Model:
 
         def main():
             with concurrent.futures.ProcessPoolExecutor() as executor:
-                executor.map(openfdem_model_ts,stress_thresholding)
+                executor.map(openfdem_model_ts,stress_thresholding) #help here
 
         if __name__ == '__main__':
             main()
