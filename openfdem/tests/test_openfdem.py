@@ -89,7 +89,9 @@ def test_model_timestep_access():
         assert np.array_equal(data1[2].get_array(data1.var_data["platen_force"]), data1['20000'].get_array(data1.var_data["platen_force"]))
 
 def test_model_width():
-    assert data1.sample_width == 108.0
+    assert data1.model_dimensions() == (56.0,116.0,0.0)
+    assert data2.model_dimensions() == (100.0,100.0,0.0)
+    assert data3.model_dimensions() == (1.0,1.0.0,0)
 
 def test_model_platen_force():
     assert data1.platen_force()[0] == 0.0
