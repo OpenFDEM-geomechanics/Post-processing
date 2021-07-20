@@ -19,8 +19,8 @@ def calc_timer_values(end_time):
         return ("\033[1m%d minutes and %d seconds\033[0m." % (minutes, sec))
 
 start = time.time()
-# model = fd.Model("../example_outputs/Irazu_UCS")
-model = fd.Model("/external/Size_7")
+model = fd.Model("../example_outputs/Irazu_UCS")
+#model = fd.Model("../Irazu_UCS")
 f_names = (model._basic_files)
 
 history_strain = []  # List to hold the stress_history

@@ -14,7 +14,7 @@ if platform.architecture()[0] != "64bit":
 
 # Check python compatibility before proceeding
 try:
-    assert sys.version_info >= (3, 5) and sys.version_info <= (3, 8)
+    assert sys.version_info >= (3, 5) and sys.version_info <= (3, 9)
     #print("Python Version: %s" % sys.version.split('\n')[0])
 except AssertionError:
     exit("Compatible Python Version 3.5+ upto 3.8.x")
