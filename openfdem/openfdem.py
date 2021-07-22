@@ -14,7 +14,7 @@ import time
 import concurrent.futures
 from multiprocessing import Process
 from threading import Thread
-
+from aggregate_storage import aggregate_storage
 
 class Model:
     """Model class collects datafiles into one interface.
@@ -151,6 +151,7 @@ class Model:
             self.n_points = self.first_file.number_of_points
             self.n_elements = self.first_file.n_cells
             self.number_of_points_per_cell = self.first_file.cell_n_points(0)
+            self.storage = aggregate_storage(folder,verbose=True)
 
         if self._fdem_engine == "Irazu":
             self.var_data = Model._var_dataset["IRAZU"]
