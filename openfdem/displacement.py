@@ -73,7 +73,24 @@ if __name__ == '__main__':
     ## Check UCS Simulation
     if model.simulation_type() != "UCS Simulation":
         print("Simulation appears to be not for compressive strength")
-    
+    print("---- PV tests ----")
+    print("Start for loop")
+    start = time.time()
+    result = []
+    for fname in f_names:
+        result.append(history_strain_func(fname,model))
+    print(len(result))
+    print(calc_timer_values(time.time()-start))
+
+
+    print(f"Start concurrent")
+    start = time.time()
+    with concurrent.futures.ProcessPoolExecutor(max_workers=os.cpu_count()) as executor:
+        results = list(executor.map(history_strain_func, f_names,repeat(model),chunksize=len(f_names)//os.cpu_count()))  # is self the list we are iterating over
+    print(len(results))
+    print(calc_timer_values(time.time() - start))
+
+    print("---- HDF tests ----")
     print("Start for loop")
     start = time.time()
     result = []
