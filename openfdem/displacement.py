@@ -64,8 +64,7 @@ def history_strain_func(f_name,model):
 
 if __name__ == '__main__':
     
-    model = fd.Model(r"X:\20210622_irazu_example\results")
-    #model = fd.Model("../Irazu_UCS")
+    model = fd.Model("../example_outputs/large_UCS_example")
     f_names = (model._basic_files)
 
     ## Get rock dimension.
@@ -90,6 +89,24 @@ if __name__ == '__main__':
     print(len(results))
     print(calc_timer_values(time.time() - start))
 
+    print(f"Start concurrent optimized n")
+    for i in range(1,10):
+        n = 2**i
+        print(f"n = {n}, chunksize = {len(f_names)//n}")
+        start = time.time()
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            results = list(executor.map(history_strain_func, f_names,repeat(model),chunksize=len(f_names)//n))  # is self the list we are iterating over
+        print(len(results))
+        print(calc_timer_values(time.time() - start))
+
+    print("chunksize = 1")
+    start = time.time()
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        results = list(executor.map(history_strain_func, f_names,repeat(model)))  # is self the list we are iterating over
+    print(len(results))
+    print(calc_timer_values(time.time() - start))
+    
+
     print("---- HDF tests ----")
     print("Start for loop")
     start = time.time()
@@ -106,8 +123,23 @@ if __name__ == '__main__':
         results = list(executor.map(history_strain_func_hdf, f_names,repeat(model),chunksize=len(f_names)//os.cpu_count()))  # is self the list we are iterating over
     print(len(results))
     print(calc_timer_values(time.time() - start))
+
+    print(f"Start concurrent optimized n")
+    for i in range(1,10):
+        n = 2**i
+        print(f"n = {n}, chunksize = {len(f_names)//n}")
+        start = time.time()
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            results = list(executor.map(history_strain_func_hdf, f_names,repeat(model),chunksize=len(f_names)//n))  # is self the list we are iterating over
+        print(len(results))
+        print(calc_timer_values(time.time() - start))
     
-    
+    print("chunksize = 1")
+    start = time.time()
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        results = list(executor.map(history_strain_func_hdf, f_names,repeat(model)))  # is self the list we are iterating over
+    print(len(results))
+    print(calc_timer_values(time.time() - start))
 
 
 # platen_displacement(model)
