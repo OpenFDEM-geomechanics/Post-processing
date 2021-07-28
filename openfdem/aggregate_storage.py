@@ -20,7 +20,7 @@ class aggregate_storage:
         timestep = os.path.splitext(basename)[0].split("_")[-1]
         return timestep+"/"+basename
 
-    def _store_file_init(self,f,vtkfilename):
+    def _store_file_init(self,f,vtkfilename,compression=None):
         """Protected function to store vtk file data into h5 file
 
         :param f: H5 file handle with write permissions enabled
@@ -35,20 +35,20 @@ class aggregate_storage:
         cells = data.cells
         offsets = data.offset
         celltypes = data.celltypes
-        ds = f.create_dataset(groupkey+"/points",points.shape,points.dtype)
+        ds = f.create_dataset(groupkey+"/points",points.shape,points.dtype,compression=compression)
         ds[()] = points
-        ds = f.create_dataset(groupkey+"/cells",cells.shape,cells.dtype)
+        ds = f.create_dataset(groupkey+"/cells",cells.shape,cells.dtype,compression=compression)
         ds[()] = cells
-        ds = f.create_dataset(groupkey+"/offsets",offsets.shape,offsets.dtype)
+        ds = f.create_dataset(groupkey+"/offsets",offsets.shape,offsets.dtype,compression=compression)
         ds[()] = offsets
-        ds = f.create_dataset(groupkey+"/celltypes",celltypes.shape,celltypes.dtype)
+        ds = f.create_dataset(groupkey+"/celltypes",celltypes.shape,celltypes.dtype,compression=compression)
         ds[()] = celltypes
         nondataarrays = ["cells","offsets","celltypes",'points']
 
         for array_name in array_names:
             if not any(x in array_name for x in nondataarrays):
                 array = data.get_array(array_name)
-                ds = f.create_dataset(groupkey+"/"+array_name,array.shape,array.dtype)
+                ds = f.create_dataset(groupkey+"/"+array_name,array.shape,array.dtype,compression=compression)
                 ds[()] = array
 
     def store_file(self,vtkfilename):
@@ -83,7 +83,7 @@ class aggregate_storage:
 
         if not files:
             return True
-    def __init__(self,file_directory,h5filename=None,overwrite=False,verbose=True):
+    def __init__(self,file_directory,h5filename=None,overwrite=False,compression=None,verbose=True):
         """Initializes aggregate storage of VTK to HDF5 data system.
 
         The following steps are performed:
@@ -128,6 +128,8 @@ class aggregate_storage:
             if verbose:
                 print(f"Selected directory {file_directory}... {len(self.files)} files found")
                 print(f"Storing data in {h5filename}")
+                if compression is not None:
+                    print(f"Using {compression} compression")
             f_w = h5py.File(h5filename,"w")
             
             # Iterate through files, storing sequentially
@@ -139,7 +141,7 @@ class aggregate_storage:
             for file_name in iterable:
                 if verbose:
                     iterable.set_description(f"Storing {os.path.basename(file_name)}")
-                self._store_file_init(f_w,file_name)
+                self._store_file_init(f_w,file_name,compression=compression)
 
     def read_file(self,filename,verbose=False):
         """Extract VTK file from HDF5 file given original filename
@@ -189,11 +191,18 @@ if __name__ == '__main__':
     # print(test_model.array_names)
     # print(test_model)
     # # pv.plot(test_model)
-
+    files = glob.glob(source_path+"/*.vtu")
+    storage = aggregate_storage(source_path,verbose=True,compression="lzf")
+    os.remove(os.path.join(source_path,"aggregated.h5"))
     storage = aggregate_storage(source_path,verbose=True)
-
-    reformed_model = storage.read_file(filename)
-    reformed_model.save(os.path.join(source_path,"test.vtu"))
+    recon_path = os.path.join(source_path,"reconstructed")
+    if not os.path.exists(recon_path):
+        os.mkdir(recon_path)
+    for filename in files:
+        reformed_model = storage.read_file(filename)
+        savefile = os.path.join(recon_path,os.path.basename(filename))
+        # print(f"Saving {savefile}")
+        reformed_model.save(savefile)
     # print(reformed_model.array_names)
     # reformed_model.plot(scalars='displacement')
 
