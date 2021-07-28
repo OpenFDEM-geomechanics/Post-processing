@@ -1,0 +1,11 @@
+<?xml version='1.0'?>
+<VTKFile type='UnstructuredGrid' version='0.1' byte_order='LittleEndian'>
+	<UnstructuredGrid>
+		<Piece NumberOfPoints='0' NumberOfCells='0'>
+	<PointData/>
+	<CellData/>
+	<Points/>
+	<Cells>		<DataArray Name='connectivity'  type='Int32' NumberOfComponents='1' />		<DataArray Name='offsets'  type='Int32' NumberOfComponents='1' />		<DataArray Name='types'  type='UInt8' NumberOfComponents='1' />	</Cells>
+		</Piece>
+	</UnstructuredGrid>
+</VTKFile>
