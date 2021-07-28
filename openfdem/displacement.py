@@ -65,7 +65,7 @@ def history_strain_func(f_name,model):
 
 if __name__ == '__main__':
     
-    model = fd.Model("../example_outputs/Irazu_UCS")
+    model = fd.Model("../example_outputs/Irazu_GBM")
     f_names = (model._basic_files)
 
     ## Get rock dimension.
@@ -85,23 +85,26 @@ if __name__ == '__main__':
 
     print(f"Start concurrent")
     start = time.time()
-    with concurrent.futures.ProcessPoolExecutor(max_workers=os.cpu_count()) as executor:
-        results = list(executor.map(history_strain_func, f_names,repeat(model),chunksize=len(f_names)//os.cpu_count()))  # is self the list we are iterating over
-    print(len(results))
-    print(calc_timer_values(time.time() - start))
+    if (len(f_names)//os.cpu_count()) >= 1:
+        with concurrent.futures.ProcessPoolExecutor(max_workers=os.cpu_count()) as executor:
+            results = list(executor.map(history_strain_func, f_names,repeat(model),chunksize=len(f_names)//os.cpu_count()))  # is self the list we are iterating over
+        print(len(results))
+        print(calc_timer_values(time.time() - start))
+    else:
+        print('Not enough test files to divide by CPU cores.')
 
     print(f"Start concurrent optimized n")
     for i in range(1,10):
         n = 2**i
         print(f"n = {n}, chunksize = {len(f_names)//n}")
         start = time.time()
-        if (len(f_names)//n) < 1:
-            break
-        else:
+        if (len(f_names)//n) >= 1:
             with concurrent.futures.ProcessPoolExecutor() as executor:
                 results = list(executor.map(history_strain_func, f_names,repeat(model),chunksize=len(f_names)//n))  # is self the list we are iterating over
             print(len(results))
             print(calc_timer_values(time.time() - start))
+        else:
+            break
 
 
     print("chunksize = 1")
@@ -124,23 +127,26 @@ if __name__ == '__main__':
 
     print(f"Start concurrent")
     start = time.time()
-    with concurrent.futures.ProcessPoolExecutor(max_workers=os.cpu_count()) as executor:
-        results = list(executor.map(history_strain_func_hdf, f_names,repeat(model),chunksize=len(f_names)//os.cpu_count()))  # is self the list we are iterating over
-    print(len(results))
-    print(calc_timer_values(time.time() - start))
+    if (len(f_names)//os.cpu_count()) >= 1:
+        with concurrent.futures.ProcessPoolExecutor(max_workers=os.cpu_count()) as executor:
+            results = list(executor.map(history_strain_func, f_names,repeat(model),chunksize=len(f_names)//os.cpu_count()))  # is self the list we are iterating over
+        print(len(results))
+        print(calc_timer_values(time.time() - start))
+    else:
+        print('Not enough test files to divide by CPU cores.')
 
     print(f"Start concurrent optimized n")
     for i in range(1,10):
         n = 2**i
         print(f"n = {n}, chunksize = {len(f_names)//n}")
         start = time.time()
-        if (len(f_names)//n)<1:
-            break
-        else:
+        if (len(f_names)//n) >= 1:
             with concurrent.futures.ProcessPoolExecutor() as executor:
-                results = list(executor.map(history_strain_func_hdf, f_names,repeat(model),chunksize=len(f_names)//n))  # is self the list we are iterating over
+                results = list(executor.map(history_strain_func, f_names,repeat(model),chunksize=len(f_names)//n))  # is self the list we are iterating over
             print(len(results))
             print(calc_timer_values(time.time() - start))
+        else:
+            break
     
     print("chunksize = 1")
     start = time.time()

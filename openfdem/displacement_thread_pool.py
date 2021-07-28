@@ -69,7 +69,7 @@ def history_strain_func(f_name, model):
 
 if __name__ == '__main__':
 
-    model = fd.Model("../example_outputs/Irazu_UCS")
+    model = fd.Model("../example_outputs/Irazu_GBM")
     f_names = (model._basic_files)
 
     ## Get rock dimension.
