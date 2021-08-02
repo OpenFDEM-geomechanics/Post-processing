@@ -48,13 +48,17 @@ class Model:
                                 "boundary": "boundary condition ID",
                                 "platen_force": "force",
                                 "platen_displacement": "displacement",
+                                "gauge_displacement": "displacement",
                                 },
                    "IRAZU": {"mineral_type": "material property ID",
                              "boundary": "boundary condition ID",
                              "platen_force": "force",
                              "platen_displacement": "displacement",
+                             "gauge_displacement": "displacement",
                              },
                    }
+
+
     def _numericalSort(value):
         """
         Strip the numerical portion of the file.
@@ -435,6 +439,37 @@ class Model:
         #     stress = avg_platen_force[axis_of_loading] / self.sample_width * 1.0e3
         #     history_stress.append(stress)
 
+
+        processes=[]
+        num_processes = os.cpu_count()
+
+        for i in range(num_processes):
+            process = Process(target=stress_thresholding)
+            processes.append(process)
+
+        for process in processes:
+            process.start()
+
+        for process in processes:
+            process.join()
+
+        # for openfdem_model_ts in self:
+        #
+        #     platen = (openfdem_model_ts.threshold([self.platen_cells_elem_id, self.platen_cells_elem_id],
+        #                                           self.var_data["mineral_type"]))
+        #     top, bottom = (platen.get_data_range(self.var_data["boundary"]))
+        #
+        #     top_platen_force_list = self.platen_info(openfdem_model_ts, top, self.var_data["platen_force"])
+        #     bot_platen_force_list = self.platen_info(openfdem_model_ts, bottom, self.var_data["platen_force"])
+        #
+        #     for i in range(0, self.number_of_points_per_cell):
+        #         # Convert forces from microN to kN and get the average forces
+        #         avg_platen_force[i] = 0.5 * (abs(top_platen_force_list[i]) + abs(bot_platen_force_list[i])) / 1.0e9
+        #
+        #     # stress in MPa (force in kN & area in mm^2)
+        #     stress = avg_platen_force[axis_of_loading] / self.sample_width * 1.0e3
+        #     history_stress.append(stress)
+
         return history_stress
 
     def platen_displacement(self, material_id=None, boundary_condition_id=None, location=None):
@@ -485,6 +520,20 @@ class Model:
                 strain_from_platen = avg_platen_disp[axis_of_loading] / self.sample_height * 100.0
 
                 history_strain.append(strain_from_platen)
+
+
+        threads = []
+        num_threads = 100 #we can make num_threads increase up to 4 or 5 digits of threads
+
+        for i in range(num_threads):
+            thread = Thread(target=strain_thresholding)
+            threads.append(thread)
+
+        for thread in threads:
+            thread.start()
+
+        for thread in threads:
+            thread.join()
 
 
         threads = []
@@ -556,14 +605,15 @@ class Model:
             print("Simulation appears to be not for compressive strength")
 
         # Load each timestep
-        for openfdem_model_ts in self:
+        def stress_thresholding():
+            for openfdem_model_ts in self:
 
-            platen = (openfdem_model_ts.threshold([self.platen_cells_elem_id, self.platen_cells_elem_id],
-                                                  self.var_data["mineral_type"]))
-            top, bottom = (platen.get_data_range(self.var_data["boundary"]))
+                platen = (openfdem_model_ts.threshold([self.platen_cells_elem_id, self.platen_cells_elem_id],
+                                                      self.var_data["mineral_type"]))
+                top, bottom = (platen.get_data_range(self.var_data["boundary"]))
 
-            top_platen_force_list = self.platen_info(openfdem_model_ts, top, self.var_data["platen_force"])
-            bot_platen_force_list = self.platen_info(openfdem_model_ts, bottom, self.var_data["platen_force"])
+                top_platen_force_list = self.platen_info(openfdem_model_ts, top, self.var_data["platen_force"])
+                bot_platen_force_list = self.platen_info(openfdem_model_ts, bottom, self.var_data["platen_force"])
 
             avg_top_platen_disp = self.platen_info(openfdem_model_ts, top, self.var_data["platen_displacement"])
             avg_bottom_platen_disp = self.platen_info(openfdem_model_ts, bottom, self.var_data["platen_displacement"])
