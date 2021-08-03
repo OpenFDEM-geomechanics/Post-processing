@@ -14,7 +14,8 @@ import time
 import concurrent.futures
 from multiprocessing import Process
 from threading import Thread
-from aggregate_storage import aggregate_storage
+import complete_UCS_thread_pool_generators
+# from aggregate_storage import aggregate_storage
 
 class Model:
     """Model class collects datafiles into one interface.
@@ -155,7 +156,7 @@ class Model:
             self.n_points = self.first_file.number_of_points
             self.n_elements = self.first_file.n_cells
             self.number_of_points_per_cell = self.first_file.cell_n_points(0)
-            self.storage = aggregate_storage(folder,verbose=True)
+            # self.storage = aggregate_storage(folder,verbose=True)
 
         if self._fdem_engine == "Irazu":
             self.var_data = Model._var_dataset["IRAZU"]
@@ -360,6 +361,11 @@ class Model:
     # def seismic_clustering(self):
 
     # def set_strain_gauge(self,point,axis):
+
+    def try_to_run_main(self):
+        # import runpy
+
+        return complete_UCS_thread_pool_generators.main(self)
 
     def platen_force(self, material_id=None, boundary_condition_id=None, location=None):
         # TODO: load based on threshold points (boundary condition)

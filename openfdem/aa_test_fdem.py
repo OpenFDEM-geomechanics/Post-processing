@@ -24,7 +24,10 @@ matplotlib.rcParams['font.size'] = 8
 
 ## Model attributes
 print("Load Model")
-model = fd.Model("../../example_outputs/Irazu_UCS")
+# model = fd.Model("../../example_outputs/Irazu_UCS")
+# model = fd.Model("/hdd/home/aly/Desktop/Dropbox/Python_Codes/OpenFDEM-Post-Processing/example_outputs/Irazu_UCS")
+# model = fd.Model('/external/Speed_Cal_Using_Flowstone/UCS/UCS_c_17_5_ts_2_55_GII_90000_v_0_8')
+model = fd.Model('/external/Size_7')
 
 # Get Model information
 print("Number of Timesteps:\t", model.n_timesteps)
@@ -42,7 +45,7 @@ print("If you want to get the extents of a material based on the material id (1)
 
 print("To load a certain file you can do it either by entering the output timestep as an integer as >>> model[X]", model[1])
 print("OR")
-print("By the actual integration time as >>> model['20000']", model['20000'])
+# print("By the actual integration time as >>> model['20000']", model['20000'])
 
 print("Get ROCK model dimensions >>> model.rock_sample_dimensions()", model.rock_sample_dimensions())
 print("Get the ROCK width from the dimensions", model.sample_width)
@@ -64,5 +67,11 @@ print("Get Platen forces >>> force = model.platen_force()")
 # print("You can also get E over a range using >>> model.E_mod[ax_force, disp, 1, 6]")
 # print(model.E_mod(ax_force, disp, 0, 1))
 print('-----')
-model.try_to_run_main()
+df_1 = model.try_to_run_main()
 
+import pandas as pd
+print(df_1)
+print(type(df_1))
+print(df_1['Platen Strain'])
+df_1.plot('Platen Strain', 'Platen Stress')
+plt.show()

@@ -47,11 +47,11 @@ def history_strain_func(f_name, model, cv, ch):
         avg_platen_disp[i] = abs(avg_top_platen_disp[i]) + abs(avg_bottom_platen_disp[i])
 
     # stress in MPa (force in kN & area in mm^2)
-    stress = avg_platen_force[axis_of_loading] / model.sample_width * 1.0e3
-    history_stress.append(stress)
+    stress_from_platen = avg_platen_force[axis_of_loading] / model.sample_width * 1.0e3
+    history_stress.append(stress_from_platen)
 
     strain_from_platen = avg_platen_disp[axis_of_loading] / model.sample_height * 100.0
-    history_strain.append(stress)
+    history_strain.append(strain_from_platen)
 
     displacement_y, displacement_x = 0.0, 0.0
 
@@ -86,7 +86,7 @@ def history_strain_func(f_name, model, cv, ch):
     yield history_stress, history_strain, gauge_disp_x, gauge_disp_y
 
 
-def set_strain_gauge(gauge_length=None, gauge_width=None):
+def set_strain_gauge(model, gauge_length=None, gauge_width=None):
     '''
     Calculate local strain based on the dimensions of a virtual strain gauge placed at the center of teh model with x/y dimnesions. By default set to 0.25 of the length/width.
 
@@ -147,33 +147,39 @@ def set_strain_gauge(gauge_length=None, gauge_width=None):
     return ch, cv, gauge_width, gauge_length
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
     # model = fd.Model("../example_outputs/Irazu_UCS")
-    model = fd.Model("/external/Size_7")
+def main(model):
+    # model = fd.Model("/external/Speed_Cal_Using_Flowstone/UCS/UCS_c_17_5_ts_2_55_GII_90000_v_0_8")
     f_names = (model._basic_files)
 
     ## Get rock dimension.
     model.rock_sample_dimensions()
+    print(model.rock_sample_dimensions())
     ## Check UCS Simulation
     if model.simulation_type() != "UCS Simulation":
         print("Simulation appears to be not for compressive strength")
     print("---- PV tests ----")
     print("Start for loop")
+    global start
     start = time.time()
     global gauge_width, gauge_length
-    cv, ch, gauge_width, gauge_length = set_strain_gauge()
+    cv, ch, gauge_width, gauge_length = set_strain_gauge(model, )
+    # sub_main(f_names, model, cv,ch)
 
-for fname in f_names:
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        results = list(executor.map(history_strain_func, f_names, repeat(model), cv, ch))  # is self the list we are iterating over
+# def sub_main(f_names, model, cv,ch):
+    for fname in f_names:
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            results = list(executor.map(history_strain_func, f_names, repeat(model), cv, ch))  # is self the list we are iterating over
 
 
-for fname_iter in f_names:
-    hist=history_strain_func(fname_iter, model, cv, ch)
-    hist.__next__()
+    for fname_iter in f_names:
+        hist=history_strain_func(fname_iter, model, cv, ch)
+        hist.__next__()
 
-print(calc_timer_values(time.time() - start))
+    print(calc_timer_values(time.time() - start))
 
-UCS_df = pd.DataFrame(list(zip(history_stress, history_strain, gauge_disp_x, gauge_disp_y)),
-                      columns=['Platen Stress', 'Platen Strain', 'Gauge Displacement X', 'Gauge Displacement Y'])
-print(UCS_df)
+    UCS_df = pd.DataFrame(list(zip(history_stress, history_strain, gauge_disp_x, gauge_disp_y)),
+                          columns=['Platen Stress', 'Platen Strain', 'Gauge Displacement X', 'Gauge Displacement Y'])
+    # print(UCS_df)
+    return UCS_df

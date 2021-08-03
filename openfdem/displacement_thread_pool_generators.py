@@ -68,6 +68,97 @@ def history_strain_func(f_name, model):
     yield strain_from_platen
 
 
+    def set_strain_gauge(self, gauge_length=None, gauge_width=None):
+        '''
+        Calculate local strain based on the dimensions of a virtual strain gauge placed at the center of teh model with x/y dimnesions. By default set to 0.25 of the length/width.
+
+        :param gauge_length: length of the virtual strain gauge
+        :type gauge_length: float
+        :param gauge_width: width of the virtual strain gauge
+        :type gauge_width: float
+        :return:
+        '''
+        pv, ph = [], []
+
+        if gauge_width==None:
+            gauge_width = 0.25 * self.sample_width
+        if gauge_length == None:
+            gauge_length = 0.25 * self.sample_height
+
+        specimen_center = self.rock_model.center
+
+        pv.append([specimen_center[0] + gauge_width / 2.0,
+                   specimen_center[1] - gauge_length / 2.0,
+                   0.0])
+        pv.append([specimen_center[0] - gauge_width / 2.0,
+                   specimen_center[1] - gauge_length / 2.0,
+                   0.0])
+        pv.append([specimen_center[0] + gauge_width / 2.0,
+                   specimen_center[1] + gauge_length / 2.0,
+                   0.0])
+        pv.append([specimen_center[0] - gauge_width / 2.0,
+                   specimen_center[1] + gauge_length / 2.0,
+                   0.0])
+        ph.append([specimen_center[0] + gauge_length / 2.0,
+                   specimen_center[1] + gauge_width / 2.0,
+                   0.0])
+        ph.append([specimen_center[0] + gauge_length / 2.0,
+                   specimen_center[1] - gauge_width / 2.0,
+                   0.0])
+        ph.append([specimen_center[0] - gauge_length / 2.0,
+                   specimen_center[1] + gauge_width / 2.0,
+                   0.0])
+        ph.append([specimen_center[0] - gauge_length / 2.0,
+                   specimen_center[1] - gauge_width / 2.0,
+                   0.0])
+        print('\tDimensions of SG are %s x %s' % (gauge_length, gauge_width))
+
+        cv, ch = [], []
+        for ps in range(0, len(pv)):
+            cv.append(self.first_file.find_closest_cell(pv[ps]))
+            ch.append(self.first_file.find_closest_cell(ph[ps]))
+
+        if -1 in pv or -1 in ph:
+            print("Check Strain Gauge Dimensions")
+
+        print('\tVertical Gauges\n\t\textends between %s\n\t\tcover cells ID %s' % (pv, cv))
+        print('\tHorizontal Gauges\n\t\textends between %s\n\t\tcover cells ID %s' % (ph, ch))
+
+        gauge_disp_x, gauge_disp_y = [], []
+
+        # Load each timestep
+        for openfdem_model_ts in self:
+            displacement_y, displacement_x = 0.0, 0.0
+
+            v_strain_gauge = openfdem_model_ts.extract_cells(cv).get_array(self.var_data['gauge_displacement'])
+            h_strain_gauge = openfdem_model_ts.extract_cells(ch).get_array(self.var_data['gauge_displacement'])
+
+            for i in range(0, len(h_strain_gauge)):
+                # Vertical contraction is assumed positive
+                # Horizontal expansion is assumed positive
+                if i < 6:
+                    # Bottom cells of vertical strain gauge
+                    # Right cells of horizontal strain gauge
+                    displacement_y += v_strain_gauge[i][1]
+                    displacement_x -= h_strain_gauge[i][0]
+                else:
+                    # Top cells of vertical strain gauge
+                    # Left cells of horizontal strain gauge
+                    displacement_y -= v_strain_gauge[i][1]
+                    displacement_x += h_strain_gauge[i][0]
+
+            displacement_y = displacement_y / 6.0
+            displacement_x = displacement_x / 6.0
+
+            # Calculate strains in percentage (%)
+            strain_x = displacement_x / gauge_length * 100.0
+            strain_y = displacement_y / gauge_length * 100.0
+            # print('strain_x & _y at time step', strain_x, strain_y)
+            gauge_disp_x.append(strain_x)
+            gauge_disp_y.append(strain_y)
+
+        return gauge_disp_x, gauge_disp_y
+
 if __name__ == '__main__':
     model = fd.Model("../example_outputs/Irazu_UCS")
     f_names = (model._basic_files)
