@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0,'./')
+
 import openfdem as fd
 import time
 import os
@@ -20,6 +23,7 @@ matplotlib.rcParams['font.family'] = ['arial']
 matplotlib.rcParams['font.size'] = 8
 
 ## Model attributes
+print("Load Model")
 model = fd.Model("../../example_outputs/Irazu_UCS")
 
 # Get Model information
@@ -44,19 +48,21 @@ print("Get ROCK model dimensions >>> model.rock_sample_dimensions()", model.rock
 print("Get the ROCK width from the dimensions", model.sample_width)
 
 print("Get Platen forces >>> force = model.platen_force()")
-ax_force = model.platen_force()
-print(model.platen_force())
-
-print("Get Platen displacement >>> model.platen_displacement()")
-disp = model.platen_displacement()
-print(model.platen_displacement())
-
-print("Process UCS >>> model.process_UCS()")
-print(model.process_UCS())
-
-print("Get Tan E Modulus >>> model.E[0]")
-print(model.E[0])
-
-print("You can also get E over a range using >>> model.E_mod[ax_force, disp, 1, 6]")
-print(model.E_mod(ax_force, disp, 0, 1))
+# ax_force = model.platen_force()
+# print(ax_force)
+# print(model.my_fun())
+# print("Get Platen displacement >>> model.platen_displacement()")
+# disp = model.platen_displacement()
+# print(model.platen_displacement())
+#
+# print("Process UCS >>> model.process_UCS()")
+# print(model.process_UCS())
+#
+# print("Get Tan E Modulus >>> model.E[0]")
+# print(model.E[0])
+#
+# print("You can also get E over a range using >>> model.E_mod[ax_force, disp, 1, 6]")
+# print(model.E_mod(ax_force, disp, 0, 1))
+print('-----')
+model.try_to_run_main()
 

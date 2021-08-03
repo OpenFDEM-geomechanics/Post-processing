@@ -1,0 +1,23 @@
+<?xml version='1.0'?>
+<VTKFile type='UnstructuredGrid' version='0.1' byte_order='LittleEndian' compressor='vtkZLibDataCompressor'>
+	<UnstructuredGrid>
+		<Piece NumberOfPoints='8' NumberOfCells='2'>
+				<PointData>
+	</PointData>
+				<CellData Scalars='softening mode '>
+		<DataArray Name='softening mode'  type='Int32' NumberOfComponents='1' format='appended' offset='0'></DataArray>
+	</CellData>
+				<Points>
+		<DataArray  type='Float64' NumberOfComponents='3' format='appended' offset='44'></DataArray>
+	</Points>
+				<Cells>
+		<DataArray Name='connectivity'  type='Int32' NumberOfComponents='1' format='appended' offset='172'></DataArray>
+		<DataArray Name='offsets'  type='Int32' NumberOfComponents='1' format='appended' offset='236'></DataArray>
+		<DataArray Name='types'  type='UInt8' NumberOfComponents='1' format='appended' offset='280'></DataArray>
+	</Cells>
+		</Piece>
+	</UnstructuredGrid>
+<AppendedData encoding='base64'>
+_AQAAAAgAAAAIAAAADgAAAA==eNpjZGBgYARiAAAUAAM=AQAAAMAAAADAAAAATAAAAA==eNrbzvrNq6nQy2GX6VT1UFkRBwYoeL/BceWFUi+H54uOR0haC8HFt5Oo3mt1bClIPDPy1lEJJHHt7jg3kDnF++J8kM0hVT0A3q4zSQ==AQAAACAAAAAgAAAAHQAAAA==eNpjYGBgYARiJiBmBmIWIGYFYjYgZgdiAAFwAB0=AQAAAAgAAAAIAAAADgAAAA==eNpjYWBg4ABiAABIAA0=AQAAAAIAAAACAAAACgAAAA==eNrj4AAAABoAEQ==
+</AppendedData>
+</VTKFile>
