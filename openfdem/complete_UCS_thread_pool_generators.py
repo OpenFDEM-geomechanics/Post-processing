@@ -25,7 +25,26 @@ history_strain, history_stress = [], []
 gauge_disp_x, gauge_disp_y = [], []
 
 def history_strain_func(f_name, model, cv, ch):
+    '''
+
+    :param f_name: name of vtu file being processed
+    :type f_name: str
+    :param model: FDEM Model Class
+    :type model:  openfdem.openfdem.Model
+    :param cv:
+    :type cv:
+    :param ch:
+    :type ch:
+    :return:
+    :rtype:
+    '''
+
     openfdem_model_ts = pv.read(f_name)
+
+    ###----------------------------------
+    ###      STRESS-STRAIN PLATENS
+    ###----------------------------------
+
     platen = (openfdem_model_ts.threshold([model.platen_cells_elem_id, model.platen_cells_elem_id],
                                           model.var_data["mineral_type"]))
     top, bottom = (platen.get_data_range(model.var_data["boundary"]))
@@ -55,22 +74,28 @@ def history_strain_func(f_name, model, cv, ch):
 
     displacement_y, displacement_x = 0.0, 0.0
 
+    ###----------------------------------
+    ###      STRAIN GAUGE ANAYLSS
+    ###----------------------------------
+
     v_strain_gauge = openfdem_model_ts.extract_cells(cv).get_array(model.var_data['gauge_displacement'])
     h_strain_gauge = openfdem_model_ts.extract_cells(ch).get_array(model.var_data['gauge_displacement'])
 
+    # print(v_strain_gauge)
+    # print(h_strain_gauge)
     for i in range(0, len(h_strain_gauge)):
         # Vertical contraction is assumed positive
         # Horizontal expansion is assumed positive
         if i < 6:
             # Bottom cells of vertical strain gauge
             # Right cells of horizontal strain gauge
-            displacement_y += v_strain_gauge[i][1]
-            displacement_x -= h_strain_gauge[i][0]
+            displacement_y += h_strain_gauge[i][1]
+            displacement_x -= v_strain_gauge[i][0]
         else:
             # Top cells of vertical strain gauge
             # Left cells of horizontal strain gauge
-            displacement_y -= v_strain_gauge[i][1]
-            displacement_x += h_strain_gauge[i][0]
+            displacement_y -= h_strain_gauge[i][1]
+            displacement_x += v_strain_gauge[i][0]
 
     displacement_y = displacement_y / 6.0
     displacement_x = displacement_x / 6.0
@@ -94,7 +119,8 @@ def set_strain_gauge(model, gauge_length=None, gauge_width=None):
     :type gauge_length: float
     :param gauge_width: width of the virtual strain gauge
     :type gauge_width: float
-    :return:
+    :return: Cells that cover the horizontal and vertical gauges as well as the gauge width and length
+    :rtype: [list, list, float, float]
     '''
 
     pv, ph = [], []
@@ -104,7 +130,8 @@ def set_strain_gauge(model, gauge_length=None, gauge_width=None):
     if gauge_length == None:
         gauge_length = 0.25 * model.sample_height
 
-
+    global st_status
+    st_status = True
     specimen_center = model.rock_model.center
 
     pv.append([specimen_center[0] + gauge_width / 2.0,
@@ -139,47 +166,61 @@ def set_strain_gauge(model, gauge_length=None, gauge_width=None):
         ch.append(model.first_file.find_closest_cell(ph[ps]))
 
     if -1 in pv or -1 in ph:
-        print("Check Strain Gauge Dimensions")
-
-    print('\tVertical Gauges\n\t\textends between %s\n\t\tcover cells ID %s' % (pv, cv))
-    print('\tHorizontal Gauges\n\t\textends between %s\n\t\tcover cells ID %s' % (ph, ch))
+        print("Check Strain Gauge Dimensions\nWill not process the strain gauges")
+        st_status = False
+    else:
+        print('\tVertical Gauges\n\t\textends between %s\n\t\tcover cells ID %s' % (pv, cv))
+        print('\tHorizontal Gauges\n\t\textends between %s\n\t\tcover cells ID %s' % (ph, ch))
 
     return ch, cv, gauge_width, gauge_length
 
 
-# if __name__ == '__main__':
-    # model = fd.Model("../example_outputs/Irazu_UCS")
 def main(model):
-    # model = fd.Model("/external/Speed_Cal_Using_Flowstone/UCS/UCS_c_17_5_ts_2_55_GII_90000_v_0_8")
+    '''
+
+    :param model: FDEM Model Class
+    :type model:  openfdem.openfdem.Model
+    :return: full stress-strain information
+    :rtype: dataframe
+    '''
+
+    # File names of the basic files
     f_names = (model._basic_files)
 
     ## Get rock dimension.
     model.rock_sample_dimensions()
     print(model.rock_sample_dimensions())
+
     ## Check UCS Simulation
     if model.simulation_type() != "UCS Simulation":
         print("Simulation appears to be not for compressive strength")
-    print("---- PV tests ----")
-    print("Start for loop")
-    global start
+
+    # Global declarations
     start = time.time()
     global gauge_width, gauge_length
-    cv, ch, gauge_width, gauge_length = set_strain_gauge(model, )
-    # sub_main(f_names, model, cv,ch)
+    # st_status = True
 
-# def sub_main(f_names, model, cv,ch):
+
+    # Initialise the Strain Gauges
+    cv, ch, gauge_width, gauge_length = set_strain_gauge(model, )
+
+    # Load basic files in the concurrent Thread Pool
     for fname in f_names:
         with concurrent.futures.ThreadPoolExecutor() as executor:
             results = list(executor.map(history_strain_func, f_names, repeat(model), cv, ch))  # is self the list we are iterating over
 
-
+    # Iterate through the files in the defined function
     for fname_iter in f_names:
-        hist=history_strain_func(fname_iter, model, cv, ch)
+        hist = history_strain_func(fname_iter, model, cv, ch)
         hist.__next__()
 
     print(calc_timer_values(time.time() - start))
 
-    UCS_df = pd.DataFrame(list(zip(history_stress, history_strain, gauge_disp_x, gauge_disp_y)),
-                          columns=['Platen Stress', 'Platen Strain', 'Gauge Displacement X', 'Gauge Displacement Y'])
-    # print(UCS_df)
+    # Merge all into a pandas DataFrame
+    if st_status == True:
+        UCS_df = pd.DataFrame(list(zip(history_stress, history_strain, gauge_disp_x, gauge_disp_y)),
+                              columns=['Platen Stress', 'Platen Strain', 'Gauge Displacement X', 'Gauge Displacement Y'])
+    if st_status == False:
+        UCS_df = pd.DataFrame(list(zip(history_stress, history_strain)),
+                              columns=['Platen Stress', 'Platen Strain'])
     return UCS_df
