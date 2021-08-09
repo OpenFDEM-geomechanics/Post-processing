@@ -362,8 +362,12 @@ class Model:
 
     # def set_strain_gauge(self,point,axis):
 
-    def try_to_run_main(self):
-        # import runpy
+    def complete_stress_strain(self):
+        '''
+
+        :return: full stress-strain information
+        :rtype: dataframe
+        '''
 
         return complete_UCS_thread_pool_generators.main(self)
 
