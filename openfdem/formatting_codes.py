@@ -51,6 +51,14 @@ def bold_text(val):  # Bold text
     return tex
 
 
+def docstring_creator(df):
+    docstring = 'Index:\n'
+    docstring = docstring + f'    {df.index}\n'
+    docstring = docstring + 'Columns:\n'
+    for col in df.columns:
+        docstring = docstring + f'    Name: {df[col].name}, dtype={df[col].dtype}, nullable: {df[col].hasnans}\n'
+        print(docstring)
+
 if __name__ == "__main__":
     try:
         red_text(text)
