@@ -1,0 +1,47 @@
+OpenFDEM Objectives and Future plans
+
+DONE for UCS
+
+Platen tracking (Should track any body of intact elements)
+- Force (x y z directions)
+- Displacement (x y z directions)
+- Velocity xyz
+- Contact area (should be separate function?)
+
+Strain gauge analysis
+- input: Location, direction, length
+- output: Strain gauge simulator?
+
+Model processing utilities
+- Stress/strain diagram
+- Volumetric strain
+- Elastic mod.
+- Plotters
+
+
+TODO
+
+Need full OpenFDEM outputs for UCS/BD
+
+BD processing
+
+Fracture/fragment characterization
+- Clustering
+- Fracture timeline
+- Fragment element groups
+
+Seismic processing
+
+Shear test
+--- Contact locations
+--- Monitoring points for seismicity asperity breakage
+
+Documentation
+- website
+- combine with preprocessing and openfdem processing?
+- creating a manual PDF from Sphinx?
+
+Testing scripts?
+
+Pre-processing UI
+- Mesh from Geo file?
