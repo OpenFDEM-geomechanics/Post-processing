@@ -22,6 +22,61 @@ plt.rcParams["figure.figsize"] = [5, 5]
 matplotlib.rcParams['font.family'] = ['arial']
 matplotlib.rcParams['font.size'] = 8
 
+
+
+'''
+DEMO!!!
+'''
+
+print("Load Model")
+# model = fd.Model("../example_outputs/Irazu_UCS")
+model = fd.Model("/hdd/home/aly/Desktop/Dropbox/Python_Codes/OpenFDEM-Post-Processing/example_outputs/Irazu_UCS")
+# model = fd.Model('/external/Speed_Cal_Using_Flowstone/UCS/UCS_c_17_5_ts_2_55_GII_90000_v_0_8')
+# model = fd.Model('/external/Size_7')
+df_1 = model.complete_stress_strain(True)
+# print(df_1)
+
+'''
+Calculate Modulus
+'''
+print(model.Etan50_mod(df_1))
+print(model.Esec_mod(df_1, 50))
+print(model.Esec_mod(df_1, 0.5))
+print(model.Eavg_mod(df_1, 50, 60))
+print(model.Eavg_mod(df_1, 0.5, 0.6))
+
+print(model.Etan50_mod(df_1, 'Gauge Displacement Y'))
+print(model.Esec_mod(df_1, 50, 'Gauge Displacement Y'))
+print(model.Esec_mod(df_1, 0.5, 'Gauge Displacement Y'))
+print(model.Eavg_mod(df_1, 50, 60, 'Gauge Displacement Y'))
+print(model.Eavg_mod(df_1, 0.5, 0.6, 'Gauge Displacement Y'))
+
+'''
+PLOTTING FUNCTIONS
+'''
+
+ax = df_1.plot('Platen Strain', 'Platen Stress', label="Platen")
+df_1.plot('Gauge Displacement Y', 'Platen Stress', ax=ax, label="Strain Gauge Y")
+# df_1.plot('Gauge Displacement X', 'Platen Stress', ax=ax, label="Strain Gauge X")
+plt.xlabel("Strain")
+plt.ylabel("Axial Stress (MPa)")
+plt.show()
+
+'''
+END DEMO!!!
+'''
+exit()
+
+
+
+
+
+
+
+
+
+
+
 ## Model attributes
 print("Load Model")
 model = fd.Model("../example_outputs/Irazu_UCS")
