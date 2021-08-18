@@ -196,6 +196,7 @@ def main(model, st_status, gauge_width, gauge_length):
     # Check UCS Simulation
     if model.simulation_type() != "UCS Simulation":
         print("Simulation appears to be not for compressive strength")
+        exit("Simulation appears to be not for compressive strength")
 
     # Global declarations
     start = time.time()
