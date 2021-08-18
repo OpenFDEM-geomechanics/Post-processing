@@ -621,97 +621,221 @@ class Model:
 
     # def generate_seismic_clustering_csv(self,output_file):
 
-    def process_UCS(self):
-        '''
-        Process model as UCS model
+    # def process_UCS(self):
+    #     '''
+    #     Process model as UCS model
+    #
+    #     :return: UCS, stress_hist, strain_hist, Elastic_moduli
+    #     :rtype: tuple[float, list[float, list[float, list[float]]
+    #
+    #     Example:
+    #         >>> data = pv.read("../example_outputs/Irazu_UCS")
+    #         >>> UCS, stress_hist, strain_hist, Elastic_moduli = data.process_UCS()
+    #         (38.03245444023052, [0.0, 4.825237206318255, 9.628822864052236, 14.414373164820148, 19.191640765444546, 23.95880093999921, 28.711674236346393, 33.44027814633586, 38.03245444023052, 13.266469715550484, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30], [0.0, 0.009259259235881877, 0.018518518471763754, 0.02777777770764563, 0.03703703694352751, 0.046296296179409384, 0.05555555541529126, 0.06481481465117314, 0.07407407388705502, 0.08333333312293689, 0.09259259235881877, 0.10185185159470064, 0.11111111083058252, 0.1203703700664644, 0.12962962930234628, 0.13888888853822817, 0.14814814777411003, 0.15740740700999192, 0.16666666624587378, 0.17592592548175565, 0.18518518471763754, 0.1944444439535194, 0.2037037031894013, 0.21296296242528318, 0.22222222166116504, 0.23148148089704693, 0.2407407401329288, 0.24999999936881068, 0.25925925860469257, 0.2685185178405744, 0.27777777707645634], [5.15399101160927, 5.181743019752671])
+    #     '''
+    #
+    #     self.history_stress, self.history_strain = [], []  # List to hold the history
+    #     avg_platen_force = [0.0, 0.0, 0.0]  # Dummy cell
+    #     avg_platen_disp = [0.0, 0.0, 0.0]  # Dummy cell
+    #     axis_of_loading = 1  # Axis of loading in Y direction.
+    #
+    #     # Get rock dimension.
+    #     self.rock_sample_dimensions()
+    #     # Check UCS Simulation
+    #     if self.simulation_type() != "UCS Simulation":
+    #         print("Simulation appears to be not for compressive strength")
+    #
+    #     # Load each timestep
+    #     def stress_thresholding():
+    #         for openfdem_model_ts in self:
+    #
+    #             platen = (openfdem_model_ts.threshold([self.platen_cells_elem_id, self.platen_cells_elem_id],
+    #                                                   self.var_data["mineral_type"]))
+    #             top, bottom = (platen.get_data_range(self.var_data["boundary"]))
+    #
+    #             top_platen_force_list = self.platen_info(openfdem_model_ts, top, self.var_data["platen_force"])
+    #             bot_platen_force_list = self.platen_info(openfdem_model_ts, bottom, self.var_data["platen_force"])
+    #
+    #         avg_top_platen_disp = self.platen_info(openfdem_model_ts, top, self.var_data["platen_displacement"])
+    #         avg_bottom_platen_disp = self.platen_info(openfdem_model_ts, bottom, self.var_data["platen_displacement"])
+    #
+    #         for i in range(0, self.number_of_points_per_cell):
+    #             # Convert forces from microN to kN and get the average forces
+    #             avg_platen_force[i] = 0.5 * (abs(top_platen_force_list[i]) + abs(bot_platen_force_list[i])) / 1.0e9
+    #             avg_platen_disp[i] = abs(avg_top_platen_disp[i]) + abs(avg_bottom_platen_disp[i])
+    #
+    #         # stress in MPa (force in kN & area in mm^2)
+    #         stress = avg_platen_force[axis_of_loading] / self.sample_width * 1.0e3
+    #         self.history_stress.append(stress)
+    #
+    #         strain_from_platen = avg_platen_disp[axis_of_loading] / self.sample_height * 100.0
+    #         self.history_strain.append(strain_from_platen)
+    #
+    #     self.UCS = max(self.history_stress)
+    #
+    #     index = self.history_stress.index(max(self.history_stress))
+    #     index = int(index / 2)
+    #
+    #     # E Tangent
+    #     E_tan = self.E_mod(self.history_stress, self.history_strain, index-1, index+1)
+    #     # E secant
+    #     E_sec = self.E_mod(self.history_stress, self.history_strain, 0, index)
+    #
+    #     self.E = [E_tan, E_sec]
+    #
+    #     return self.UCS, self.history_stress, self.history_strain, self.E
 
-        :return: UCS, stress_hist, strain_hist, Elastic_moduli
-        :rtype: tuple[float, list[float, list[float, list[float]]
+
+    # def E_mod(self, stress, strain, range_min, range_max):
+    #     '''
+    #     Calculate Elastic modulus between two extents (data points)
+    #
+    #     :param stress: Stress in MPa
+    #     :type stress: list[float]
+    #     :param strain: Strain in %
+    #     :type strain: list[float]
+    #     :param range_min: Index of the lower end of range
+    #     :type range_min: int
+    #     :param range_max: Index of the upper end of range
+    #     :type range_max: int
+    #     :return: Elastic Modulus in GPa = delta stress / delta strain
+    #     :rtype: float
+    #     '''
+    #
+    #     # Stress in MPa
+    #     d_stress = ( stress[range_max] - stress[range_min] )
+    #     # Convert from strain % to strain
+    #     d_strain = ( strain[range_max] - strain[range_min] ) * 100
+    #
+    #     return d_stress / d_strain
+
+    def Etan50_mod(self, ucs_data, loc_strain='Platen Strain'):
+        '''
+        Tangent Elastic modulus at 50%. Calculates +/- 1 datapoint from the 50% Stress
+
+        :param ucs_data: DataFrame containing the stress-strain data
+        :type ucs_data: pandas.DataFrame
+        :param loc_strain: Column to obtain strain from. Defaults to Platen Strain
+        :type loc_strain: str
+        :return: Tangent Elastic modulus at 50%
+        :rtype: float
 
         Example:
             >>> data = pv.read("../example_outputs/Irazu_UCS")
-            >>> UCS, stress_hist, strain_hist, Elastic_moduli = data.process_UCS()
-            (38.03245444023052, [0.0, 4.825237206318255, 9.628822864052236, 14.414373164820148, 19.191640765444546, 23.95880093999921, 28.711674236346393, 33.44027814633586, 38.03245444023052, 13.266469715550484, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30], [0.0, 0.009259259235881877, 0.018518518471763754, 0.02777777770764563, 0.03703703694352751, 0.046296296179409384, 0.05555555541529126, 0.06481481465117314, 0.07407407388705502, 0.08333333312293689, 0.09259259235881877, 0.10185185159470064, 0.11111111083058252, 0.1203703700664644, 0.12962962930234628, 0.13888888853822817, 0.14814814777411003, 0.15740740700999192, 0.16666666624587378, 0.17592592548175565, 0.18518518471763754, 0.1944444439535194, 0.2037037031894013, 0.21296296242528318, 0.22222222166116504, 0.23148148089704693, 0.2407407401329288, 0.24999999936881068, 0.25925925860469257, 0.2685185178405744, 0.27777777707645634], [5.15399101160927, 5.181743019752671])
+            >>> df_1 = data.complete_stress_strain(True)
+            >>> data.Etan_mod(df_1)
+            51539.9101160927
+            >>> data.Etan_mod(df_1, 'Gauge Displacement Y')
+            51043.327845235595
         '''
 
-        self.history_stress, self.history_strain = [], []  # List to hold the history
-        avg_platen_force = [0.0, 0.0, 0.0]  # Dummy cell
-        avg_platen_disp = [0.0, 0.0, 0.0]  # Dummy cell
-        axis_of_loading = 1  # Axis of loading in Y direction.
+        # Find the nearest match to the 50% max stress value.
+        df_sort = ucs_data.iloc[(ucs_data['Platen Stress'] - (max(ucs_data['Platen Stress']) / 2)).abs().argsort()[:1]]
+        # Return the index of the nearest match
+        mid_stress_id = df_sort.index[0]
 
-        # Get rock dimension.
-        self.rock_sample_dimensions()
-        # Check UCS Simulation
-        if self.simulation_type() != "UCS Simulation":
-            print("Simulation appears to be not for compressive strength")
+        # Calculate delta stress/strain between at +/- 1 from the index of the 50% max stress value
+        delta_stress = (ucs_data['Platen Stress'][mid_stress_id + 1] - ucs_data['Platen Stress'][mid_stress_id - 1])
+        delta_strain = (ucs_data[loc_strain][mid_stress_id + 1] - ucs_data[loc_strain][mid_stress_id - 1])
 
-        # Load each timestep
-        def stress_thresholding():
-            for openfdem_model_ts in self:
+        Etan50 = (delta_stress / delta_strain) * 100
 
-                platen = (openfdem_model_ts.threshold([self.platen_cells_elem_id, self.platen_cells_elem_id],
-                                                      self.var_data["mineral_type"]))
-                top, bottom = (platen.get_data_range(self.var_data["boundary"]))
+        return Etan50
 
-                top_platen_force_list = self.platen_info(openfdem_model_ts, top, self.var_data["platen_force"])
-                bot_platen_force_list = self.platen_info(openfdem_model_ts, bottom, self.var_data["platen_force"])
-
-            avg_top_platen_disp = self.platen_info(openfdem_model_ts, top, self.var_data["platen_displacement"])
-            avg_bottom_platen_disp = self.platen_info(openfdem_model_ts, bottom, self.var_data["platen_displacement"])
-
-            for i in range(0, self.number_of_points_per_cell):
-                # Convert forces from microN to kN and get the average forces
-                avg_platen_force[i] = 0.5 * (abs(top_platen_force_list[i]) + abs(bot_platen_force_list[i])) / 1.0e9
-                avg_platen_disp[i] = abs(avg_top_platen_disp[i]) + abs(avg_bottom_platen_disp[i])
-
-            # stress in MPa (force in kN & area in mm^2)
-            stress = avg_platen_force[axis_of_loading] / self.sample_width * 1.0e3
-            self.history_stress.append(stress)
-
-            strain_from_platen = avg_platen_disp[axis_of_loading] / self.sample_height * 100.0
-            self.history_strain.append(strain_from_platen)
-
-        self.UCS = max(self.history_stress)
-
-        index = self.history_stress.index(max(self.history_stress))
-        index = int(index / 2)
-
-        # E Tangent
-        E_tan = self.E_mod(self.history_stress, self.history_strain, index-1, index+1)
-        # E secant
-        E_sec = self.E_mod(self.history_stress, self.history_strain, 0, index)
-
-        self.E = [E_tan, E_sec]
-
-        return self.UCS, self.history_stress, self.history_strain, self.E
-
-
-    def E_mod(self, stress, strain, range_min, range_max):
+    def Esec_mod(self, ucs_data, upperrange, loc_strain='Platen Strain'):
         '''
-        Calculate Elastic modulus between two extents (data points)
+        Secant Modulus between 0 and upperrange. The upperrange can be a % or a fraction.
 
-        :param stress: Stress in MPa
-        :type stress: list[float]
-        :param strain: Strain in %
-        :type strain: list[float]
-        :param range_min: Index of the lower end of range
-        :type range_min: int
-        :param range_max: Index of the upper end of range
-        :type range_max: int
-        :return: Elastic Modulus in GPa = delta stress / delta strain
+        :param ucs_data: DataFrame containing the stress-strain data
+        :type ucs_data: pandas.DataFrame
+        :param upperrange: Range over which to calculate the Secant Modulus
+        :type upperrange: float
+        :param loc_strain: Column to obtain strain from. Defaults to Platen Strain
+        :type loc_strain: str
+        :return: Secant Elastic modulus between 0 and upperrange
         :rtype: float
+
+        Example:
+            >>> data = pv.read("../example_outputs/Irazu_UCS")
+            >>> df_1 = data.complete_stress_strain(True)
+            >>> data.Esec_mod(df_1, 0.5)
+            51751.010161057035
+            >>> data.Esec_mod(df_1, 0.5, 'Gauge Displacement Y')
+            51279.95421163901
         '''
 
-        # Stress in MPa
-        d_stress = ( stress[range_max] - stress[range_min] )
-        # Convert from strain % to strain
-        d_strain = ( strain[range_max] - strain[range_min] ) * 100
+        # Convert percentage to decimal
+        if upperrange > 1:
+            upperrange = upperrange / 100
 
-        return d_stress / d_strain
+        # Find the nearest match to the (upperrange * max stress) value.
+        df_sort = ucs_data.iloc[(ucs_data['Platen Stress'] - (max(ucs_data['Platen Stress']) * upperrange)).abs().argsort()[:1]]
+        # Return the index of the nearest match
+        sec_stress_id = df_sort.index[0]
+
+        # Calculate delta stress/strain between 0 and the defined value
+        delta_stress = (ucs_data['Platen Stress'][sec_stress_id + 1])
+        delta_strain = (ucs_data[loc_strain][sec_stress_id + 1])
+
+        Esec = (delta_stress / delta_strain) * 100
+
+        return Esec
+
+    def Eavg_mod(self, ucs_data, upperrange, lowerrange, loc_strain='Platen Strain'):
+        '''
+        Average Elastic modulus between two ranges
+
+        :param ucs_data: DataFrame containing the stress-strain data
+        :type ucs_data: pandas.DataFrame
+        :param upperrange: Upper range to calculate the average
+        :type upperrange: float
+        :param lowerrange: Lower range to calculate the average
+        :type lowerrange: float
+        :param loc_strain: Column to obtain strain from. Defaults to Platen Strain
+        :type loc_strain: str
+        :return: Average Elastic modulus
+        :rtype: float
+
+        Example:
+            >>> data = pv.read("../example_outputs/Irazu_UCS")
+            >>> df_1 = data.complete_stress_strain(True)
+            >>> data.Eavg_mod(df_1, 0.5, 0.6)
+            51485.33001517835
+            >>> data.Eavg_mod(df_1, 0.5, 0.6, 'Gauge Displacement Y')
+            50976.62587224803
+        '''
+
+        # Convert percentage to decimal
+        if upperrange > 1:
+            upperrange = upperrange / 100
+        if lowerrange > 1:
+            lowerrange = lowerrange / 100
+
+        # Find the nearest match to the (upperrange * max stress) value.
+        df_sort = ucs_data.iloc[(ucs_data['Platen Stress'] - (max(ucs_data['Platen Stress']) * upperrange)).abs().argsort()[:1]]
+        # Find the nearest match to the (lowerrange * max stress) value.
+        df_sort = ucs_data.iloc[(ucs_data['Platen Stress'] - (max(ucs_data['Platen Stress']) * lowerrange)).abs().argsort()[:1]]
+
+        # Return the index of the nearest match
+        upper_stress_id = df_sort.index[0]
+        lower_stress_id = df_sort.index[0]
+
+        # Calculate delta stress/strain between the defined value
+        delta_stress = (ucs_data['Platen Stress'][upper_stress_id] - ucs_data['Platen Stress'][lower_stress_id])
+        delta_strain = (ucs_data[loc_strain][upper_stress_id] - ucs_data[loc_strain][lower_stress_id])
+
+        Eavg = (delta_stress / delta_strain) * 100
+
+        return Eavg
 
     # def process_BD(self):
 
     # def magnitude_histogram(self):
+
+    # def process_BD(self):
+
+    # def magnitude_histogram(self):
+
 
 
 class Timestep:
