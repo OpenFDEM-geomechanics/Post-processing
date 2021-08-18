@@ -421,19 +421,19 @@ class Model:
             >>> data = fdem.Model("../example_outputs/OpenFDEM_BD")
             <BLANKLINE>
             # full stress-strain without SG
-            >>> df_wo_SG = data.complete_stress_strain(False)
+            >>> df_wo_SG = data.complete_BD_stress_strain(False)
             Columns:
                 Name: Platen Stress, dtype=float64, nullable: False
                 Name: Platen Strain, dtype=float64, nullable: False
             # full stress-strain with SG and default dimensions
-            >>> df_Def_SG = data.complete_stress_strain(True)
+            >>> df_Def_SG = data.complete_BD_stress_strain(True)
             Columns:
                 Name: Platen Stress, dtype=float64, nullable: False
                 Name: Platen Strain, dtype=float64, nullable: False
                 Name: Gauge Displacement X, dtype=float64, nullable: False
                 Name: Gauge Displacement Y, dtype=float64, nullable: False
             # full stress-strain with SG and user-defined dimensions
-            >>> df_userdf_SG = data.complete_stress_strain(True, 10, 10)
+            >>> df_userdf_SG = data.complete_BD_stress_strain(True, 10, 10)
             Columns:
                 Name: Platen Stress, dtype=float64, nullable: False
                 Name: Platen Strain, dtype=float64, nullable: False
