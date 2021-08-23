@@ -22,20 +22,19 @@ plt.rcParams["figure.figsize"] = [5, 5]
 matplotlib.rcParams['font.family'] = ['arial']
 matplotlib.rcParams['font.size'] = 8
 
-
-
 '''
 DEMO!!!
 '''
 
 print("Load Model")
 # model = fd.Model("../example_outputs/Irazu_UCS")
-model = fd.Model("/hdd/home/aly/Desktop/Dropbox/Python_Codes/OpenFDEM-Post-Processing/example_outputs/Irazu_UCS")
+# model = fd.Model("/hdd/home/aly/Desktop/Dropbox/Python_Codes/OpenFDEM-Post-Processing/example_outputs/Irazu_UCS")
 # model = fd.Model('/external/Speed_Cal_Using_Flowstone/UCS/UCS_c_17_5_ts_2_55_GII_90000_v_0_8')
+model = fd.Model("/hdd/home/aly/Desktop/Dropbox/Python_Codes/OpenFDEM-Post-Processing/example_outputs/Irazu_UCS")
 # model = fd.Model('/external/Size_7')
-df_1 = model.complete_stress_strain(True)
+df_1 = model.complete_BD_stress_strain(True)
 # print(df_1)
-
+exit()
 '''
 Calculate Modulus
 '''
