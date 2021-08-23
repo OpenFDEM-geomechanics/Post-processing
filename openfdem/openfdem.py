@@ -15,6 +15,7 @@ import concurrent.futures
 from multiprocessing import Process
 from threading import Thread
 import complete_UCS_thread_pool_generators
+import complete_BD_thread_pool_generators
 # from aggregate_storage import aggregate_storage
 
 class Model:
@@ -401,6 +402,46 @@ class Model:
 
         return complete_UCS_thread_pool_generators.main(self, st_status, gauge_width, gauge_length)
 
+
+    def complete_BD_stress_strain(self, st_status = False, gauge_width=0, gauge_length=0):
+        '''
+        Calculate the full stress-strain curve
+
+        :param st_status: Enable/Disable SG
+        :type st_status: bool
+        :param gauge_length: length of the virtual strain gauge
+        :type gauge_length: float
+        :param gauge_width: width of the virtual strain gauge
+        :type gauge_width: float
+        :return: full stress-strain information
+        :rtype: pd.DataFrame
+
+        Example:
+            >>> import openfdem as fdem
+            >>> data = fdem.Model("../example_outputs/OpenFDEM_BD")
+            <BLANKLINE>
+            # full stress-strain without SG
+            >>> df_wo_SG = data.complete_BD_stress_strain(False)
+            Columns:
+                Name: Platen Stress, dtype=float64, nullable: False
+                Name: Platen Strain, dtype=float64, nullable: False
+            # full stress-strain with SG and default dimensions
+            >>> df_Def_SG = data.complete_BD_stress_strain(True)
+            Columns:
+                Name: Platen Stress, dtype=float64, nullable: False
+                Name: Platen Strain, dtype=float64, nullable: False
+                Name: Gauge Displacement X, dtype=float64, nullable: False
+                Name: Gauge Displacement Y, dtype=float64, nullable: False
+            # full stress-strain with SG and user-defined dimensions
+            >>> df_userdf_SG = data.complete_BD_stress_strain(True, 10, 10)
+            Columns:
+                Name: Platen Stress, dtype=float64, nullable: False
+                Name: Platen Strain, dtype=float64, nullable: False
+                Name: Gauge Displacement X, dtype=float64, nullable: False
+                Name: Gauge Displacement Y, dtype=float64, nullable: False
+        '''
+
+        return complete_BD_thread_pool_generators.main(self, st_status, gauge_width, gauge_length)
 
     def platen_force(self, material_id=None, boundary_condition_id=None, location=None):
         # TODO: load based on threshold points (boundary condition)

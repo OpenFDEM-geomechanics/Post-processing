@@ -52,8 +52,10 @@ def history_strain_func(f_name, model, cv, ch):
         avg_platen_force[i] = 0.5 * (abs(top_platen_force_list[i]) + abs(bot_platen_force_list[i])) / 1.0e9
         avg_platen_disp[i] = abs(avg_top_platen_disp[i]) + abs(avg_bottom_platen_disp[i])
 
-    # Calculate the stress in MPa (force in kN & area in mm^2)
-    stress_from_platen = avg_platen_force[axis_of_loading] / model.sample_width * 1.0e3
+    # stress in MPa (force in kN & area in mm^2)
+    # BD Force = 2P/A ; A = pi * d^2 /2 ; d = diameter = sample width in 2D
+    area = 3.142 * model.sample_width * model.sample_width / 4.0
+    stress_from_platen = 2.0 * avg_platen_force[axis_of_loading] / area * 1.0e3
     history_stress.append(stress_from_platen)
 
     # Calculate strains in percentage (%)
@@ -193,10 +195,10 @@ def main(model, st_status, gauge_width, gauge_length):
     # Get rock dimension.
     model.rock_sample_dimensions()
 
-    # Check UCS Simulation
-    if model.simulation_type() != "UCS Simulation":
-        print("Simulation appears to be not for compressive strength")
-        exit("Simulation appears to be not for compressive strength")
+    # Check BD Simulation
+    if model.simulation_type() != "BD Simulation":
+        print("Simulation appears to be not for indirect tensile strength")
+        exit("Simulation appears to be not for indirect tensile strength")
 
     # Global declarations
     start = time.time()
@@ -221,9 +223,9 @@ def main(model, st_status, gauge_width, gauge_length):
 
     # Merge all into a pandas DataFrame
     if st_status:  # SG Enabled st_status == True
-        ucs_df = pd.DataFrame(list(zip(history_stress, history_strain, gauge_disp_x, gauge_disp_y)),
+        bd_df = pd.DataFrame(list(zip(history_stress, history_strain, gauge_disp_x, gauge_disp_y)),
                               columns=['Platen Stress', 'Platen Strain', 'Gauge Displacement X', 'Gauge Displacement Y'])
     else:  # SG Disabled st_status == False
-        ucs_df = pd.DataFrame(list(zip(history_stress, history_strain)),
+        bd_df = pd.DataFrame(list(zip(history_stress, history_strain)),
                               columns=['Platen Stress', 'Platen Strain'])
-    return ucs_df
+    return bd_df
