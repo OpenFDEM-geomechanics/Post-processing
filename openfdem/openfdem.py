@@ -29,7 +29,7 @@ class Model:
     Collection of timesteps?
     handles temporal manipulations
     
-    Example:
+    :Example:
         >>> import openfdem as fdem
         >>> model = fdem.Model("../example_outputs/Irazu_UCS")
         
@@ -75,7 +75,7 @@ class Model:
         :return parts: Return the numerical portion of the file
         :rtype: list[str]
         
-        Example:
+        :Example:
             >>> import openfdem as fdem
             >>> data = fdem.Model("../example_outputs/Irazu_UCS")
             >>> data._numericalSort('..\\example_outputs\\Irazu_UCS\\UCS_tutorial-Run_1_femdem.r2m_broken_joint_540000.vtu')
@@ -101,7 +101,7 @@ class Model:
         :return: A list of subdirectories
         :rtype: list[str]
         
-        Example:
+        :Example:
             >>> import openfdem as fdem
             >>> data = fdem.Model("../example_outputs/Irazu_UCS")
             >>> data._findOutputFiles("../example_outputs/Irazu_UCS/",tuple(["vtu","vtp"]),"basic")[0:3]
@@ -124,8 +124,10 @@ class Model:
 
     def __init__(self, folder=None, runfile=None, fdem_engine=None):
         """Create a Model object that finds all the run files and organizes all the file names on creation.
+
+        :raise LookupError: Folder does not appear to exist or does not have valid output files.
         
-        Example:: 
+        :Example::
             >>> import openfdem as fdem
             >>> data = fdem.Model("../example_outputs/Irazu_UCS")
             <BLANKLINE>
@@ -174,8 +176,9 @@ class Model:
         :type key: Union[int, float]
         :return: Dataset of the timestep
         :rtype: Union[MultiBlock, UnstructuredGrid]
+        :raise IndexError: Index outside model data range.
 
-        Example:
+        :Example:
             >>> import openfdem as fdem
             >>> timestep = fdem.model['380000']
             <BLANKLINE>
@@ -192,8 +195,7 @@ class Model:
                 self.timestep_data = pv.read(self._basic_files[indices[0]])
             return self.timestep_data
         except IndexError:
-            raise IndexError("Material ID for platen out of range.\nMaterial Range %s" % self.all_elem_id)
-            # raise IndexError('Index outside model data range')
+            raise IndexError('Index outside model data range')
 
     # def __contains__(self, item):
     # """ Access to timestep in Model
@@ -210,16 +212,18 @@ class Model:
         :return: model width, model height, model thickness
         :type: tuple[float, float, float]
 
-        Example:
-            >>> data = pv.read("../example_outputs/Irazu_UCS")
+        :Example:
+            >>> import openfdem as fdem
+            >>> model = fdem.Model("../example_outputs/Irazu_UCS")
+            <BLANKLINE>
             # Returns the overall model dimensions
-            >>> data.model_dimensions
+            >>> model.model_dimensions
             (56.0, 116.0, 0.0)
             # Returns the model dimensions based on material id 1
-            >>> data.model_dimensions(1)
+            >>> model.model_dimensions(1)
             (52.0, 108.0, 0.0)
             # Error when material is not found
-            >>> data.model_dimensions(3)
+            >>> model.model_dimensions(3)
             IndexError: Material ID for platen out of range.
             Material Range 0-1
         '''
@@ -243,10 +247,21 @@ class Model:
 
     def model_domain(self):
         '''
-        Identifies the model domain if 2D (3 Points - Triangle) or 3D (4 Points - Tetrahedral) by confirming the simulation cell vertex.
+        Identifies the model domain by confirming the simulation cell vertex.
+            2D (3 Points - Triangle)
+            3D (4 Points - Tetrahedral)
 
         :return: number of nodes to skip in analysis
         :rtype: int
+        :raise Exception: The simulation is not currently supported.
+
+        :Example:
+            >>> import openfdem as fdem
+            >>> model = fdem.Model("../example_outputs/Irazu_UCS")
+            <BLANKLINE>
+            >>> model.model_domain()
+            2D Simulation
+            4
         '''
 
         if self.number_of_points_per_cell == 3:
@@ -261,19 +276,24 @@ class Model:
 
     # def load_basic(self,timestep=None):
 
-    def filter_material(self, material_id):
-        ''' Filter based on the material id
 
-        :param material_id: material id to be threshold
-        :type material_id: int
-        :return: Dataset of the threshold
-        :rtype: Union[MultiBlock, UnstructuredGrid]
-        '''
-        #TODO: look into making this with several input MIN MAX range of which ARRAY?
-        # Seems like it IS NOT for a MultiBlock condition?!
-
-        ax = self._data.threshold([material_id, material_id], self.var_data["mineral_type"])
-        return ax
+    # def filter_material(self, material_id):
+    #     ''' Threshold based on the material id
+    #
+    #     :param material_id: material id to be threshold
+    #     :type material_id: int
+    #     :return: Dataset of the threshold
+    #     :rtype: Union[MultiBlock, UnstructuredGrid]
+    #
+    #     :Example:
+    #         >>> import openfdem as fdem
+    #         >>> model = fdem.Model("../example_outputs/Irazu_UCS")
+    #         <BLANKLINE>
+    #     '''
+    #
+    #     filtered_data = self._data.threshold([material_id, material_id], self.var_data["mineral_type"])
+    #
+    #     return filtered_data
 
 
     def mat_bound_check(self, mat_id):
@@ -284,6 +304,17 @@ class Model:
         :type mat_id: int
         :return: ID of the material
         :rtype: int
+        :raise IndexError: Material ID for platen out of range.
+
+        :Example:
+            >>> import openfdem as fdem
+            >>> model = fdem.Model("../example_outputs/Irazu_UCS")
+            <BLANKLINE>
+            >>> model.mat_bound_check(0)
+            0
+            >>> model.mat_bound_check(5)
+            IndexError: Material ID for platen out of range.
+            Material Range 0-1
         '''
 
         min, max = self.first_file.get_data_range(self.var_data["mineral_type"])
@@ -304,7 +335,7 @@ class Model:
         :return: sample width, sample height, sample thickness
         :type: tuple[float, float, float]
 
-        Example:
+        :Example:
             >>> import openfdem as fdem
             >>> data = fdem.Model("../example_outputs/Irazu_UCS")
             <BLANKLINE>
@@ -357,6 +388,22 @@ class Model:
 
 
     def simulation_type(self):
+        ''' Identifies the type of simulation running. BD or UCS.
+
+        :return: Type of simulation. BD/UCS
+        :rtype: str
+
+        :Example:
+            >>> import openfdem as fdem
+            >>> data = fdem.Model("../example_outputs/Irazu_UCS")
+            <BLANKLINE>
+            # Let the script try to identify the planten material ID
+            >>> data.rock_sample_dimensions()
+            Script Identifying Platen
+                Platen Material ID found as [1]
+            >>> data.simulation_type()
+            'UCS Simulation'
+        '''
         self.check_edge_point = [self.rock_model.bounds[1], self.rock_model.bounds[3], 0]
         self.check_edge_cell = self.first_file.extract_cells(self.first_file.find_closest_cell(self.check_edge_point))
         self.check_edge_cell = pv.cell_array(self.check_edge_cell, self.var_data['mineral_type'])
@@ -427,10 +474,16 @@ class Model:
         :return: full stress-strain information
         :rtype: pd.DataFrame
 
-        Example:
+        :Example:
             >>> import openfdem as fdem
             >>> data = fdem.Model("../example_outputs/Irazu_UCS")
             <BLANKLINE>
+            # Minimal Arguments
+            >>> df_wo_SG = data.complete_stress_strain()
+            Columns:
+                Name: Platen Stress, dtype=float64, nullable: False
+                Name: Platen Strain, dtype=float64, nullable: False
+            # full stress-strain with SG and default dimensions
             # full stress-strain without SG
             >>> df_wo_SG = data.complete_stress_strain(None, False)
             Columns:
@@ -468,7 +521,7 @@ class Model:
         :return: full stress-strain information
         :rtype: pd.DataFrame
 
-        Example:
+        :Example:
             >>> import openfdem as fdem
             >>> data = fdem.Model("../example_outputs/OpenFDEM_BD")
             <BLANKLINE>
@@ -497,12 +550,39 @@ class Model:
 
 
     def plot_stress_strain(self, strain, stress, ax=None, **plt_kwargs):
+        '''
+
+        :param strain: X-axis data [Strain]
+        :type strain: pandas.DataFrame
+        :param stress: Y-axis data [Stress]
+        :type stress: pandas.DataFrame
+        :param ax: Matplotlib Axis
+        :type ax: matplotlib
+        :param plt_kwargs: `~matplotlib.Modules` submodules
+        :type plt_kwargs:
+        :return: Matplotlib AxesSubplots
+        :rtype: Matplotlib Axis
+
+        :Example:
+            >>> import openfdem as fdem
+            >>> data = fdem.Model("../example_outputs/OpenFDEM_BD")
+            <BLANKLINE>
+            # Minimal Arguments
+            >>> df_wo_SG = data.complete_stress_strain()
+            Columns:
+                Name: Platen Stress, dtype=float64, nullable: False
+                Name: Platen Strain, dtype=float64, nullable: False
+            >>> data.plot_stress_strain(df_wo_SG['Platen Strain'], df_wo_SG['Platen Stress'], label='stress-strain', color='green')
+            <AxesSubplot:xlabel='Strain (-)', ylabel='Axial Stress (MPa)'>
+        '''
+
         if ax is None:
             ax = plt.gca()
         ax.plot(strain, stress, **plt_kwargs)  # example plot here
         plt.xlabel('Strain (-)')
         plt.ylabel('Axial Stress (MPa)')
-        return (ax)
+
+        return ax
 
     # def generate_seismic_clustering_csv(self,output_file):
 
@@ -513,7 +593,7 @@ class Model:
     #     :return: UCS, stress_hist, strain_hist, Elastic_moduli
     #     :rtype: tuple[float, list[float, list[float, list[float]]
     #
-    #     Example:
+    #     :Example:
     #         >>> data = pv.read("../example_outputs/Irazu_UCS")
     #         >>> UCS, stress_hist, strain_hist, Elastic_moduli = data.process_UCS()
     #         (38.03245444023052, [0.0, 4.825237206318255, 9.628822864052236, 14.414373164820148, 19.191640765444546, 23.95880093999921, 28.711674236346393, 33.44027814633586, 38.03245444023052, 13.266469715550484, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30], [0.0, 0.009259259235881877, 0.018518518471763754, 0.02777777770764563, 0.03703703694352751, 0.046296296179409384, 0.05555555541529126, 0.06481481465117314, 0.07407407388705502, 0.08333333312293689, 0.09259259235881877, 0.10185185159470064, 0.11111111083058252, 0.1203703700664644, 0.12962962930234628, 0.13888888853822817, 0.14814814777411003, 0.15740740700999192, 0.16666666624587378, 0.17592592548175565, 0.18518518471763754, 0.1944444439535194, 0.2037037031894013, 0.21296296242528318, 0.22222222166116504, 0.23148148089704693, 0.2407407401329288, 0.24999999936881068, 0.25925925860469257, 0.2685185178405744, 0.27777777707645634], [5.15399101160927, 5.181743019752671])
@@ -605,7 +685,7 @@ class Model:
         :return: Tangent Elastic modulus at 50%
         :rtype: float
 
-        Example:
+        :Example:
             >>> data = pv.read("../example_outputs/Irazu_UCS")
             >>> df_1 = data.complete_stress_strain(True)
             >>> data.Etan_mod(df_1)
@@ -640,7 +720,7 @@ class Model:
         :return: Secant Elastic modulus between 0 and upperrange
         :rtype: float
 
-        Example:
+        :Example:
             >>> data = pv.read("../example_outputs/Irazu_UCS")
             >>> df_1 = data.complete_stress_strain(True)
             >>> data.Esec_mod(df_1, 0.5)
@@ -680,8 +760,9 @@ class Model:
         :type loc_strain: str
         :return: Average Elastic modulus
         :rtype: float
+        :raise ZeroDivisionError: The range over which to calculate the Eavg is too small. Consider a larger range.
 
-        Example:
+        :Example:
             >>> data = pv.read("../example_outputs/Irazu_UCS")
             >>> df_1 = data.complete_stress_strain(True)
             >>> data.Eavg_mod(df_1, 0.5, 0.6)
