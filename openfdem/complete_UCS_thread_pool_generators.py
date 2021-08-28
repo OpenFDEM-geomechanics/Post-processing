@@ -171,12 +171,14 @@ def set_strain_gauge(model, gauge_length=None, gauge_width=None):
     return ch, cv, gauge_width, gauge_length
 
 
-def main(model, st_status, gauge_width, gauge_length):
+def main(model, platen_id, st_status, gauge_width, gauge_length):
     """
     Main concurrent Thread Pool to calculate the full stress-strain
 
     :param model: FDEM Model Class
     :type model:  openfdem.openfdem.Model
+    :param platen_id: Manual override of Platen ID
+    :type platen_id: None or int
     :param st_status: Enable/Disable SG Calculations
     :type st_status: bool
     :param gauge_width: SG width
@@ -191,7 +193,7 @@ def main(model, st_status, gauge_width, gauge_length):
     f_names = model._basic_files
 
     # Get rock dimension.
-    model.rock_sample_dimensions()
+    model.rock_sample_dimensions(platen_id)
 
     # Check UCS Simulation
     if model.simulation_type() != "UCS Simulation":

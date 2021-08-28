@@ -18,6 +18,10 @@ import complete_UCS_thread_pool_generators
 import complete_BD_thread_pool_generators
 # from aggregate_storage import aggregate_storage
 
+# TODO
+# Give the user the option to identify the platen material ID
+# Function to extract stress/strain for the element
+
 class Model:
     """Model class collects datafiles into one interface.
     
@@ -188,7 +192,8 @@ class Model:
                 self.timestep_data = pv.read(self._basic_files[indices[0]])
             return self.timestep_data
         except IndexError:
-            raise IndexError('Index outside model data range')
+            raise IndexError("Material ID for platen out of range.\nMaterial Range %s" % self.all_elem_id)
+            # raise IndexError('Index outside model data range')
 
     # def __contains__(self, item):
     # """ Access to timestep in Model
@@ -215,16 +220,14 @@ class Model:
             (52.0, 108.0, 0.0)
             # Error when material is not found
             >>> data.model_dimensions(3)
-            Material ID specified out of range
-            Process finished with exit code 1
+            IndexError: Material ID for platen out of range.
+            Material Range 0-1
         '''
 
         if mat_id != None:
-            min, max = self.first_file.get_data_range(self.var_data["mineral_type"])
-            if mat_id in range(min, max + 1):
-                self.thresholds_FDEM_output_files = self.first_file.threshold([mat_id, mat_id], self.var_data["mineral_type"])
-            else:
-                raise IndexError("Material ID specified out of range")
+            self.mat_bound_check(mat_id)
+            self.thresholds_FDEM_output_files = self.first_file.threshold([mat_id, mat_id],
+                                                                          self.var_data["mineral_type"])
         else:
             self.thresholds_FDEM_output_files = self.first_file
 
@@ -252,7 +255,7 @@ class Model:
         else:  # 3D (Tetrahedral)
             print(("3D Simulation"))
             node_skip = 6
-            exit("3D Simulation not supported")
+            raise Exception("3D Simulation not supported")
 
         return node_skip
 
@@ -268,30 +271,94 @@ class Model:
         '''
         #TODO: look into making this with several input MIN MAX range of which ARRAY?
         # Seems like it IS NOT for a MultiBlock condition?!
+
         ax = self._data.threshold([material_id, material_id], self.var_data["mineral_type"])
         return ax
 
 
-    def rock_sample_dimensions(self):
+    def mat_bound_check(self, mat_id):
         '''
-        Lookup cell element ID on the top center and then trace points Using this information, we obtain the platen prop ID
+        Checks the material ID is a valid choice.
 
+        :param mat_id: Material ID
+        :type mat_id: int
+        :return: ID of the material
+        :rtype: int
+        '''
+
+        min, max = self.first_file.get_data_range(self.var_data["mineral_type"])
+
+        if mat_id not in range(min, max + 1):
+            raise IndexError("Material ID for platen out of range.\nMaterial Range %s-%s" % (min, max) )
+        else:
+            return mat_id
+
+    # def platen_check(self, platen_id, top_center_cell):
+    #
+    #     min, max = self.first_file.get_data_range(self.var_data["mineral_type"])
+    #
+    #     if platen_id == None:
+    #         print("Script Identifying Platen")
+    #         if top_center_cell == -1:
+    #             print("Unable to identify Platen ID Correctly.")
+    #         self.platen_cells_elem_id = pv.cell_array(top_center_cell, self.var_data['mineral_type'])
+    #     else:
+    #         if platen_id in range (min, max+1):
+    #             print("User Defined Platen ID")
+    #             self.platen_cells_elem_id = platen_id
+    #         else:
+    #             print("Undefined Material ID for platen")
+    #             raise IndexError("Material ID for platen out of range.\nMaterial Range %s" % self.all_elem_id)
+    #
+    #     print("\tPlaten Material ID found as %s" % self.platen_cells_elem_id)
+
+    def rock_sample_dimensions(self, platen_id=None):
+        '''
+        Lookup cell element ID on the top center and then trace points Using this information, we obtain the platen prop ID.
+        Alternatively the user can define the material ID to exclude
+
+        :param platen_id: Manual override of Platen ID
+        :type platen_id: None or int
         :return: sample width, sample height, sample thickness
         :type: tuple[float, float, float]
+
+        Example:
+            >>> import openfdem as fdem
+            >>> data = fdem.Model("../example_outputs/Irazu_UCS")
+            <BLANKLINE>
+            # Let the script try to identify the planten material ID
+            >>> data.rock_sample_dimensions()
+            Script Identifing Platen
+                Platen Material ID found as [1]
+                (52.0, 108.0, 0.0)
+            # Explicity defined the platen material ID
+            >>> data.rock_sample_dimensions(0)
+            User Defined Platen ID
+                Platen Material ID found as [0]
+                (56.0, 116.0, 0.0)
+            >>> data.rock_sample_dimensions(3)
+            IndexError: Material ID for platen out of range.
+            Material Range 0-1
         '''
 
         top_center_point = [self.first_file.GetCenter()[0], self.first_file.bounds[3], self.first_file.bounds[5]]
 
         top_center_cell = self.first_file.extract_cells(self.first_file.find_closest_cell(top_center_point))
 
-        if top_center_cell == -1:
-            print("Unable to identify Platen ID Correctly.")
-        self.platen_cells_elem_id = pv.cell_array(top_center_cell, self.var_data['mineral_type'])
+        if platen_id == None:
+            print("Script Identifying Platen")
+            if top_center_cell == -1:
+                print("Unable to identify Platen ID Correctly.")
+            self.platen_cells_elem_id = pv.cell_array(top_center_cell, self.var_data['mineral_type'])
+        else:
+            print("User Defined Platen ID")
+            self.mat_bound_check(platen_id)
+            self.platen_cells_elem_id = platen_id
 
         print("\tPlaten Material ID found as %s" % self.platen_cells_elem_id)
 
-        all_elem_id = list(set(self.first_file.get_array(self.var_data["mineral_type"])))
-        self.rock_elem_ids = [x for x in all_elem_id if x != self.platen_cells_elem_id]
+        self.all_elem_id = list(set(self.first_file.get_array(self.var_data["mineral_type"])))
+        self.rock_elem_ids = [x for x in self.all_elem_id if x != self.platen_cells_elem_id]
         self.rock_elem_ids_max, self.rock_elem_ids_min = max(self.rock_elem_ids), min(self.rock_elem_ids)
 
         self.rock_model = (self.first_file.threshold([self.rock_elem_ids_min, self.rock_elem_ids_max], self.var_data["mineral_type"]))
@@ -362,12 +429,14 @@ class Model:
 
     # def set_strain_gauge(self,point,axis):
 
-    def complete_stress_strain(self, st_status = False, gauge_width=0, gauge_length=0):
+    def complete_stress_strain(self, platen_id = None, st_status = False, gauge_width=0, gauge_length=0):
         '''
         Calculate the full stress-strain curve
 
         :param st_status: Enable/Disable SG
         :type st_status: bool
+        :param platen_id: Manual override of Platen ID
+        :type platen_id: None or int
         :param gauge_length: length of the virtual strain gauge
         :type gauge_length: float
         :param gauge_width: width of the virtual strain gauge
@@ -380,19 +449,19 @@ class Model:
             >>> data = fdem.Model("../example_outputs/Irazu_UCS")
             <BLANKLINE>
             # full stress-strain without SG
-            >>> df_wo_SG = data.complete_stress_strain(False)
+            >>> df_wo_SG = data.complete_stress_strain(None, False)
             Columns:
                 Name: Platen Stress, dtype=float64, nullable: False
                 Name: Platen Strain, dtype=float64, nullable: False
             # full stress-strain with SG and default dimensions
-            >>> df_Def_SG = data.complete_stress_strain(True)
+            >>> df_Def_SG = data.complete_stress_strain(None, True)
             Columns:
                 Name: Platen Stress, dtype=float64, nullable: False
                 Name: Platen Strain, dtype=float64, nullable: False
                 Name: Gauge Displacement X, dtype=float64, nullable: False
                 Name: Gauge Displacement Y, dtype=float64, nullable: False
             # full stress-strain with SG and user-defined dimensions
-            >>> df_userdf_SG = data.complete_stress_strain(True, 10, 10)
+            >>> df_userdf_SG = data.complete_stress_strain(None, True, 10, 10)
             Columns:
                 Name: Platen Stress, dtype=float64, nullable: False
                 Name: Platen Strain, dtype=float64, nullable: False
@@ -400,7 +469,7 @@ class Model:
                 Name: Gauge Displacement Y, dtype=float64, nullable: False
         '''
 
-        return complete_UCS_thread_pool_generators.main(self, st_status, gauge_width, gauge_length)
+        return complete_UCS_thread_pool_generators.main(self, platen_id, st_status, gauge_width, gauge_length)
 
 
     def complete_BD_stress_strain(self, st_status = False, gauge_width=0, gauge_length=0):
