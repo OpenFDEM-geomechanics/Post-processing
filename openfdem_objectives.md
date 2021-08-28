@@ -9,16 +9,20 @@
 4. Contact area (should be separate function?)
 
 ### Strain gauge analysis
-1. input: Location, direction, length
+1. input: Location, direction, length (DIRECTION And Length <=> PENDING: Center Location)
 2. output: Strain gauge simulator?
 
 ### Model processing utilities
-1. Stress/strain diagram
-2. Volumetric strain
-3. Elastic mod.
-4. Plotters
+1. Stress/strain diagram (COMPLETED)
+2. Volumetric strain (Lateral Strain (COMPLETED))
+3. Elastic mod. (COMPLETED)
+4. Plotters (COMPLETED)
+5. Extract individual cells data into a panda.DataFrame
 
 ## TODO
+1. Ability to define the center point of the SG.
+2. Function to extract stress/strain for the element
+ 
 
 ### Need full OpenFDEM outputs for UCS/BD
 

@@ -505,6 +505,8 @@ class Model:
                 Name: Gauge Displacement Y, dtype=float64, nullable: False
         '''
 
+        #TODO:
+        # Ability to define the center point of the SG.
         return complete_UCS_thread_pool_generators.main(self, platen_id, st_status, gauge_width, gauge_length)
 
 
