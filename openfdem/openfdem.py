@@ -8,6 +8,7 @@ import glob
 import os
 import os.path as path
 import re
+import matplotlib.pyplot as plt
 
 import pyvista as pv
 import time
@@ -19,7 +20,6 @@ import complete_BD_thread_pool_generators
 # from aggregate_storage import aggregate_storage
 
 # TODO
-# Give the user the option to identify the platen material ID
 # Function to extract stress/strain for the element
 
 class Model:
@@ -29,7 +29,7 @@ class Model:
     Collection of timesteps?
     handles temporal manipulations
     
-    Example:
+    :Example:
         >>> import openfdem as fdem
         >>> model = fdem.Model("../example_outputs/Irazu_UCS")
         
@@ -75,7 +75,7 @@ class Model:
         :return parts: Return the numerical portion of the file
         :rtype: list[str]
         
-        Example:
+        :Example:
             >>> import openfdem as fdem
             >>> data = fdem.Model("../example_outputs/Irazu_UCS")
             >>> data._numericalSort('..\\example_outputs\\Irazu_UCS\\UCS_tutorial-Run_1_femdem.r2m_broken_joint_540000.vtu')
@@ -101,7 +101,7 @@ class Model:
         :return: A list of subdirectories
         :rtype: list[str]
         
-        Example:
+        :Example:
             >>> import openfdem as fdem
             >>> data = fdem.Model("../example_outputs/Irazu_UCS")
             >>> data._findOutputFiles("../example_outputs/Irazu_UCS/",tuple(["vtu","vtp"]),"basic")[0:3]
@@ -124,8 +124,10 @@ class Model:
 
     def __init__(self, folder=None, runfile=None, fdem_engine=None):
         """Create a Model object that finds all the run files and organizes all the file names on creation.
+
+        :raise LookupError: Folder does not appear to exist or does not have valid output files.
         
-        Example:: 
+        :Example::
             >>> import openfdem as fdem
             >>> data = fdem.Model("../example_outputs/Irazu_UCS")
             <BLANKLINE>
@@ -174,8 +176,9 @@ class Model:
         :type key: Union[int, float]
         :return: Dataset of the timestep
         :rtype: Union[MultiBlock, UnstructuredGrid]
+        :raise IndexError: Index outside model data range.
 
-        Example:
+        :Example:
             >>> import openfdem as fdem
             >>> timestep = fdem.model['380000']
             <BLANKLINE>
@@ -192,8 +195,7 @@ class Model:
                 self.timestep_data = pv.read(self._basic_files[indices[0]])
             return self.timestep_data
         except IndexError:
-            raise IndexError("Material ID for platen out of range.\nMaterial Range %s" % self.all_elem_id)
-            # raise IndexError('Index outside model data range')
+            raise IndexError('Index outside model data range')
 
     # def __contains__(self, item):
     # """ Access to timestep in Model
@@ -210,16 +212,18 @@ class Model:
         :return: model width, model height, model thickness
         :type: tuple[float, float, float]
 
-        Example:
-            >>> data = pv.read("../example_outputs/Irazu_UCS")
+        :Example:
+            >>> import openfdem as fdem
+            >>> model = fdem.Model("../example_outputs/Irazu_UCS")
+            <BLANKLINE>
             # Returns the overall model dimensions
-            >>> data.model_dimensions
+            >>> model.model_dimensions
             (56.0, 116.0, 0.0)
             # Returns the model dimensions based on material id 1
-            >>> data.model_dimensions(1)
+            >>> model.model_dimensions(1)
             (52.0, 108.0, 0.0)
             # Error when material is not found
-            >>> data.model_dimensions(3)
+            >>> model.model_dimensions(3)
             IndexError: Material ID for platen out of range.
             Material Range 0-1
         '''
@@ -243,10 +247,21 @@ class Model:
 
     def model_domain(self):
         '''
-        Identifies the model domain if 2D (3 Points - Triangle) or 3D (4 Points - Tetrahedral) by confirming the simulation cell vertex.
+        Identifies the model domain by confirming the simulation cell vertex.
+            2D (3 Points - Triangle)
+            3D (4 Points - Tetrahedral)
 
         :return: number of nodes to skip in analysis
         :rtype: int
+        :raise Exception: The simulation is not currently supported.
+
+        :Example:
+            >>> import openfdem as fdem
+            >>> model = fdem.Model("../example_outputs/Irazu_UCS")
+            <BLANKLINE>
+            >>> model.model_domain()
+            2D Simulation
+            4
         '''
 
         if self.number_of_points_per_cell == 3:
@@ -261,19 +276,24 @@ class Model:
 
     # def load_basic(self,timestep=None):
 
-    def filter_material(self, material_id):
-        ''' Filter based on the material id
 
-        :param material_id: material id to be threshold
-        :type material_id: int
-        :return: Dataset of the threshold
-        :rtype: Union[MultiBlock, UnstructuredGrid]
-        '''
-        #TODO: look into making this with several input MIN MAX range of which ARRAY?
-        # Seems like it IS NOT for a MultiBlock condition?!
-
-        ax = self._data.threshold([material_id, material_id], self.var_data["mineral_type"])
-        return ax
+    # def filter_material(self, material_id):
+    #     ''' Threshold based on the material id
+    #
+    #     :param material_id: material id to be threshold
+    #     :type material_id: int
+    #     :return: Dataset of the threshold
+    #     :rtype: Union[MultiBlock, UnstructuredGrid]
+    #
+    #     :Example:
+    #         >>> import openfdem as fdem
+    #         >>> model = fdem.Model("../example_outputs/Irazu_UCS")
+    #         <BLANKLINE>
+    #     '''
+    #
+    #     filtered_data = self._data.threshold([material_id, material_id], self.var_data["mineral_type"])
+    #
+    #     return filtered_data
 
 
     def mat_bound_check(self, mat_id):
@@ -284,6 +304,17 @@ class Model:
         :type mat_id: int
         :return: ID of the material
         :rtype: int
+        :raise IndexError: Material ID for platen out of range.
+
+        :Example:
+            >>> import openfdem as fdem
+            >>> model = fdem.Model("../example_outputs/Irazu_UCS")
+            <BLANKLINE>
+            >>> model.mat_bound_check(0)
+            0
+            >>> model.mat_bound_check(5)
+            IndexError: Material ID for platen out of range.
+            Material Range 0-1
         '''
 
         min, max = self.first_file.get_data_range(self.var_data["mineral_type"])
@@ -293,24 +324,6 @@ class Model:
         else:
             return mat_id
 
-    # def platen_check(self, platen_id, top_center_cell):
-    #
-    #     min, max = self.first_file.get_data_range(self.var_data["mineral_type"])
-    #
-    #     if platen_id == None:
-    #         print("Script Identifying Platen")
-    #         if top_center_cell == -1:
-    #             print("Unable to identify Platen ID Correctly.")
-    #         self.platen_cells_elem_id = pv.cell_array(top_center_cell, self.var_data['mineral_type'])
-    #     else:
-    #         if platen_id in range (min, max+1):
-    #             print("User Defined Platen ID")
-    #             self.platen_cells_elem_id = platen_id
-    #         else:
-    #             print("Undefined Material ID for platen")
-    #             raise IndexError("Material ID for platen out of range.\nMaterial Range %s" % self.all_elem_id)
-    #
-    #     print("\tPlaten Material ID found as %s" % self.platen_cells_elem_id)
 
     def rock_sample_dimensions(self, platen_id=None):
         '''
@@ -322,7 +335,7 @@ class Model:
         :return: sample width, sample height, sample thickness
         :type: tuple[float, float, float]
 
-        Example:
+        :Example:
             >>> import openfdem as fdem
             >>> data = fdem.Model("../example_outputs/Irazu_UCS")
             <BLANKLINE>
@@ -375,6 +388,22 @@ class Model:
 
 
     def simulation_type(self):
+        ''' Identifies the type of simulation running. BD or UCS.
+
+        :return: Type of simulation. BD/UCS
+        :rtype: str
+
+        :Example:
+            >>> import openfdem as fdem
+            >>> data = fdem.Model("../example_outputs/Irazu_UCS")
+            <BLANKLINE>
+            # Let the script try to identify the planten material ID
+            >>> data.rock_sample_dimensions()
+            Script Identifying Platen
+                Platen Material ID found as [1]
+            >>> data.simulation_type()
+            'UCS Simulation'
+        '''
         self.check_edge_point = [self.rock_model.bounds[1], self.rock_model.bounds[3], 0]
         self.check_edge_cell = self.first_file.extract_cells(self.first_file.find_closest_cell(self.check_edge_point))
         self.check_edge_cell = pv.cell_array(self.check_edge_cell, self.var_data['mineral_type'])
@@ -384,6 +413,7 @@ class Model:
         else:
             self.sim_type = "UCS Simulation"
         return self.sim_type
+
 
     def platen_info(self, pv_cells, platen_boundary_id, var_property):
         '''
@@ -444,10 +474,16 @@ class Model:
         :return: full stress-strain information
         :rtype: pd.DataFrame
 
-        Example:
+        :Example:
             >>> import openfdem as fdem
             >>> data = fdem.Model("../example_outputs/Irazu_UCS")
             <BLANKLINE>
+            # Minimal Arguments
+            >>> df_wo_SG = data.complete_stress_strain()
+            Columns:
+                Name: Platen Stress, dtype=float64, nullable: False
+                Name: Platen Strain, dtype=float64, nullable: False
+            # full stress-strain with SG and default dimensions
             # full stress-strain without SG
             >>> df_wo_SG = data.complete_stress_strain(None, False)
             Columns:
@@ -485,7 +521,7 @@ class Model:
         :return: full stress-strain information
         :rtype: pd.DataFrame
 
-        Example:
+        :Example:
             >>> import openfdem as fdem
             >>> data = fdem.Model("../example_outputs/OpenFDEM_BD")
             <BLANKLINE>
@@ -512,222 +548,41 @@ class Model:
 
         return complete_BD_thread_pool_generators.main(self, st_status, gauge_width, gauge_length)
 
-    def platen_force(self, material_id=None, boundary_condition_id=None, location=None):
-        # TODO: load based on threshold points (boundary condition)
-        #   can not do as there is a -1 boundary condition! And
-        #   this should be limited only to the platen boundary condition (e.g. confinement)
-        # TODO: Why do we need so many input parameters ?
-        '''
-        Checks if Compression Simulations.
-        Calculate the stress based on the force in the platens.
 
-        :return: stress (MPa) = force / width of sample
-        :rtype: list
-
-        Example:
-            >>> data = pv.read("../example_outputs/Irazu_UCS")
-            >>> axial_stress = data.platen_force()
-            [0.0, 4.825237206318255, 9.628822864052236, 14.414373164820148, 19.191640765444546, 23.95880093999921, 28.711674236346393, 33.44027814633586, 38.03245444023052, 13.266469715550484, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30]
+    def plot_stress_strain(self, strain, stress, ax=None, **plt_kwargs):
         '''
 
-        history_stress = []  # List to hold the stress_history
-        avg_platen_force = [0.0, 0.0, 0.0]  # Dummy cell
-        axis_of_loading = 1  # Axis of loading in Y direction.
+        :param strain: X-axis data [Strain]
+        :type strain: pandas.DataFrame
+        :param stress: Y-axis data [Stress]
+        :type stress: pandas.DataFrame
+        :param ax: Matplotlib Axis
+        :type ax: matplotlib
+        :param plt_kwargs: `~matplotlib.Modules` submodules
+        :type plt_kwargs:
+        :return: Matplotlib AxesSubplots
+        :rtype: Matplotlib Axis
 
-        ## Get rock dimension.
-        self.rock_sample_dimensions()
-        ## Check UCS Simulation
-        if self.simulation_type() != "UCS Simulation":
-            print("Simulation appears to be not for compressive strength")
-
-        # Load each timestep
-        def stress_thresholding():
-            for openfdem_model_ts in self:
-
-                platen = (openfdem_model_ts.threshold([self.platen_cells_elem_id, self.platen_cells_elem_id],
-                                                      self.var_data["mineral_type"]))
-                top, bottom = (platen.get_data_range(self.var_data["boundary"]))
-
-                top_platen_force_list = self.platen_info(openfdem_model_ts, top, self.var_data["platen_force"])
-                bot_platen_force_list = self.platen_info(openfdem_model_ts, bottom, self.var_data["platen_force"])
-
-                for i in range(0, self.number_of_points_per_cell):
-                    # Convert forces from microN to kN and get the average forces
-                    avg_platen_force[i] = 0.5 * (abs(top_platen_force_list[i]) + abs(bot_platen_force_list[i])) / 1.0e9
-
-                # stress in MPa (force in kN & area in mm^2)
-                stress = avg_platen_force[axis_of_loading] / self.sample_width * 1.0e3
-                history_stress.append(stress)
-
-
-        processes=[]
-        num_processes = os.cpu_count()
-
-        for i in range(num_processes):
-            process = Process(target=stress_thresholding)
-            processes.append(process)
-
-        for process in processes:
-            process.start()
-
-        for process in processes:
-            process.join()
-
-        # for openfdem_model_ts in self:
-        #
-        #     platen = (openfdem_model_ts.threshold([self.platen_cells_elem_id, self.platen_cells_elem_id],
-        #                                           self.var_data["mineral_type"]))
-        #     top, bottom = (platen.get_data_range(self.var_data["boundary"]))
-        #
-        #     top_platen_force_list = self.platen_info(openfdem_model_ts, top, self.var_data["platen_force"])
-        #     bot_platen_force_list = self.platen_info(openfdem_model_ts, bottom, self.var_data["platen_force"])
-        #
-        #     for i in range(0, self.number_of_points_per_cell):
-        #         # Convert forces from microN to kN and get the average forces
-        #         avg_platen_force[i] = 0.5 * (abs(top_platen_force_list[i]) + abs(bot_platen_force_list[i])) / 1.0e9
-        #
-        #     # stress in MPa (force in kN & area in mm^2)
-        #     stress = avg_platen_force[axis_of_loading] / self.sample_width * 1.0e3
-        #     history_stress.append(stress)
-
-
-        processes=[]
-        num_processes = os.cpu_count()
-
-        for i in range(num_processes):
-            process = Process(target=stress_thresholding)
-            processes.append(process)
-
-        for process in processes:
-            process.start()
-
-        for process in processes:
-            process.join()
-
-        # for openfdem_model_ts in self:
-        #
-        #     platen = (openfdem_model_ts.threshold([self.platen_cells_elem_id, self.platen_cells_elem_id],
-        #                                           self.var_data["mineral_type"]))
-        #     top, bottom = (platen.get_data_range(self.var_data["boundary"]))
-        #
-        #     top_platen_force_list = self.platen_info(openfdem_model_ts, top, self.var_data["platen_force"])
-        #     bot_platen_force_list = self.platen_info(openfdem_model_ts, bottom, self.var_data["platen_force"])
-        #
-        #     for i in range(0, self.number_of_points_per_cell):
-        #         # Convert forces from microN to kN and get the average forces
-        #         avg_platen_force[i] = 0.5 * (abs(top_platen_force_list[i]) + abs(bot_platen_force_list[i])) / 1.0e9
-        #
-        #     # stress in MPa (force in kN & area in mm^2)
-        #     stress = avg_platen_force[axis_of_loading] / self.sample_width * 1.0e3
-        #     history_stress.append(stress)
-
-        return history_stress
-
-    def platen_displacement(self, material_id=None, boundary_condition_id=None, location=None):
-        # TODO: load based on threshold points (boundary condition)
-        #   can not do as there is a -1 boundary condition! And
-        #   this should be limited only to the platen boundary condition (e.g. confinement)
-        '''
-        Checks if Compression Simulations.
-        Calculate the strain based on the displacement in the platens.
-
-        :return: strain (%) = displacement / height of sample
-        :rtype: list
-
-        Example:
-            >>> data = pv.read("../example_outputs/Irazu_UCS")
-            >>> axial_disp = data.platen_displacement()
-            [0.0, 0.009259259235881877, 0.018518518471763754, 0.02777777770764563, 0.03703703694352751, 0.046296296179409384, 0.05555555541529126, 0.06481481465117314, 0.07407407388705502, 0.08333333312293689, 0.09259259235881877, 0.10185185159470064, 0.11111111083058252, 0.1203703700664644, 0.12962962930234628, 0.13888888853822817, 0.14814814777411003, 0.15740740700999192, 0.16666666624587378, 0.17592592548175565, 0.18518518471763754, 0.1944444439535194, 0.2037037031894013, 0.21296296242528318, 0.22222222166116504, 0.23148148089704693, 0.2407407401329288, 0.24999999936881068, 0.25925925860469257, 0.2685185178405744, 0.27777777707645634]
-
+        :Example:
+            >>> import openfdem as fdem
+            >>> data = fdem.Model("../example_outputs/OpenFDEM_BD")
+            <BLANKLINE>
+            # Minimal Arguments
+            >>> df_wo_SG = data.complete_stress_strain()
+            Columns:
+                Name: Platen Stress, dtype=float64, nullable: False
+                Name: Platen Strain, dtype=float64, nullable: False
+            >>> data.plot_stress_strain(df_wo_SG['Platen Strain'], df_wo_SG['Platen Stress'], label='stress-strain', color='green')
+            <AxesSubplot:xlabel='Strain (-)', ylabel='Axial Stress (MPa)'>
         '''
 
-        history_strain = []  # List to hold the stress_history
-        avg_platen_disp = [0.0, 0.0, 0.0]  # Dummy cell
-        axis_of_loading = 1  # Axis of loading in Y direction.
+        if ax is None:
+            ax = plt.gca()
+        ax.plot(strain, stress, **plt_kwargs)  # example plot here
+        plt.xlabel('Strain (-)')
+        plt.ylabel('Axial Stress (MPa)')
 
-        ## Get rock dimension.
-        self.rock_sample_dimensions()
-        ## Check UCS Simulation
-        if self.simulation_type() != "UCS Simulation":
-            print("Simulation appears to be not for compressive strength")
-
-        # Load each timestep
-        #backup copy compressed below
-
-        def strain_thresholding():
-            for openfdem_model_ts in self:
-
-                platen = (openfdem_model_ts.threshold([self.platen_cells_elem_id, self.platen_cells_elem_id],
-                                                      self.var_data["mineral_type"]))
-                top, bottom = (platen.get_data_range(self.var_data["boundary"]))
-
-                avg_top_platen_disp = self.platen_info(openfdem_model_ts, top, self.var_data["platen_displacement"])
-                avg_bottom_platen_disp = self.platen_info(openfdem_model_ts, bottom, self.var_data["platen_displacement"])
-
-
-                for i in range(0, self.number_of_points_per_cell):
-                    avg_platen_disp[i] = abs(avg_top_platen_disp[i]) + abs(avg_bottom_platen_disp[i])
-
-                strain_from_platen = avg_platen_disp[axis_of_loading] / self.sample_height * 100.0
-
-                history_strain.append(strain_from_platen)
-
-
-        threads = []
-        num_threads = 100 #we can make num_threads increase up to 4 or 5 digits of threads
-
-        for i in range(num_threads):
-            thread = Thread(target=strain_thresholding)
-            threads.append(thread)
-
-        for thread in threads:
-            thread.start()
-
-        for thread in threads:
-            thread.join()
-
-
-        threads = []
-        num_threads = 100 #we can make num_threads increase up to 4 or 5 digits of threads
-
-        for i in range(num_threads):
-            thread = Thread(target=strain_thresholding)
-            threads.append(thread)
-
-        for thread in threads:
-            thread.start()
-
-        for thread in threads:
-            thread.join()
-
-        return history_strain
-
-    # def generate_rose_diagrams(self,output_folder):
-    # """ Call generate_rose_diagram for each timestep"""
-
-    # def cluster_cracks(self):
-
-    # def save_csv_outputs(self,output_folder):
-
-    # def generate_basic_csv(self,output_file):
-
-    # def generate_brokenjoints_csv(self,output_file):
-
-    # def generate_seismic_csv(self,output_file):
-
-    def generate_history_csv(self, output_file):
-        '''
-
-        :param output_file:
-        :return:
-        '''
-
-        try:
-            self.history_stress
-        except AttributeError:
-            print("Processing UCS")
-            Model.process_UCS(self)
-
+        return ax
 
     # def generate_seismic_clustering_csv(self,output_file):
 
@@ -738,7 +593,7 @@ class Model:
     #     :return: UCS, stress_hist, strain_hist, Elastic_moduli
     #     :rtype: tuple[float, list[float, list[float, list[float]]
     #
-    #     Example:
+    #     :Example:
     #         >>> data = pv.read("../example_outputs/Irazu_UCS")
     #         >>> UCS, stress_hist, strain_hist, Elastic_moduli = data.process_UCS()
     #         (38.03245444023052, [0.0, 4.825237206318255, 9.628822864052236, 14.414373164820148, 19.191640765444546, 23.95880093999921, 28.711674236346393, 33.44027814633586, 38.03245444023052, 13.266469715550484, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30], [0.0, 0.009259259235881877, 0.018518518471763754, 0.02777777770764563, 0.03703703694352751, 0.046296296179409384, 0.05555555541529126, 0.06481481465117314, 0.07407407388705502, 0.08333333312293689, 0.09259259235881877, 0.10185185159470064, 0.11111111083058252, 0.1203703700664644, 0.12962962930234628, 0.13888888853822817, 0.14814814777411003, 0.15740740700999192, 0.16666666624587378, 0.17592592548175565, 0.18518518471763754, 0.1944444439535194, 0.2037037031894013, 0.21296296242528318, 0.22222222166116504, 0.23148148089704693, 0.2407407401329288, 0.24999999936881068, 0.25925925860469257, 0.2685185178405744, 0.27777777707645634], [5.15399101160927, 5.181743019752671])
@@ -830,7 +685,7 @@ class Model:
         :return: Tangent Elastic modulus at 50%
         :rtype: float
 
-        Example:
+        :Example:
             >>> data = pv.read("../example_outputs/Irazu_UCS")
             >>> df_1 = data.complete_stress_strain(True)
             >>> data.Etan_mod(df_1)
@@ -865,7 +720,7 @@ class Model:
         :return: Secant Elastic modulus between 0 and upperrange
         :rtype: float
 
-        Example:
+        :Example:
             >>> data = pv.read("../example_outputs/Irazu_UCS")
             >>> df_1 = data.complete_stress_strain(True)
             >>> data.Esec_mod(df_1, 0.5)
@@ -905,8 +760,9 @@ class Model:
         :type loc_strain: str
         :return: Average Elastic modulus
         :rtype: float
+        :raise ZeroDivisionError: The range over which to calculate the Eavg is too small. Consider a larger range.
 
-        Example:
+        :Example:
             >>> data = pv.read("../example_outputs/Irazu_UCS")
             >>> df_1 = data.complete_stress_strain(True)
             >>> data.Eavg_mod(df_1, 0.5, 0.6)
@@ -922,13 +778,17 @@ class Model:
             lowerrange = lowerrange / 100
 
         # Find the nearest match to the (upperrange * max stress) value.
-        df_sort = ucs_data.iloc[(ucs_data['Platen Stress'] - (max(ucs_data['Platen Stress']) * upperrange)).abs().argsort()[:1]]
+        df_sort_upper = ucs_data.iloc[(ucs_data['Platen Stress'] - (max(ucs_data['Platen Stress']) * upperrange)).abs().argsort()[:1]]
         # Find the nearest match to the (lowerrange * max stress) value.
-        df_sort = ucs_data.iloc[(ucs_data['Platen Stress'] - (max(ucs_data['Platen Stress']) * lowerrange)).abs().argsort()[:1]]
+        df_sort_lower = ucs_data.iloc[(ucs_data['Platen Stress'] - (max(ucs_data['Platen Stress']) * lowerrange)).abs().argsort()[:1]]
 
         # Return the index of the nearest match
-        upper_stress_id = df_sort.index[0]
-        lower_stress_id = df_sort.index[0]
+        upper_stress_id = df_sort_upper.index[0]
+        lower_stress_id = df_sort_lower.index[0]
+
+        # Error as the range is too small, which wields the same output time step in the script.
+        if upper_stress_id == lower_stress_id:
+            raise ZeroDivisionError("The range over which to calculate the Eavg is too small. Consider a larger range.")
 
         # Calculate delta stress/strain between the defined value
         delta_stress = (ucs_data['Platen Stress'][upper_stress_id] - ucs_data['Platen Stress'][lower_stress_id])
