@@ -8,6 +8,7 @@ import glob
 import os
 import os.path as path
 import re
+import matplotlib.pyplot as plt
 
 import pyvista as pv
 import time
@@ -19,7 +20,6 @@ import complete_BD_thread_pool_generators
 # from aggregate_storage import aggregate_storage
 
 # TODO
-# Give the user the option to identify the platen material ID
 # Function to extract stress/strain for the element
 
 class Model:
@@ -293,24 +293,6 @@ class Model:
         else:
             return mat_id
 
-    # def platen_check(self, platen_id, top_center_cell):
-    #
-    #     min, max = self.first_file.get_data_range(self.var_data["mineral_type"])
-    #
-    #     if platen_id == None:
-    #         print("Script Identifying Platen")
-    #         if top_center_cell == -1:
-    #             print("Unable to identify Platen ID Correctly.")
-    #         self.platen_cells_elem_id = pv.cell_array(top_center_cell, self.var_data['mineral_type'])
-    #     else:
-    #         if platen_id in range (min, max+1):
-    #             print("User Defined Platen ID")
-    #             self.platen_cells_elem_id = platen_id
-    #         else:
-    #             print("Undefined Material ID for platen")
-    #             raise IndexError("Material ID for platen out of range.\nMaterial Range %s" % self.all_elem_id)
-    #
-    #     print("\tPlaten Material ID found as %s" % self.platen_cells_elem_id)
 
     def rock_sample_dimensions(self, platen_id=None):
         '''
@@ -384,6 +366,7 @@ class Model:
         else:
             self.sim_type = "UCS Simulation"
         return self.sim_type
+
 
     def platen_info(self, pv_cells, platen_boundary_id, var_property):
         '''
@@ -512,222 +495,14 @@ class Model:
 
         return complete_BD_thread_pool_generators.main(self, st_status, gauge_width, gauge_length)
 
-    def platen_force(self, material_id=None, boundary_condition_id=None, location=None):
-        # TODO: load based on threshold points (boundary condition)
-        #   can not do as there is a -1 boundary condition! And
-        #   this should be limited only to the platen boundary condition (e.g. confinement)
-        # TODO: Why do we need so many input parameters ?
-        '''
-        Checks if Compression Simulations.
-        Calculate the stress based on the force in the platens.
 
-        :return: stress (MPa) = force / width of sample
-        :rtype: list
-
-        Example:
-            >>> data = pv.read("../example_outputs/Irazu_UCS")
-            >>> axial_stress = data.platen_force()
-            [0.0, 4.825237206318255, 9.628822864052236, 14.414373164820148, 19.191640765444546, 23.95880093999921, 28.711674236346393, 33.44027814633586, 38.03245444023052, 13.266469715550484, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30, 2.036136892438222e-30]
-        '''
-
-        history_stress = []  # List to hold the stress_history
-        avg_platen_force = [0.0, 0.0, 0.0]  # Dummy cell
-        axis_of_loading = 1  # Axis of loading in Y direction.
-
-        ## Get rock dimension.
-        self.rock_sample_dimensions()
-        ## Check UCS Simulation
-        if self.simulation_type() != "UCS Simulation":
-            print("Simulation appears to be not for compressive strength")
-
-        # Load each timestep
-        def stress_thresholding():
-            for openfdem_model_ts in self:
-
-                platen = (openfdem_model_ts.threshold([self.platen_cells_elem_id, self.platen_cells_elem_id],
-                                                      self.var_data["mineral_type"]))
-                top, bottom = (platen.get_data_range(self.var_data["boundary"]))
-
-                top_platen_force_list = self.platen_info(openfdem_model_ts, top, self.var_data["platen_force"])
-                bot_platen_force_list = self.platen_info(openfdem_model_ts, bottom, self.var_data["platen_force"])
-
-                for i in range(0, self.number_of_points_per_cell):
-                    # Convert forces from microN to kN and get the average forces
-                    avg_platen_force[i] = 0.5 * (abs(top_platen_force_list[i]) + abs(bot_platen_force_list[i])) / 1.0e9
-
-                # stress in MPa (force in kN & area in mm^2)
-                stress = avg_platen_force[axis_of_loading] / self.sample_width * 1.0e3
-                history_stress.append(stress)
-
-
-        processes=[]
-        num_processes = os.cpu_count()
-
-        for i in range(num_processes):
-            process = Process(target=stress_thresholding)
-            processes.append(process)
-
-        for process in processes:
-            process.start()
-
-        for process in processes:
-            process.join()
-
-        # for openfdem_model_ts in self:
-        #
-        #     platen = (openfdem_model_ts.threshold([self.platen_cells_elem_id, self.platen_cells_elem_id],
-        #                                           self.var_data["mineral_type"]))
-        #     top, bottom = (platen.get_data_range(self.var_data["boundary"]))
-        #
-        #     top_platen_force_list = self.platen_info(openfdem_model_ts, top, self.var_data["platen_force"])
-        #     bot_platen_force_list = self.platen_info(openfdem_model_ts, bottom, self.var_data["platen_force"])
-        #
-        #     for i in range(0, self.number_of_points_per_cell):
-        #         # Convert forces from microN to kN and get the average forces
-        #         avg_platen_force[i] = 0.5 * (abs(top_platen_force_list[i]) + abs(bot_platen_force_list[i])) / 1.0e9
-        #
-        #     # stress in MPa (force in kN & area in mm^2)
-        #     stress = avg_platen_force[axis_of_loading] / self.sample_width * 1.0e3
-        #     history_stress.append(stress)
-
-
-        processes=[]
-        num_processes = os.cpu_count()
-
-        for i in range(num_processes):
-            process = Process(target=stress_thresholding)
-            processes.append(process)
-
-        for process in processes:
-            process.start()
-
-        for process in processes:
-            process.join()
-
-        # for openfdem_model_ts in self:
-        #
-        #     platen = (openfdem_model_ts.threshold([self.platen_cells_elem_id, self.platen_cells_elem_id],
-        #                                           self.var_data["mineral_type"]))
-        #     top, bottom = (platen.get_data_range(self.var_data["boundary"]))
-        #
-        #     top_platen_force_list = self.platen_info(openfdem_model_ts, top, self.var_data["platen_force"])
-        #     bot_platen_force_list = self.platen_info(openfdem_model_ts, bottom, self.var_data["platen_force"])
-        #
-        #     for i in range(0, self.number_of_points_per_cell):
-        #         # Convert forces from microN to kN and get the average forces
-        #         avg_platen_force[i] = 0.5 * (abs(top_platen_force_list[i]) + abs(bot_platen_force_list[i])) / 1.0e9
-        #
-        #     # stress in MPa (force in kN & area in mm^2)
-        #     stress = avg_platen_force[axis_of_loading] / self.sample_width * 1.0e3
-        #     history_stress.append(stress)
-
-        return history_stress
-
-    def platen_displacement(self, material_id=None, boundary_condition_id=None, location=None):
-        # TODO: load based on threshold points (boundary condition)
-        #   can not do as there is a -1 boundary condition! And
-        #   this should be limited only to the platen boundary condition (e.g. confinement)
-        '''
-        Checks if Compression Simulations.
-        Calculate the strain based on the displacement in the platens.
-
-        :return: strain (%) = displacement / height of sample
-        :rtype: list
-
-        Example:
-            >>> data = pv.read("../example_outputs/Irazu_UCS")
-            >>> axial_disp = data.platen_displacement()
-            [0.0, 0.009259259235881877, 0.018518518471763754, 0.02777777770764563, 0.03703703694352751, 0.046296296179409384, 0.05555555541529126, 0.06481481465117314, 0.07407407388705502, 0.08333333312293689, 0.09259259235881877, 0.10185185159470064, 0.11111111083058252, 0.1203703700664644, 0.12962962930234628, 0.13888888853822817, 0.14814814777411003, 0.15740740700999192, 0.16666666624587378, 0.17592592548175565, 0.18518518471763754, 0.1944444439535194, 0.2037037031894013, 0.21296296242528318, 0.22222222166116504, 0.23148148089704693, 0.2407407401329288, 0.24999999936881068, 0.25925925860469257, 0.2685185178405744, 0.27777777707645634]
-
-        '''
-
-        history_strain = []  # List to hold the stress_history
-        avg_platen_disp = [0.0, 0.0, 0.0]  # Dummy cell
-        axis_of_loading = 1  # Axis of loading in Y direction.
-
-        ## Get rock dimension.
-        self.rock_sample_dimensions()
-        ## Check UCS Simulation
-        if self.simulation_type() != "UCS Simulation":
-            print("Simulation appears to be not for compressive strength")
-
-        # Load each timestep
-        #backup copy compressed below
-
-        def strain_thresholding():
-            for openfdem_model_ts in self:
-
-                platen = (openfdem_model_ts.threshold([self.platen_cells_elem_id, self.platen_cells_elem_id],
-                                                      self.var_data["mineral_type"]))
-                top, bottom = (platen.get_data_range(self.var_data["boundary"]))
-
-                avg_top_platen_disp = self.platen_info(openfdem_model_ts, top, self.var_data["platen_displacement"])
-                avg_bottom_platen_disp = self.platen_info(openfdem_model_ts, bottom, self.var_data["platen_displacement"])
-
-
-                for i in range(0, self.number_of_points_per_cell):
-                    avg_platen_disp[i] = abs(avg_top_platen_disp[i]) + abs(avg_bottom_platen_disp[i])
-
-                strain_from_platen = avg_platen_disp[axis_of_loading] / self.sample_height * 100.0
-
-                history_strain.append(strain_from_platen)
-
-
-        threads = []
-        num_threads = 100 #we can make num_threads increase up to 4 or 5 digits of threads
-
-        for i in range(num_threads):
-            thread = Thread(target=strain_thresholding)
-            threads.append(thread)
-
-        for thread in threads:
-            thread.start()
-
-        for thread in threads:
-            thread.join()
-
-
-        threads = []
-        num_threads = 100 #we can make num_threads increase up to 4 or 5 digits of threads
-
-        for i in range(num_threads):
-            thread = Thread(target=strain_thresholding)
-            threads.append(thread)
-
-        for thread in threads:
-            thread.start()
-
-        for thread in threads:
-            thread.join()
-
-        return history_strain
-
-    # def generate_rose_diagrams(self,output_folder):
-    # """ Call generate_rose_diagram for each timestep"""
-
-    # def cluster_cracks(self):
-
-    # def save_csv_outputs(self,output_folder):
-
-    # def generate_basic_csv(self,output_file):
-
-    # def generate_brokenjoints_csv(self,output_file):
-
-    # def generate_seismic_csv(self,output_file):
-
-    def generate_history_csv(self, output_file):
-        '''
-
-        :param output_file:
-        :return:
-        '''
-
-        try:
-            self.history_stress
-        except AttributeError:
-            print("Processing UCS")
-            Model.process_UCS(self)
-
+    def plot_stress_strain(self, strain, stress, ax=None, **plt_kwargs):
+        if ax is None:
+            ax = plt.gca()
+        ax.plot(strain, stress, **plt_kwargs)  # example plot here
+        plt.xlabel('Strain (-)')
+        plt.ylabel('Axial Stress (MPa)')
+        return (ax)
 
     # def generate_seismic_clustering_csv(self,output_file):
 
@@ -922,13 +697,17 @@ class Model:
             lowerrange = lowerrange / 100
 
         # Find the nearest match to the (upperrange * max stress) value.
-        df_sort = ucs_data.iloc[(ucs_data['Platen Stress'] - (max(ucs_data['Platen Stress']) * upperrange)).abs().argsort()[:1]]
+        df_sort_upper = ucs_data.iloc[(ucs_data['Platen Stress'] - (max(ucs_data['Platen Stress']) * upperrange)).abs().argsort()[:1]]
         # Find the nearest match to the (lowerrange * max stress) value.
-        df_sort = ucs_data.iloc[(ucs_data['Platen Stress'] - (max(ucs_data['Platen Stress']) * lowerrange)).abs().argsort()[:1]]
+        df_sort_lower = ucs_data.iloc[(ucs_data['Platen Stress'] - (max(ucs_data['Platen Stress']) * lowerrange)).abs().argsort()[:1]]
 
         # Return the index of the nearest match
-        upper_stress_id = df_sort.index[0]
-        lower_stress_id = df_sort.index[0]
+        upper_stress_id = df_sort_upper.index[0]
+        lower_stress_id = df_sort_lower.index[0]
+
+        # Error as the range is too small, which wields the same output time step in the script.
+        if upper_stress_id == lower_stress_id:
+            raise ZeroDivisionError("The range over which to calculate the Eavg is too small. Consider a larger range.")
 
         # Calculate delta stress/strain between the defined value
         delta_stress = (ucs_data['Platen Stress'][upper_stress_id] - ucs_data['Platen Stress'][lower_stress_id])
