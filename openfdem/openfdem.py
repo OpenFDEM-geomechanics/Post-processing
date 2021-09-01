@@ -324,6 +324,31 @@ class Model:
         else:
             return mat_id
 
+    def openfdem_att_check(self, att):
+        '''
+        Checks the material ID is a valid choice.
+
+        :param mat_id: Attribute
+        :type mat_id: str
+        :return: Attribute
+        :rtype: str
+        :raise KeyError: Attribute does not exist.
+
+        :Example:
+            >>> import openfdem as fdem
+            >>> model = fdem.Model("../example_outputs/Irazu_UCS")
+            <BLANKLINE>
+            >>> model.openfdem_att_check('material_type')
+            'material_type'
+            >>> model.openfdem_att_check('material_property')
+            KeyError: Attribute does not exist.
+            Available options are mineral_type, boundary, platen_force, platen_displacement, gauge_displacement'
+        '''
+
+        if att not in self.var_data.keys():
+            raise KeyError("Attribute does not exist.\nAvailable options are %s" % ", ".join(list(self.var_data.keys())))
+        else:
+            return att
 
     def rock_sample_dimensions(self, platen_id=None):
         '''
@@ -442,7 +467,40 @@ class Model:
 
     # def get_broken(self, mode_id=None):
 
-    # def find_cell(self, points):
+    def find_cell(self, model_point):
+        '''
+        Identify the nearest cell in the model to the defined point
+
+        :param model_point: x,y,z of a point in the model which
+        :type model_point: list[float, float, float]
+        :return: the cell nearest to the point
+        :rtype: int
+
+        :Example:
+            >>> import openfdem as fdem
+            >>> data = fdem.Model("../example_outputs/Irazu_UCS")
+            <BLANKLINE>
+            >>> data.find_cell([0, 0, 0])
+            2167
+            >>> data.find_cell([100, 100, 0])
+            IndexError: Point outside model domain.
+            X=56.0, Y=116.0, Z=0.0
+
+        '''
+
+        if self.first_file.find_closest_cell(model_point) == -1:
+            raise IndexError("Point outside model domain.\nX=%s, Y=%s, Z=%s" % (self.model_dimensions()[0], self.model_dimensions()[1], self.model_dimensions()[2]))
+
+        return self.first_file.find_closest_cell(model_point)
+
+
+    def extract_cell_info(self, cell_id, array_needed):
+
+        self.openfdem_att_check(array_needed)
+
+        import extract_cell_thread_pool_generators
+
+        return extract_cell_thread_pool_generators.main(self, cell_id, array_needed)
 
     # def model_composition(self):
     # if not self._basic_0_loaded:
