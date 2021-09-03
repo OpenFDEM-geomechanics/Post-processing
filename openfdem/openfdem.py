@@ -9,18 +9,17 @@ import os
 import os.path as path
 import re
 import matplotlib.pyplot as plt
+import pandas as pd
 
 import pyvista as pv
 import time
 import concurrent.futures
 from multiprocessing import Process
 from threading import Thread
-import complete_UCS_thread_pool_generators
-import complete_BD_thread_pool_generators
+# import complete_UCS_thread_pool_generators
+# import complete_BD_thread_pool_generators
 # from aggregate_storage import aggregate_storage
 
-# TODO
-# Function to extract stress/strain for the element
 
 class Model:
     """Model class collects datafiles into one interface.
@@ -93,6 +92,7 @@ class Model:
         parts[1::2] = map(int, parts[1::2])  # Return the numerical portion of the file
         return parts
 
+
     def _findOutputFiles(self, dir_path, file_extension, output_type):
         """Find the collection of vtk files that belong to a specific group
         
@@ -121,6 +121,7 @@ class Model:
         list_of_files = [path.relpath(vtkfile) for vtkfile in list_of_files]
 
         return list_of_files
+
 
     def __init__(self, folder=None, runfile=None, fdem_engine=None):
         """Create a Model object that finds all the run files and organizes all the file names on creation.
@@ -169,6 +170,7 @@ class Model:
         elif self._fdem_engine == "OpenFDEM":
             self.var_data = Model._var_dataset["openFDEM"]
 
+
     def __getitem__(self, key):
         """ Obtain all arrays by timestep access.
 
@@ -186,7 +188,9 @@ class Model:
             <BLANKLINE>
         """
 
-        # TODO: how to identify the data set being interrogated (basic / seismic?)
+        # TODO:
+        #  how to identify the data set being interrogated (basic / seismic?)
+
         try :
             if isinstance(key, int):
                 self.timestep_data = pv.read(self._basic_files[key])
@@ -197,11 +201,14 @@ class Model:
         except IndexError:
             raise IndexError('Index outside model data range')
 
+
     # def __contains__(self, item):
     # """ Access to timestep in Model
-    # """
+
+
     # def __len__(self):
     # """ Number of timestep files """
+
 
     def model_dimensions(self, mat_id=None):
         '''
@@ -273,27 +280,6 @@ class Model:
             raise Exception("3D Simulation not supported")
 
         return node_skip
-
-    # def load_basic(self,timestep=None):
-
-
-    # def filter_material(self, material_id):
-    #     ''' Threshold based on the material id
-    #
-    #     :param material_id: material id to be threshold
-    #     :type material_id: int
-    #     :return: Dataset of the threshold
-    #     :rtype: Union[MultiBlock, UnstructuredGrid]
-    #
-    #     :Example:
-    #         >>> import openfdem as fdem
-    #         >>> model = fdem.Model("../example_outputs/Irazu_UCS")
-    #         <BLANKLINE>
-    #     '''
-    #
-    #     filtered_data = self._data.threshold([material_id, material_id], self.var_data["mineral_type"])
-    #
-    #     return filtered_data
 
 
     def mat_bound_check(self, mat_id):
@@ -479,7 +465,7 @@ class Model:
         :Example:
             >>> import openfdem as fdem
             >>> data = fdem.Model("../example_outputs/Irazu_UCS")
-            <BLANKLINE>
+            <<BLANKLINE>>
             >>> data.find_cell([0, 0, 0])
             2167
             >>> data.find_cell([100, 100, 0])
@@ -494,20 +480,100 @@ class Model:
         return self.first_file.find_closest_cell(model_point)
 
 
-    def extract_cell_info(self, cell_id, array_needed):
+    def unpack_DataFrame(self, packed_cell_info):
+        '''
+        Unpacking of the original array produced by pyvista
+        If the array is a point data, the array is suffixed with _Nx where x is the node on that cell.
 
-        self.openfdem_att_check(array_needed)
+        :param packed_cell_info:
+        :type packed_cell_info: pandas.DataFrame
+        :return: Unpacked DataFrame
+        :rtype: pandas.DataFrame
+        '''
+
+        unpacked_DataFrame = pd.DataFrame()
+        for idx, i in enumerate(list(packed_cell_info.columns)):
+            name_list = []
+            if len(packed_cell_info[i][0]) == 1:
+                temp_list = packed_cell_info.explode(i)
+                df = temp_list[i]
+            else:
+                for j in range(1, len(packed_cell_info[i][0]) + 1):
+                    name_list.append(i + "_N%s" % j)
+                df = pd.DataFrame([pd.Series(x) for x in packed_cell_info[i]])
+                df.columns = name_list
+
+            unpacked_DataFrame = pd.concat([unpacked_DataFrame, df], axis=1)
+
+        return unpacked_DataFrame
+
+    def extract_cell_info(self, cell_id, arrays_needed):
+        '''
+        Returns the information of the cell based on the array requested.
+        If the array is a point data, the array is suffixed with _Nx where x is the node on that cell.
+
+        :param cell_id: Cell ID to extract
+        :type cell_id: int
+        :param arrays_needed: list of array names to extract
+        :type arrays_needed: list[str]
+        :return: unpacked DataFrame
+        :rtype: pandas.DataFrame
+
+        :Example:
+            >>> import openfdem as fdem
+            >>> data = fdem.Model("../example_outputs/Irazu_UCS")
+            <BLANKLINE>
+            # Extract data platen_force', 'boundary', 'mineral_type' from Cell ID 1683
+            >>> extraction_of_cellinfo = data.extract_cell_info(1683, ['platen_force', 'boundary', 'mineral_type'])
+            Columns:
+                Name: platen_force_N1, dtype=object, nullable: False
+                Name: platen_force_N2, dtype=object, nullable: False
+                Name: platen_force_N3, dtype=object, nullable: False
+                Name: boundary_N1, dtype=int64, nullable: False
+                Name: boundary_N2, dtype=int64, nullable: False
+                Name: boundary_N3, dtype=int64, nullable: False
+                Name: mineral_type, dtype=object, nullable: False
+            # For noded information => PLOTTING METHOD ONE
+            >>> x, y = [], []
+            >>> for i, row in extraction_of_cellinfo.iterrows():
+            >>>     x.append(i)
+            >>>     y.append(row['platen_force_N2'][0])
+            >>> plt.plot(x, y, c='red', label='platen_force_N2_x')
+            >>> plt.legend()
+            >>> plt.show()
+            # For noded information => PLOTTING METHOD TWO
+            >>> lx = extraction_of_cellinfo['platen_force_N2'].to_list()
+            >>> lx1 = list(zip(*lx))
+            >>> plt.plot(lx1[0], label='platen_force_N2_x')
+            >>> plt.plot(lx1[1], label='platen_force_N2_y')
+            >>> plt.plot(lx1[2], label='platen_force_N2_z')
+            >>> plt.legend()
+            >>> plt.show()
+            # For non-nonded infomration
+            >>> plt.plot(lx1[0], label='mineral_type')
+            >>> plt.legend()
+            >>> plt.show()
+
+        '''
+
+        if not type(arrays_needed) == list:
+            self.openfdem_att_check(arrays_needed)
+        else:
+            for array_needed in arrays_needed:
+                self.openfdem_att_check(array_needed)
 
         import extract_cell_thread_pool_generators
 
-        return extract_cell_thread_pool_generators.main(self, cell_id, array_needed)
+        packed_df = extract_cell_thread_pool_generators.main(self, cell_id, arrays_needed)
+
+        unpacked_df = self.unpack_DataFrame(packed_df)
+
+        return unpacked_df
 
     # def model_composition(self):
     # if not self._basic_0_loaded:
     # load_basic(0)
-    # def n_cells(self): #TODO: Is this function even useful?
 
-    # def n_points(self): #TODO: Is this function even useful?
 
     # def broken_joints(self, mode=None,):
 
@@ -530,7 +596,7 @@ class Model:
         :param gauge_width: width of the virtual strain gauge
         :type gauge_width: float
         :return: full stress-strain information
-        :rtype: pd.DataFrame
+        :rtype: pandas.DataFrame
 
         :Example:
             >>> import openfdem as fdem
@@ -565,6 +631,9 @@ class Model:
 
         #TODO:
         # Ability to define the center point of the SG.
+
+        import complete_UCS_thread_pool_generators
+
         return complete_UCS_thread_pool_generators.main(self, platen_id, st_status, gauge_width, gauge_length)
 
 
@@ -605,6 +674,8 @@ class Model:
                 Name: Gauge Displacement X, dtype=float64, nullable: False
                 Name: Gauge Displacement Y, dtype=float64, nullable: False
         '''
+
+        import complete_BD_thread_pool_generators
 
         return complete_BD_thread_pool_generators.main(self, st_status, gauge_width, gauge_length)
 
