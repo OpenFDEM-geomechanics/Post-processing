@@ -212,7 +212,7 @@ def main(model, platen_id, st_status, gauge_width, gauge_length):
     # Load basic files in the concurrent Thread Pool
     for fname in f_names:
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            results = list(executor.map(history_strain_func, f_names, repeat(model), cv, ch))  # is self the list we are iterating over
+            results = list(executor.map(history_strain_func, fname, repeat(model), cv, ch))  # is self the list we are iterating over
 
     # Iterate through the files in the defined function
     for fname_iter in f_names:
