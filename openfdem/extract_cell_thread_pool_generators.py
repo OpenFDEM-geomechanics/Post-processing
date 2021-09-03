@@ -2,13 +2,14 @@ import concurrent.futures
 import time
 from itertools import repeat
 
+import pandas as pd
 import pyvista as pv
 
 import formatting_codes
 
-
 def history_cellinfo_func(f_name, model, cell_id, array_needed):
     '''
+    Generate a dictionary of the various array being interrogated for the said cell ID
 
     :param f_name: name of vtu file being processed
     :type f_name: str
@@ -23,13 +24,14 @@ def history_cellinfo_func(f_name, model, cell_id, array_needed):
     '''
 
     openfdem_model_ts = pv.read(f_name)
-
+    ts_values = []
     # Extract Data and convert to list and get value
-    cell_value = openfdem_model_ts.extract_cells([cell_id][0]).get_array(model.var_data[[array_needed][0]]).tolist()[0]
 
-    # Append value to list
-    cell_data.append(cell_value)
-    yield cell_data
+    for i_array_needed in array_needed:
+        ts_values = openfdem_model_ts.extract_cells([cell_id][0]).get_array(model.var_data[i_array_needed]).tolist()
+        dict_array[i_array_needed].append(ts_values)
+
+    yield dict_array
 
 
 def main(model, cellid, arrayname):
@@ -42,12 +44,21 @@ def main(model, cellid, arrayname):
     :type cellid: int
     :param arrayname: Name of the property to extract
     :type arrayname: str
-    :return: list of the values of the property from the cell being extracted
-    :rtype: list
+    :return: DataFrame of the values of the property from the cell being extracted
+    :rtype: pandas.DataFrame
     '''
 
-    global cell_data
-    cell_data = []  # to reset the value everytime the function is called.
+    global cell_data, dict_array
+    # To reset the value everytime the function is called.
+    cell_data = []
+    dict_array = {}
+
+    if type(arrayname) == list:
+        for i in arrayname:
+            dict_array[i] = []
+    else:
+        dict_array[arrayname] = []
+        arrayname = [arrayname]
 
     # File names of the basic files
     f_names = model._basic_files
@@ -58,7 +69,7 @@ def main(model, cellid, arrayname):
     # Load basic files in the concurrent Thread Pool
     for fname in f_names:
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            results = list(executor.map(history_cellinfo_func, f_names, repeat(model), [cellid], [arrayname]))  # is self the list we are iterating over
+            results = list(executor.map(history_cellinfo_func, fname, repeat(model), [cellid], arrayname))  # is self the list we are iterating over
 
     # Iterate through the files in the defined function
     for fname_iter in f_names:
@@ -67,4 +78,7 @@ def main(model, cellid, arrayname):
 
     print(formatting_codes.calc_timer_values(time.time() - start))
 
-    return cell_data
+    # Convert the dictionary into a DataFrame
+    cell_df = pd.DataFrame.from_dict(dict_array)
+
+    return cell_df
