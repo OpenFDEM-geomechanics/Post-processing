@@ -5,7 +5,7 @@ from itertools import repeat
 import pandas as pd
 import pyvista as pv
 
-import formatting_codes
+from . import formatting_codes
 
 # Initialise Variables
 history_strain, history_stress = [], []
@@ -21,9 +21,10 @@ def history_strain_func(f_name, model, cv, ch):
     :param model: FDEM Model Class
     :type model:  openfdem.openfdem.Model
     :param cv: list of cells at the corner of the vertical strain gauge
-    :type cv: list
+    :type cv: list[int]
     :param ch: list of cells at the corner of the horizontal strain gauge
-    :type ch: list
+    :type ch: list[int]
+
     :return: Stress, Platen Strain, SG Strain, SG Lateral Strain
     :rtype: Generator[Tuple[list, list, list, list], Any, None]
     """
@@ -109,6 +110,7 @@ def set_strain_gauge(model, gauge_length=None, gauge_width=None):
     :type gauge_length: float
     :param gauge_width: width of the virtual strain gauge
     :type gauge_width: float
+
     :return: Cells that cover the horizontal and vertical gauges as well as the gauge width and length
     :rtype: [list, list, float, float]
     """
@@ -185,6 +187,7 @@ def main(model, platen_id, st_status, gauge_width, gauge_length):
     :type gauge_width:  float
     :param gauge_length: SG length
     :type gauge_length: float
+
     :return: full stress-strain information
     :rtype: pd.DataFrame
     """

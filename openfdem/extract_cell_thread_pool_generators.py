@@ -5,10 +5,10 @@ from itertools import repeat
 import pandas as pd
 import pyvista as pv
 
-import formatting_codes
+from . import formatting_codes
 
 def history_cellinfo_func(f_name, model, cell_id, array_needed):
-    '''
+    """
     Generate a dictionary of the various array being interrogated for the said cell ID
 
     :param f_name: name of vtu file being processed
@@ -18,10 +18,11 @@ def history_cellinfo_func(f_name, model, cell_id, array_needed):
     :param cell_id: ID of the cell from which the data needs to be extracted
     :type cell_id: int
     :param array_needed: Name of the property to extract
-    :type array_needed: str
+    :type array_needed: list[str]
+
     :return: The value of the property from the cell being extracted
     :rtype: Generator[Tuple()]
-    '''
+    """
 
     openfdem_model_ts = pv.read(f_name)
     ts_values = []
@@ -35,7 +36,7 @@ def history_cellinfo_func(f_name, model, cell_id, array_needed):
 
 
 def main(model, cellid, arrayname):
-    '''
+    """
     Main concurrent Thread Pool to get value of the property from the cell being extracted
 
     :param model: FDEM Model Class
@@ -43,10 +44,11 @@ def main(model, cellid, arrayname):
     :param cellid: ID of the cell from which the data needs to be extracted
     :type cellid: int
     :param arrayname: Name of the property to extract
-    :type arrayname: str
+    :type arrayname: list[str]
+
     :return: DataFrame of the values of the property from the cell being extracted
     :rtype: pandas.DataFrame
-    '''
+    """
 
     global cell_data, dict_array
     # To reset the value everytime the function is called.
