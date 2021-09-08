@@ -1,0 +1,134 @@
+\begin{sphinxtheindex}
+\let\bigletter\sphinxstyleindexlettergroup
+\let\spxpagem \sphinxstyleindexpagemain
+\let\spxentry \sphinxstyleindexentry
+\let\spxextra \sphinxstyleindexextra
+
+  \bigletter A
+  \item \spxentry{aggregate\_storage}\spxextra{class in openfdem.aggregate\_storage}, \hyperpage{1}
+
+  \indexspace
+  \bigletter B
+  \item \spxentry{bold\_text()}\spxextra{in module openfdem.formatting\_codes}, \hyperpage{4}
+
+  \indexspace
+  \bigletter C
+  \item \spxentry{calc\_timer\_values()}\spxextra{in module openfdem.formatting\_codes}, 
+		\hyperpage{4}
+  \item \spxentry{complete\_BD\_stress\_strain()}\spxextra{openfdem.openfdem.Model method}, 
+		\hyperpage{6}
+  \item \spxentry{complete\_stress\_strain()}\spxextra{openfdem.openfdem.Model method}, 
+		\hyperpage{7}
+
+  \indexspace
+  \bigletter D
+  \item \spxentry{docstring\_creator()}\spxextra{in module openfdem.formatting\_codes}, 
+		\hyperpage{4}
+
+  \indexspace
+  \bigletter E
+  \item \spxentry{Eavg\_mod()}\spxextra{openfdem.openfdem.Model method}, \hyperpage{5}
+  \item \spxentry{Esec\_mod()}\spxextra{openfdem.openfdem.Model method}, \hyperpage{5}
+  \item \spxentry{Etan50\_mod()}\spxextra{openfdem.openfdem.Model method}, \hyperpage{6}
+  \item \spxentry{extract\_cell\_info()}\spxextra{openfdem.openfdem.Model method}, \hyperpage{8}
+
+  \indexspace
+  \bigletter F
+  \item \spxentry{file\_group\_key()}\spxextra{openfdem.aggregate\_storage.aggregate\_storage method}, 
+		\hyperpage{1}
+  \item \spxentry{find\_cell()}\spxextra{openfdem.openfdem.Model method}, \hyperpage{8}
+
+  \indexspace
+  \bigletter G
+  \item \spxentry{green\_text()}\spxextra{in module openfdem.formatting\_codes}, \hyperpage{4}
+
+  \indexspace
+  \bigletter H
+  \item \spxentry{history\_cellinfo\_func()}\spxextra{in module openfdem.extract\_cell\_thread\_pool\_generators}, 
+		\hyperpage{4}
+  \item \spxentry{history\_strain\_func()}\spxextra{in module openfdem.complete\_BD\_thread\_pool\_generators}, 
+		\hyperpage{2}
+  \item \spxentry{history\_strain\_func()}\spxextra{in module openfdem.complete\_UCS\_thread\_pool\_generators}, 
+		\hyperpage{3}
+
+  \indexspace
+  \bigletter M
+  \item \spxentry{main()}\spxextra{in module openfdem.complete\_BD\_thread\_pool\_generators}, 
+		\hyperpage{2}
+  \item \spxentry{main()}\spxextra{in module openfdem.complete\_UCS\_thread\_pool\_generators}, 
+		\hyperpage{3}
+  \item \spxentry{main()}\spxextra{in module openfdem.extract\_cell\_thread\_pool\_generators}, 
+		\hyperpage{4}
+  \item \spxentry{mat\_bound\_check()}\spxextra{openfdem.openfdem.Model method}, \hyperpage{8}
+  \item \spxentry{Model}\spxextra{class in openfdem.openfdem}, \hyperpage{5}
+  \item \spxentry{model\_dimensions()}\spxextra{openfdem.openfdem.Model method}, \hyperpage{8}
+  \item \spxentry{model\_domain()}\spxextra{openfdem.openfdem.Model method}, \hyperpage{9}
+  \item \spxentry{module}
+    \subitem \spxentry{openfdem}, \hyperpage{11}
+    \subitem \spxentry{openfdem.aggregate\_storage}, \hyperpage{1}
+    \subitem \spxentry{openfdem.complete\_BD\_thread\_pool\_generators}, \hyperpage{2}
+    \subitem \spxentry{openfdem.complete\_UCS\_thread\_pool\_generators}, \hyperpage{3}
+    \subitem \spxentry{openfdem.extract\_cell\_thread\_pool\_generators}, \hyperpage{4}
+    \subitem \spxentry{openfdem.formatting\_codes}, \hyperpage{4}
+    \subitem \spxentry{openfdem.model\_reader}, \hyperpage{5}
+    \subitem \spxentry{openfdem.openfdem}, \hyperpage{5}
+  \item \spxentry{mp\_read()}\spxextra{in module openfdem.model\_reader}, \hyperpage{5}
+  \item \spxentry{multiprocess\_async()}\spxextra{in module openfdem.model\_reader}, \hyperpage{5}
+  \item \spxentry{multiprocess\_lib\_read()}\spxextra{in module openfdem.model\_reader}, 
+		\hyperpage{5}
+
+  \indexspace
+  \bigletter N
+  \item \spxentry{normal\_read()}\spxextra{in module openfdem.model\_reader}, \hyperpage{5}
+
+  \indexspace
+  \bigletter O
+  \item \spxentry{openfdem}
+    \subitem \spxentry{module}, \hyperpage{11}
+  \item \spxentry{openfdem.aggregate\_storage}
+    \subitem \spxentry{module}, \hyperpage{1}
+  \item \spxentry{openfdem.complete\_BD\_thread\_pool\_generators}
+    \subitem \spxentry{module}, \hyperpage{2}
+  \item \spxentry{openfdem.complete\_UCS\_thread\_pool\_generators}
+    \subitem \spxentry{module}, \hyperpage{3}
+  \item \spxentry{openfdem.extract\_cell\_thread\_pool\_generators}
+    \subitem \spxentry{module}, \hyperpage{4}
+  \item \spxentry{openfdem.formatting\_codes}
+    \subitem \spxentry{module}, \hyperpage{4}
+  \item \spxentry{openfdem.model\_reader}
+    \subitem \spxentry{module}, \hyperpage{5}
+  \item \spxentry{openfdem.openfdem}
+    \subitem \spxentry{module}, \hyperpage{5}
+  \item \spxentry{openfdem\_att\_check()}\spxextra{openfdem.openfdem.Model method}, \hyperpage{9}
+
+  \indexspace
+  \bigletter P
+  \item \spxentry{platen\_info()}\spxextra{openfdem.openfdem.Model method}, \hyperpage{9}
+  \item \spxentry{plot\_stress\_strain()}\spxextra{openfdem.openfdem.Model method}, \hyperpage{10}
+  \item \spxentry{pv\_read()}\spxextra{in module openfdem.model\_reader}, \hyperpage{5}
+  \item \spxentry{pv\_read\_queue()}\spxextra{in module openfdem.model\_reader}, \hyperpage{5}
+
+  \indexspace
+  \bigletter R
+  \item \spxentry{read\_file()}\spxextra{openfdem.aggregate\_storage.aggregate\_storage method}, 
+		\hyperpage{1}
+  \item \spxentry{red\_text()}\spxextra{in module openfdem.formatting\_codes}, \hyperpage{4}
+  \item \spxentry{rock\_sample\_dimensions()}\spxextra{openfdem.openfdem.Model method}, 
+		\hyperpage{10}
+
+  \indexspace
+  \bigletter S
+  \item \spxentry{set\_strain\_gauge()}\spxextra{in module openfdem.complete\_BD\_thread\_pool\_generators}, 
+		\hyperpage{2}
+  \item \spxentry{set\_strain\_gauge()}\spxextra{in module openfdem.complete\_UCS\_thread\_pool\_generators}, 
+		\hyperpage{3}
+  \item \spxentry{simulation\_type()}\spxextra{openfdem.openfdem.Model method}, \hyperpage{11}
+  \item \spxentry{store\_file()}\spxextra{openfdem.aggregate\_storage.aggregate\_storage method}, 
+		\hyperpage{1}
+
+  \indexspace
+  \bigletter T
+  \item \spxentry{timed()}\spxextra{in module openfdem.model\_reader}, \hyperpage{5}
+  \item \spxentry{Timestep}\spxextra{class in openfdem.openfdem}, \hyperpage{11}
+
+\end{sphinxtheindex}

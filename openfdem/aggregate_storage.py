@@ -7,6 +7,7 @@ from tqdm import tqdm
 
 class aggregate_storage:
     """Aggregator class to store VTK files in a single h5 file for faster access to data.
+        :param: none
     """
     def file_group_key(self,vtkfilename):
         """Produces a standard group/key based on VTK file name

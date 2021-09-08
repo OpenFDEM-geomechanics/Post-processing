@@ -1,0 +1,1073 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>openfdem package &mdash; openFDEM Post-Processing 0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="About OpenFDEM Post-Processing Modules" href="about.html" />
+    <link rel="prev" title="openfdem" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> openFDEM Post-Processing
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">openfdem</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">openfdem package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#openfdem-aa-test-fdem-module">openfdem.aa_test_fdem module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-openfdem.aggregate_storage">openfdem.aggregate_storage module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-openfdem.complete_BD_thread_pool_generators">openfdem.complete_BD_thread_pool_generators module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-openfdem.complete_UCS_thread_pool_generators">openfdem.complete_UCS_thread_pool_generators module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-openfdem.extract_cell_thread_pool_generators">openfdem.extract_cell_thread_pool_generators module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-openfdem.formatting_codes">openfdem.formatting_codes module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-openfdem.model_reader">openfdem.model_reader module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-openfdem.openfdem">openfdem.openfdem module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-openfdem">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About OpenFDEM Post-Processing Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gettingstarted.html">How to Get Started</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">openFDEM Post-Processing</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">openfdem</a> &raquo;</li>
+        
+      <li>openfdem package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/openfdem.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="openfdem-package">
+<h1>openfdem package<a class="headerlink" href="#openfdem-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="openfdem-aa-test-fdem-module">
+<h2>openfdem.aa_test_fdem module<a class="headerlink" href="#openfdem-aa-test-fdem-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-openfdem.aggregate_storage">
+<span id="openfdem-aggregate-storage-module"></span><h2>openfdem.aggregate_storage module<a class="headerlink" href="#module-openfdem.aggregate_storage" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="openfdem.aggregate_storage.aggregate_storage">
+<em class="property">class </em><code class="sig-prename descclassname">openfdem.aggregate_storage.</code><code class="sig-name descname">aggregate_storage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_directory</span></em>, <em class="sig-param"><span class="n">h5filename</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">overwrite</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">compression</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.aggregate_storage.aggregate_storage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Aggregator class to store VTK files in a single h5 file for faster access to data.
+:param: none</p>
+<dl class="py method">
+<dt id="openfdem.aggregate_storage.aggregate_storage.file_group_key">
+<code class="sig-name descname">file_group_key</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vtkfilename</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.aggregate_storage.aggregate_storage.file_group_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Produces a standard group/key based on VTK file name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>vtkfilename</strong> (<em>str path</em>) – VTK file name to be stored/read</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Key described using timestep and filename</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="openfdem.aggregate_storage.aggregate_storage.read_file">
+<code class="sig-name descname">read_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.aggregate_storage.aggregate_storage.read_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract VTK file from HDF5 file given original filename</p>
+<p>The VTK file is reconstructed from the data arrays stored in the HDF5 file. It will be similar but different from the original.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str path</em>) – File name to be extracted (unaltered since HDF5 file creation)</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – Print progress statements, defaults to False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>VTK Unstructured Grid as if read from a <a href="#id1"><span class="problematic" id="id2">*</span></a>.vtp or <a href="#id3"><span class="problematic" id="id4">*</span></a>.vtu file</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>VTK Unstructured Grid</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="openfdem.aggregate_storage.aggregate_storage.store_file">
+<code class="sig-name descname">store_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vtkfilename</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.aggregate_storage.aggregate_storage.store_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stores VTK file into HDF5 file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>vtkfilename</strong> (<em>str path</em>) – VTK file name</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-openfdem.complete_BD_thread_pool_generators">
+<span id="openfdem-complete-bd-thread-pool-generators-module"></span><h2>openfdem.complete_BD_thread_pool_generators module<a class="headerlink" href="#module-openfdem.complete_BD_thread_pool_generators" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="openfdem.complete_BD_thread_pool_generators.history_strain_func">
+<code class="sig-prename descclassname">openfdem.complete_BD_thread_pool_generators.</code><code class="sig-name descname">history_strain_func</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">f_name</span></em>, <em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">cv</span></em>, <em class="sig-param"><span class="n">ch</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.complete_BD_thread_pool_generators.history_strain_func" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the axial stress from platens, axial strain from platens and SG as well as lateral strain from SG</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f_name</strong> (<em>str</em>) – name of vtu file being processed</p></li>
+<li><p><strong>model</strong> (<a class="reference internal" href="#openfdem.openfdem.Model" title="openfdem.openfdem.Model"><em>openfdem.openfdem.Model</em></a>) – FDEM Model Class</p></li>
+<li><p><strong>cv</strong> (<em>list</em>) – list of cells at the corner of the vertical strain gauge</p></li>
+<li><p><strong>ch</strong> (<em>list</em>) – list of cells at the corner of the horizontal strain gauge</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Stress, Platen Strain, SG Strain, SG Lateral Strain</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Generator[Tuple[list, list, list, list], Any, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="openfdem.complete_BD_thread_pool_generators.main">
+<code class="sig-prename descclassname">openfdem.complete_BD_thread_pool_generators.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">st_status</span></em>, <em class="sig-param"><span class="n">gauge_width</span></em>, <em class="sig-param"><span class="n">gauge_length</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.complete_BD_thread_pool_generators.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main concurrent Thread Pool to calculate the full stress-strain</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<a class="reference internal" href="#openfdem.openfdem.Model" title="openfdem.openfdem.Model"><em>openfdem.openfdem.Model</em></a>) – FDEM Model Class</p></li>
+<li><p><strong>st_status</strong> (<em>bool</em>) – Enable/Disable SG Calculations</p></li>
+<li><p><strong>gauge_width</strong> (<em>float</em>) – SG width</p></li>
+<li><p><strong>gauge_length</strong> (<em>float</em>) – SG length</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>full stress-strain information</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="openfdem.complete_BD_thread_pool_generators.set_strain_gauge">
+<code class="sig-prename descclassname">openfdem.complete_BD_thread_pool_generators.</code><code class="sig-name descname">set_strain_gauge</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">gauge_length</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">gauge_width</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.complete_BD_thread_pool_generators.set_strain_gauge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate local strain based on the dimensions of a virtual strain gauge placed at the center of teh model with
+x/y dimensions. By default set to 0.25 of the length/width.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<a class="reference internal" href="#openfdem.openfdem.Model" title="openfdem.openfdem.Model"><em>openfdem.openfdem.Model</em></a>) – FDEM Model Class</p></li>
+<li><p><strong>gauge_length</strong> (<em>float</em>) – length of the virtual strain gauge</p></li>
+<li><p><strong>gauge_width</strong> (<em>float</em>) – width of the virtual strain gauge</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Cells that cover the horizontal and vertical gauges as well as the gauge width and length</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[list, list, float, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-openfdem.complete_UCS_thread_pool_generators">
+<span id="openfdem-complete-ucs-thread-pool-generators-module"></span><h2>openfdem.complete_UCS_thread_pool_generators module<a class="headerlink" href="#module-openfdem.complete_UCS_thread_pool_generators" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="openfdem.complete_UCS_thread_pool_generators.history_strain_func">
+<code class="sig-prename descclassname">openfdem.complete_UCS_thread_pool_generators.</code><code class="sig-name descname">history_strain_func</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">f_name</span></em>, <em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">cv</span></em>, <em class="sig-param"><span class="n">ch</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.complete_UCS_thread_pool_generators.history_strain_func" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the axial stress from platens, axial strain from platens and SG as well as lateral strain from SG</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f_name</strong> (<em>str</em>) – name of vtu file being processed</p></li>
+<li><p><strong>model</strong> (<a class="reference internal" href="#openfdem.openfdem.Model" title="openfdem.openfdem.Model"><em>openfdem.openfdem.Model</em></a>) – FDEM Model Class</p></li>
+<li><p><strong>cv</strong> (<em>list</em>) – list of cells at the corner of the vertical strain gauge</p></li>
+<li><p><strong>ch</strong> (<em>list</em>) – list of cells at the corner of the horizontal strain gauge</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Stress, Platen Strain, SG Strain, SG Lateral Strain</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Generator[Tuple[list, list, list, list], Any, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="openfdem.complete_UCS_thread_pool_generators.main">
+<code class="sig-prename descclassname">openfdem.complete_UCS_thread_pool_generators.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">platen_id</span></em>, <em class="sig-param"><span class="n">st_status</span></em>, <em class="sig-param"><span class="n">gauge_width</span></em>, <em class="sig-param"><span class="n">gauge_length</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.complete_UCS_thread_pool_generators.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main concurrent Thread Pool to calculate the full stress-strain</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<a class="reference internal" href="#openfdem.openfdem.Model" title="openfdem.openfdem.Model"><em>openfdem.openfdem.Model</em></a>) – FDEM Model Class</p></li>
+<li><p><strong>platen_id</strong> (<em>None</em><em> or </em><em>int</em>) – Manual override of Platen ID</p></li>
+<li><p><strong>st_status</strong> (<em>bool</em>) – Enable/Disable SG Calculations</p></li>
+<li><p><strong>gauge_width</strong> (<em>float</em>) – SG width</p></li>
+<li><p><strong>gauge_length</strong> (<em>float</em>) – SG length</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>full stress-strain information</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="openfdem.complete_UCS_thread_pool_generators.set_strain_gauge">
+<code class="sig-prename descclassname">openfdem.complete_UCS_thread_pool_generators.</code><code class="sig-name descname">set_strain_gauge</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">gauge_length</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">gauge_width</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.complete_UCS_thread_pool_generators.set_strain_gauge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate local strain based on the dimensions of a virtual strain gauge placed at the center of teh model with
+x/y dimensions. By default set to 0.25 of the length/width.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<a class="reference internal" href="#openfdem.openfdem.Model" title="openfdem.openfdem.Model"><em>openfdem.openfdem.Model</em></a>) – FDEM Model Class</p></li>
+<li><p><strong>gauge_length</strong> (<em>float</em>) – length of the virtual strain gauge</p></li>
+<li><p><strong>gauge_width</strong> (<em>float</em>) – width of the virtual strain gauge</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Cells that cover the horizontal and vertical gauges as well as the gauge width and length</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[list, list, float, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-openfdem.extract_cell_thread_pool_generators">
+<span id="openfdem-extract-cell-thread-pool-generators-module"></span><h2>openfdem.extract_cell_thread_pool_generators module<a class="headerlink" href="#module-openfdem.extract_cell_thread_pool_generators" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="openfdem.extract_cell_thread_pool_generators.history_cellinfo_func">
+<code class="sig-prename descclassname">openfdem.extract_cell_thread_pool_generators.</code><code class="sig-name descname">history_cellinfo_func</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">f_name</span></em>, <em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">cell_id</span></em>, <em class="sig-param"><span class="n">array_needed</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.extract_cell_thread_pool_generators.history_cellinfo_func" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f_name</strong> (<em>str</em>) – name of vtu file being processed</p></li>
+<li><p><strong>model</strong> (<a class="reference internal" href="#openfdem.openfdem.Model" title="openfdem.openfdem.Model"><em>openfdem.openfdem.Model</em></a>) – FDEM Model Class</p></li>
+<li><p><strong>cell_id</strong> (<em>int</em>) – ID of the cell from which the data needs to be extracted</p></li>
+<li><p><strong>array_needed</strong> (<em>str</em>) – Name of the property to extract</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The value of the property from the cell being extracted</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Generator[Tuple()]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="openfdem.extract_cell_thread_pool_generators.main">
+<code class="sig-prename descclassname">openfdem.extract_cell_thread_pool_generators.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">cellid</span></em>, <em class="sig-param"><span class="n">arrayname</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.extract_cell_thread_pool_generators.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main concurrent Thread Pool to get value of the property from the cell being extracted</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<a class="reference internal" href="#openfdem.openfdem.Model" title="openfdem.openfdem.Model"><em>openfdem.openfdem.Model</em></a>) – FDEM Model Class</p></li>
+<li><p><strong>cellid</strong> (<em>int</em>) – ID of the cell from which the data needs to be extracted</p></li>
+<li><p><strong>arrayname</strong> (<em>str</em>) – Name of the property to extract</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of the values of the property from the cell being extracted</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-openfdem.formatting_codes">
+<span id="openfdem-formatting-codes-module"></span><h2>openfdem.formatting_codes module<a class="headerlink" href="#module-openfdem.formatting_codes" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>Function to calculate the time</dt><dd><dl class="simple">
+<dt>Inputs:</dt><dd><ul class="simple">
+<li><p>Difference in time in seconds</p></li>
+</ul>
+</dd>
+<dt>Returns:</dt><dd><ul class="simple">
+<li><p>Time in minutes and seconds</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py function">
+<dt id="openfdem.formatting_codes.bold_text">
+<code class="sig-prename descclassname">openfdem.formatting_codes.</code><code class="sig-name descname">bold_text</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.formatting_codes.bold_text" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="openfdem.formatting_codes.calc_timer_values">
+<code class="sig-prename descclassname">openfdem.formatting_codes.</code><code class="sig-name descname">calc_timer_values</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">end_time</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.formatting_codes.calc_timer_values" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="openfdem.formatting_codes.docstring_creator">
+<code class="sig-prename descclassname">openfdem.formatting_codes.</code><code class="sig-name descname">docstring_creator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.formatting_codes.docstring_creator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="openfdem.formatting_codes.green_text">
+<code class="sig-prename descclassname">openfdem.formatting_codes.</code><code class="sig-name descname">green_text</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.formatting_codes.green_text" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="openfdem.formatting_codes.red_text">
+<code class="sig-prename descclassname">openfdem.formatting_codes.</code><code class="sig-name descname">red_text</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.formatting_codes.red_text" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-openfdem.model_reader">
+<span id="openfdem-model-reader-module"></span><h2>openfdem.model_reader module<a class="headerlink" href="#module-openfdem.model_reader" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="openfdem.model_reader.mp_read">
+<code class="sig-prename descclassname">openfdem.model_reader.</code><code class="sig-name descname">mp_read</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.model_reader.mp_read" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="openfdem.model_reader.multiprocess_async">
+<code class="sig-prename descclassname">openfdem.model_reader.</code><code class="sig-name descname">multiprocess_async</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.model_reader.multiprocess_async" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="openfdem.model_reader.multiprocess_lib_read">
+<code class="sig-prename descclassname">openfdem.model_reader.</code><code class="sig-name descname">multiprocess_lib_read</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.model_reader.multiprocess_lib_read" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="openfdem.model_reader.normal_read">
+<code class="sig-prename descclassname">openfdem.model_reader.</code><code class="sig-name descname">normal_read</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.model_reader.normal_read" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="openfdem.model_reader.pv_read">
+<code class="sig-prename descclassname">openfdem.model_reader.</code><code class="sig-name descname">pv_read</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.model_reader.pv_read" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="openfdem.model_reader.pv_read_queue">
+<code class="sig-prename descclassname">openfdem.model_reader.</code><code class="sig-name descname">pv_read_queue</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">list_of_files</span></em>, <em class="sig-param"><span class="n">q</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.model_reader.pv_read_queue" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="openfdem.model_reader.timed">
+<code class="sig-prename descclassname">openfdem.model_reader.</code><code class="sig-name descname">timed</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.model_reader.timed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-openfdem.openfdem">
+<span id="openfdem-openfdem-module"></span><h2>openfdem.openfdem module<a class="headerlink" href="#module-openfdem.openfdem" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="openfdem.openfdem.Model">
+<em class="property">class </em><code class="sig-prename descclassname">openfdem.openfdem.</code><code class="sig-name descname">Model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">folder</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">runfile</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fdem_engine</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.openfdem.Model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Model class collects datafiles into one interface.</p>
+<p>Each data array returns as a list ordered by timestep
+Collection of timesteps?
+handles temporal manipulations</p>
+<dl class="field-list">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openfdem</span> <span class="k">as</span> <span class="nn">fdem</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">fdem</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="s2">&quot;../example_outputs/Irazu_UCS&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="openfdem.openfdem.Model.Eavg_mod">
+<code class="sig-name descname">Eavg_mod</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ucs_data</span></em>, <em class="sig-param"><span class="n">upperrange</span></em>, <em class="sig-param"><span class="n">lowerrange</span></em>, <em class="sig-param"><span class="n">loc_strain</span><span class="o">=</span><span class="default_value">'Platen Strain'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.openfdem.Model.Eavg_mod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Average Elastic modulus between two ranges</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ucs_data</strong> (<em>pandas.DataFrame</em>) – DataFrame containing the stress-strain data</p></li>
+<li><p><strong>upperrange</strong> (<em>float</em>) – Upper range to calculate the average</p></li>
+<li><p><strong>lowerrange</strong> (<em>float</em>) – Lower range to calculate the average</p></li>
+<li><p><strong>loc_strain</strong> (<em>str</em>) – Column to obtain strain from. Defaults to Platen Strain</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Average Elastic modulus</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ZeroDivisionError</strong> – The range over which to calculate the Eavg is too small. Consider a larger range.</p>
+</dd>
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;../example_outputs/Irazu_UCS&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df_1</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">complete_stress_strain</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">Eavg_mod</span><span class="p">(</span><span class="n">df_1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">)</span>
+<span class="go">51485.33001517835</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">Eavg_mod</span><span class="p">(</span><span class="n">df_1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="s1">&#39;Gauge Displacement Y&#39;</span><span class="p">)</span>
+<span class="go">50976.62587224803</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="openfdem.openfdem.Model.Esec_mod">
+<code class="sig-name descname">Esec_mod</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ucs_data</span></em>, <em class="sig-param"><span class="n">upperrange</span></em>, <em class="sig-param"><span class="n">loc_strain</span><span class="o">=</span><span class="default_value">'Platen Strain'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.openfdem.Model.Esec_mod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Secant Modulus between 0 and upperrange. The upperrange can be a % or a fraction.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ucs_data</strong> (<em>pandas.DataFrame</em>) – DataFrame containing the stress-strain data</p></li>
+<li><p><strong>upperrange</strong> (<em>float</em>) – Range over which to calculate the Secant Modulus</p></li>
+<li><p><strong>loc_strain</strong> (<em>str</em>) – Column to obtain strain from. Defaults to Platen Strain</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Secant Elastic modulus between 0 and upperrange</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;../example_outputs/Irazu_UCS&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df_1</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">complete_stress_strain</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">Esec_mod</span><span class="p">(</span><span class="n">df_1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="go">51751.010161057035</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">Esec_mod</span><span class="p">(</span><span class="n">df_1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;Gauge Displacement Y&#39;</span><span class="p">)</span>
+<span class="go">51279.95421163901</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="openfdem.openfdem.Model.Etan50_mod">
+<code class="sig-name descname">Etan50_mod</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ucs_data</span></em>, <em class="sig-param"><span class="n">loc_strain</span><span class="o">=</span><span class="default_value">'Platen Strain'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.openfdem.Model.Etan50_mod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tangent Elastic modulus at 50%. Calculates +/- 1 datapoint from the 50% Stress</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ucs_data</strong> (<em>pandas.DataFrame</em>) – DataFrame containing the stress-strain data</p></li>
+<li><p><strong>loc_strain</strong> (<em>str</em>) – Column to obtain strain from. Defaults to Platen Strain</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tangent Elastic modulus at 50%</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;../example_outputs/Irazu_UCS&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df_1</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">complete_stress_strain</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">Etan_mod</span><span class="p">(</span><span class="n">df_1</span><span class="p">)</span>
+<span class="go">51539.9101160927</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">Etan_mod</span><span class="p">(</span><span class="n">df_1</span><span class="p">,</span> <span class="s1">&#39;Gauge Displacement Y&#39;</span><span class="p">)</span>
+<span class="go">51043.327845235595</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="openfdem.openfdem.Model.complete_BD_stress_strain">
+<code class="sig-name descname">complete_BD_stress_strain</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">st_status</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">gauge_width</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">gauge_length</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.openfdem.Model.complete_BD_stress_strain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the full stress-strain curve</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>st_status</strong> (<em>bool</em>) – Enable/Disable SG</p></li>
+<li><p><strong>gauge_length</strong> (<em>float</em>) – length of the virtual strain gauge</p></li>
+<li><p><strong>gauge_width</strong> (<em>float</em>) – width of the virtual strain gauge</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>full stress-strain information</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openfdem</span> <span class="k">as</span> <span class="nn">fdem</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">fdem</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="s2">&quot;../example_outputs/OpenFDEM_BD&quot;</span><span class="p">)</span>
+
+<span class="go"># full stress-strain without SG</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df_wo_SG</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">complete_BD_stress_strain</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">Columns:</span>
+<span class="go">    Name: Platen Stress, dtype=float64, nullable: False</span>
+<span class="go">    Name: Platen Strain, dtype=float64, nullable: False</span>
+<span class="go"># full stress-strain with SG and default dimensions</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df_Def_SG</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">complete_BD_stress_strain</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">Columns:</span>
+<span class="go">    Name: Platen Stress, dtype=float64, nullable: False</span>
+<span class="go">    Name: Platen Strain, dtype=float64, nullable: False</span>
+<span class="go">    Name: Gauge Displacement X, dtype=float64, nullable: False</span>
+<span class="go">    Name: Gauge Displacement Y, dtype=float64, nullable: False</span>
+<span class="go"># full stress-strain with SG and user-defined dimensions</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df_userdf_SG</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">complete_BD_stress_strain</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="go">Columns:</span>
+<span class="go">    Name: Platen Stress, dtype=float64, nullable: False</span>
+<span class="go">    Name: Platen Strain, dtype=float64, nullable: False</span>
+<span class="go">    Name: Gauge Displacement X, dtype=float64, nullable: False</span>
+<span class="go">    Name: Gauge Displacement Y, dtype=float64, nullable: False</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="openfdem.openfdem.Model.complete_stress_strain">
+<code class="sig-name descname">complete_stress_strain</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">platen_id</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">st_status</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">gauge_width</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">gauge_length</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.openfdem.Model.complete_stress_strain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the full stress-strain curve</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>st_status</strong> (<em>bool</em>) – Enable/Disable SG</p></li>
+<li><p><strong>platen_id</strong> (<em>None</em><em> or </em><em>int</em>) – Manual override of Platen ID</p></li>
+<li><p><strong>gauge_length</strong> (<em>float</em>) – length of the virtual strain gauge</p></li>
+<li><p><strong>gauge_width</strong> (<em>float</em>) – width of the virtual strain gauge</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>full stress-strain information</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openfdem</span> <span class="k">as</span> <span class="nn">fdem</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">fdem</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="s2">&quot;../example_outputs/Irazu_UCS&quot;</span><span class="p">)</span>
+
+<span class="go"># Minimal Arguments</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df_wo_SG</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">complete_stress_strain</span><span class="p">()</span>
+<span class="go">Columns:</span>
+<span class="go">    Name: Platen Stress, dtype=float64, nullable: False</span>
+<span class="go">    Name: Platen Strain, dtype=float64, nullable: False</span>
+<span class="go"># full stress-strain with SG and default dimensions</span>
+<span class="go"># full stress-strain without SG</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df_wo_SG</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">complete_stress_strain</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+<span class="go">Columns:</span>
+<span class="go">    Name: Platen Stress, dtype=float64, nullable: False</span>
+<span class="go">    Name: Platen Strain, dtype=float64, nullable: False</span>
+<span class="go"># full stress-strain with SG and default dimensions</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df_Def_SG</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">complete_stress_strain</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="go">Columns:</span>
+<span class="go">    Name: Platen Stress, dtype=float64, nullable: False</span>
+<span class="go">    Name: Platen Strain, dtype=float64, nullable: False</span>
+<span class="go">    Name: Gauge Displacement X, dtype=float64, nullable: False</span>
+<span class="go">    Name: Gauge Displacement Y, dtype=float64, nullable: False</span>
+<span class="go"># full stress-strain with SG and user-defined dimensions</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df_userdf_SG</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">complete_stress_strain</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="go">Columns:</span>
+<span class="go">    Name: Platen Stress, dtype=float64, nullable: False</span>
+<span class="go">    Name: Platen Strain, dtype=float64, nullable: False</span>
+<span class="go">    Name: Gauge Displacement X, dtype=float64, nullable: False</span>
+<span class="go">    Name: Gauge Displacement Y, dtype=float64, nullable: False</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="openfdem.openfdem.Model.extract_cell_info">
+<code class="sig-name descname">extract_cell_info</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cell_id</span></em>, <em class="sig-param"><span class="n">array_needed</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.openfdem.Model.extract_cell_info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="openfdem.openfdem.Model.find_cell">
+<code class="sig-name descname">find_cell</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model_point</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.openfdem.Model.find_cell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identify the nearest cell in the model to the defined point</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model_point</strong> (<em>list</em><em>[</em><em>float</em><em>, </em><em>float</em><em>, </em><em>float</em><em>]</em>) – x,y,z of a point in the model which</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the cell nearest to the point</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openfdem</span> <span class="k">as</span> <span class="nn">fdem</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">fdem</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="s2">&quot;../example_outputs/Irazu_UCS&quot;</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">find_cell</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="go">2167</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">find_cell</span><span class="p">([</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="go">IndexError: Point outside model domain.</span>
+<span class="go">X=56.0, Y=116.0, Z=0.0</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="openfdem.openfdem.Model.mat_bound_check">
+<code class="sig-name descname">mat_bound_check</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mat_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.openfdem.Model.mat_bound_check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks the material ID is a valid choice.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mat_id</strong> (<em>int</em>) – Material ID</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>ID of the material</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>IndexError</strong> – Material ID for platen out of range.</p>
+</dd>
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openfdem</span> <span class="k">as</span> <span class="nn">fdem</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">fdem</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="s2">&quot;../example_outputs/Irazu_UCS&quot;</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">mat_bound_check</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">mat_bound_check</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="go">IndexError: Material ID for platen out of range.</span>
+<span class="go">Material Range 0-1</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="openfdem.openfdem.Model.model_dimensions">
+<code class="sig-name descname">model_dimensions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mat_id</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.openfdem.Model.model_dimensions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to get the “INITIAL” model bounds and returns the width, height, thickness</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mat_id</strong> (<em>int</em>) – Optional, if a threshold is specific to a material type</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>model width, model height, model thickness</p>
+</dd>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>tuple[float, float, float]</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openfdem</span> <span class="k">as</span> <span class="nn">fdem</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">fdem</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="s2">&quot;../example_outputs/Irazu_UCS&quot;</span><span class="p">)</span>
+
+<span class="go"># Returns the overall model dimensions</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">model_dimensions</span>
+<span class="go">(56.0, 116.0, 0.0)</span>
+<span class="go"># Returns the model dimensions based on material id 1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">model_dimensions</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">(52.0, 108.0, 0.0)</span>
+<span class="go"># Error when material is not found</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">model_dimensions</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">IndexError: Material ID for platen out of range.</span>
+<span class="go">Material Range 0-1</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="openfdem.openfdem.Model.model_domain">
+<code class="sig-name descname">model_domain</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.openfdem.Model.model_domain" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Identifies the model domain by confirming the simulation cell vertex.</dt><dd><p>2D (3 Points - Triangle)
+3D (4 Points - Tetrahedral)</p>
+</dd>
+</dl>
+<dl class="field-list">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>number of nodes to skip in analysis</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>Exception</strong> – The simulation is not currently supported.</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openfdem</span> <span class="k">as</span> <span class="nn">fdem</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">fdem</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="s2">&quot;../example_outputs/Irazu_UCS&quot;</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">model_domain</span><span class="p">()</span>
+<span class="go">2D Simulation</span>
+<span class="go">4</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="openfdem.openfdem.Model.openfdem_att_check">
+<code class="sig-name descname">openfdem_att_check</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">att</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.openfdem.Model.openfdem_att_check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks the material ID is a valid choice.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mat_id</strong> (<em>str</em>) – Attribute</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Attribute</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>KeyError</strong> – Attribute does not exist.</p>
+</dd>
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openfdem</span> <span class="k">as</span> <span class="nn">fdem</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">fdem</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="s2">&quot;../example_outputs/Irazu_UCS&quot;</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">openfdem_att_check</span><span class="p">(</span><span class="s1">&#39;material_type&#39;</span><span class="p">)</span>
+<span class="go">&#39;material_type&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">openfdem_att_check</span><span class="p">(</span><span class="s1">&#39;material_property&#39;</span><span class="p">)</span>
+<span class="go">KeyError: Attribute does not exist.</span>
+<span class="go">Available options are mineral_type, boundary, platen_force, platen_displacement, gauge_displacement&#39;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="openfdem.openfdem.Model.platen_info">
+<code class="sig-name descname">platen_info</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pv_cells</span></em>, <em class="sig-param"><span class="n">platen_boundary_id</span></em>, <em class="sig-param"><span class="n">var_property</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.openfdem.Model.platen_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function thresholds cells based on boundary condition and sums them based on the defined parameter var_property</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pv_cells</strong> (<em>pyvista.core.pointset.UnstructuredGrid</em>) – </p></li>
+<li><p><strong>platen_boundary_id</strong> (<em>float</em>) – boundary id that the threshold should be based on</p></li>
+<li><p><strong>var_property</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – name of the property (array to b returned)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>array of the property based on the threshold</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="openfdem.openfdem.Model.plot_stress_strain">
+<code class="sig-name descname">plot_stress_strain</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">strain</span></em>, <em class="sig-param"><span class="n">stress</span></em>, <em class="sig-param"><span class="n">ax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">plt_kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.openfdem.Model.plot_stress_strain" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>strain</strong> (<em>pandas.DataFrame</em>) – X-axis data [Strain]</p></li>
+<li><p><strong>stress</strong> (<em>pandas.DataFrame</em>) – Y-axis data [Stress]</p></li>
+<li><p><strong>ax</strong> (<em>matplotlib</em>) – Matplotlib Axis</p></li>
+<li><p><strong>plt_kwargs</strong> – <cite>~matplotlib.Modules</cite> submodules</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Matplotlib AxesSubplots</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Matplotlib Axis</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openfdem</span> <span class="k">as</span> <span class="nn">fdem</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">fdem</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="s2">&quot;../example_outputs/OpenFDEM_BD&quot;</span><span class="p">)</span>
+
+<span class="go"># Minimal Arguments</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df_wo_SG</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">complete_stress_strain</span><span class="p">()</span>
+<span class="go">Columns:</span>
+<span class="go">    Name: Platen Stress, dtype=float64, nullable: False</span>
+<span class="go">    Name: Platen Strain, dtype=float64, nullable: False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">plot_stress_strain</span><span class="p">(</span><span class="n">df_wo_SG</span><span class="p">[</span><span class="s1">&#39;Platen Strain&#39;</span><span class="p">],</span> <span class="n">df_wo_SG</span><span class="p">[</span><span class="s1">&#39;Platen Stress&#39;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;stress-strain&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">)</span>
+<span class="go">&lt;AxesSubplot:xlabel=&#39;Strain (-)&#39;, ylabel=&#39;Axial Stress (MPa)&#39;&gt;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="openfdem.openfdem.Model.rock_sample_dimensions">
+<code class="sig-name descname">rock_sample_dimensions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">platen_id</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.openfdem.Model.rock_sample_dimensions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lookup cell element ID on the top center and then trace points Using this information, we obtain the platen prop ID.
+Alternatively the user can define the material ID to exclude</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>platen_id</strong> (<em>None</em><em> or </em><em>int</em>) – Manual override of Platen ID</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>sample width, sample height, sample thickness</p>
+</dd>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>tuple[float, float, float]</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openfdem</span> <span class="k">as</span> <span class="nn">fdem</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">fdem</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="s2">&quot;../example_outputs/Irazu_UCS&quot;</span><span class="p">)</span>
+
+<span class="go"># Let the script try to identify the planten material ID</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">rock_sample_dimensions</span><span class="p">()</span>
+<span class="go">Script Identifing Platen</span>
+<span class="go">    Platen Material ID found as [1]</span>
+<span class="go">    (52.0, 108.0, 0.0)</span>
+<span class="go"># Explicity defined the platen material ID</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">rock_sample_dimensions</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="go">User Defined Platen ID</span>
+<span class="go">    Platen Material ID found as [0]</span>
+<span class="go">    (56.0, 116.0, 0.0)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">rock_sample_dimensions</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">IndexError: Material ID for platen out of range.</span>
+<span class="go">Material Range 0-1</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="openfdem.openfdem.Model.simulation_type">
+<code class="sig-name descname">simulation_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.openfdem.Model.simulation_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identifies the type of simulation running. BD or UCS.</p>
+<dl class="field-list">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Type of simulation. BD/UCS</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">openfdem</span> <span class="k">as</span> <span class="nn">fdem</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">fdem</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="s2">&quot;../example_outputs/Irazu_UCS&quot;</span><span class="p">)</span>
+
+<span class="go"># Let the script try to identify the planten material ID</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">rock_sample_dimensions</span><span class="p">()</span>
+<span class="go">Script Identifying Platen</span>
+<span class="go">    Platen Material ID found as [1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="o">.</span><span class="n">simulation_type</span><span class="p">()</span>
+<span class="go">&#39;UCS Simulation&#39;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="openfdem.openfdem.Timestep">
+<em class="property">class </em><code class="sig-prename descclassname">openfdem.openfdem.</code><code class="sig-name descname">Timestep</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file</span></em>, <em class="sig-param"><span class="n">runfile</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#openfdem.openfdem.Timestep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class handling the data of each timestep.</p>
+<p>Each data array returns for only the timestep
+handles spatial manipulations</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-openfdem">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-openfdem" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="about.html" class="btn btn-neutral float-right" title="About OpenFDEM Post-Processing Modules" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="modules.html" class="btn btn-neutral float-left" title="openfdem" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, openFDEM Post-Processing.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
