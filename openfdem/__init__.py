@@ -20,7 +20,16 @@ except AssertionError:
     print("Python Version: %s" % sys.version.split('\n')[0])
     exit("Compatible Python Version 3.5+ upto 3.8.x")
 
+# Load Classes
 from .openfdem import (
     Model,
     Timestep
-    )
+)
+
+# Load sub-routine modules py files
+from . import (
+    complete_UCS_thread_pool_generators,
+    formatting_codes,
+    complete_BD_thread_pool_generators,
+    extract_cell_thread_pool_generators
+)

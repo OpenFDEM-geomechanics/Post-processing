@@ -17,11 +17,11 @@
 2. Volumetric strain (Lateral Strain (COMPLETED))
 3. Elastic mod. (COMPLETED)
 4. Plotters (COMPLETED)
-5. Extract individual cells data into a panda.DataFrame
+5. Extract individual cells data into a panda.DataFrame (COMPLETED => TO List)
 
 ## TODO
 1. Ability to define the center point of the SG.
-2. Function to extract stress/strain for the element
+2. Function to extract stress/strain for the element (COMPLETED)
  
 
 ### Need full OpenFDEM outputs for UCS/BD
@@ -37,7 +37,7 @@
 
 ### Shear test
 1. Contact locations
-1. Monitoring points for seismicity asperity breakage
+1. Monitoring points for seismicity asperity breakage (Can be done using loop and find_cell function and extract cell function)
 
 ## Documentation
 1. website
