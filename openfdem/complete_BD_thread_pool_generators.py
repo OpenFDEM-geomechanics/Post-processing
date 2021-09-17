@@ -173,7 +173,7 @@ def set_strain_gauge(model, gauge_length=None, gauge_width=None):
     return ch, cv, gauge_width, gauge_length
 
 
-def main(model, st_status, gauge_width, gauge_length):
+def main(model, st_status, gauge_width, gauge_length, progress_bar=False):
     """
     Main concurrent Thread Pool to calculate the full stress-strain
 
@@ -185,6 +185,9 @@ def main(model, st_status, gauge_width, gauge_length):
     :type gauge_width:  float
     :param gauge_length: SG length
     :type gauge_length: float
+    :param progress_bar: Show/Hide progress bar
+    :type progress_bar: bool
+
     :return: full stress-strain information
     :rtype: pd.DataFrame
     """
@@ -215,8 +218,10 @@ def main(model, st_status, gauge_width, gauge_length):
             results = list(executor.map(history_strain_func, f_names, repeat(model), cv, ch))  # is self the list we are iterating over
 
     # Iterate through the files in the defined function
-    for fname_iter in f_names:
+    for idx, fname_iter in enumerate(f_names):
         hist = history_strain_func(fname_iter, model, cv, ch)
+        if progress_bar:
+            formatting_codes.print_progress(idx + 1, len(f_names), prefix='Progress:', suffix='Complete')
         hist.__next__()
 
     print(formatting_codes.calc_timer_values(time.time() - start))
