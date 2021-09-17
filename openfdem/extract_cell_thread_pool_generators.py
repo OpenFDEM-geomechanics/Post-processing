@@ -5,7 +5,10 @@ from itertools import repeat
 import pandas as pd
 import pyvista as pv
 
-from . import formatting_codes
+try:
+    from . import formatting_codes
+except ImportError:
+    import formatting_codes
 
 def history_cellinfo_func(f_name, model, cell_id, array_needed):
     """
@@ -35,7 +38,7 @@ def history_cellinfo_func(f_name, model, cell_id, array_needed):
     yield dict_array
 
 
-def main(model, cellid, arrayname):
+def main(model, cellid, arrayname, progress_bar=False):
     """
     Main concurrent Thread Pool to get value of the property from the cell being extracted
 
@@ -45,6 +48,8 @@ def main(model, cellid, arrayname):
     :type cellid: int
     :param arrayname: Name of the property to extract
     :type arrayname: list[str]
+    :param progress_bar: Show/Hide progress bar
+    :type gauge_length: bool
 
     :return: DataFrame of the values of the property from the cell being extracted
     :rtype: pandas.DataFrame
@@ -74,8 +79,10 @@ def main(model, cellid, arrayname):
             results = list(executor.map(history_cellinfo_func, fname, repeat(model), [cellid], arrayname))  # is self the list we are iterating over
 
     # Iterate through the files in the defined function
-    for fname_iter in f_names:
+    for idx, fname_iter in enumerate(f_names):
         hist = history_cellinfo_func(fname_iter, model, cellid, arrayname)
+        if progress_bar:
+            formatting_codes.print_progress(idx + 1, len(f_names), prefix='Progress:', suffix='Complete')
         hist.__next__()
 
     print(formatting_codes.calc_timer_values(time.time() - start))

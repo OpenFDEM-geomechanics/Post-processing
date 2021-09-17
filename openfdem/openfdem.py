@@ -526,7 +526,7 @@ class Model:
 
         return unpacked_DataFrame
 
-    def extract_cell_info(self, cell_id, arrays_needed):
+    def extract_cell_info(self, cell_id, arrays_needed, progress_bar=False):
         """
         Returns the information of the cell based on the array requested.
         If the array is a point data, the array is suffixed with _Nx where x is the node on that cell.
@@ -580,9 +580,12 @@ class Model:
             for array_needed in arrays_needed:
                 self.openfdem_att_check(array_needed)
 
-        from . import extract_cell_thread_pool_generators
+        try:
+            from . import extract_cell_thread_pool_generators
+        except ImportError:
+            import extract_cell_thread_pool_generators
 
-        packed_df = extract_cell_thread_pool_generators.main(self, cell_id, arrays_needed)
+        packed_df = extract_cell_thread_pool_generators.main(self, cell_id, arrays_needed, progress_bar)
 
         unpacked_df = self.unpack_DataFrame(packed_df)
 
@@ -600,7 +603,7 @@ class Model:
 
     # def set_strain_gauge(self,point,axis):
 
-    def complete_stress_strain(self, platen_id=None, st_status=False, gauge_width=0, gauge_length=0):
+    def complete_stress_strain(self, platen_id=None, st_status=False, gauge_width=0, gauge_length=0, progress_bar=False):
         """
         Calculate the full stress-strain curve
 
@@ -648,11 +651,14 @@ class Model:
         # TODO:
         # Ability to define the center point of the SG.
 
-        from . import complete_UCS_thread_pool_generators
+        try:
+            from . import complete_UCS_thread_pool_generators
+        except ImportError:
+            import complete_UCS_thread_pool_generators
 
-        return complete_UCS_thread_pool_generators.main(self, platen_id, st_status, gauge_width, gauge_length)
+        return complete_UCS_thread_pool_generators.main(self, platen_id, st_status, gauge_width, gauge_length, progress_bar)
 
-    def complete_BD_stress_strain(self, st_status=False, gauge_width=0, gauge_length=0):
+    def complete_BD_stress_strain(self, st_status=False, gauge_width=0, gauge_length=0, progress_bar=False):
         """
         Calculate the full stress-strain curve
 
@@ -692,7 +698,7 @@ class Model:
 
         from . import complete_BD_thread_pool_generators
 
-        return complete_BD_thread_pool_generators.main(self, st_status, gauge_width, gauge_length)
+        return complete_BD_thread_pool_generators.main(self, st_status, gauge_width, gauge_length, progress_bar)
 
     def plot_stress_strain(self, strain, stress, ax=None, **plt_kwargs):
         """
