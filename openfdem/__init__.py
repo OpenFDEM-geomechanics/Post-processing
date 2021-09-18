@@ -31,5 +31,6 @@ from . import (
     complete_UCS_thread_pool_generators,
     formatting_codes,
     complete_BD_thread_pool_generators,
-    extract_cell_thread_pool_generators
+    extract_cell_thread_pool_generators,
+    rotary_ds_thread_pool_generators
 )

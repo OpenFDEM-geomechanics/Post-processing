@@ -224,11 +224,6 @@ def main(model, platen_id, st_status, gauge_width, gauge_length, progress_bar=Fa
             results = list(executor.map(history_strain_func, fname, repeat(model), cv, ch))  # is self the list we are iterating over
 
     # Iterate through the files in the defined function
-    # for fname_iter in f_names:
-    #     hist = history_strain_func(fname_iter, model, cv, ch)
-    #     hist.__next__()
-
-    # Iterate through the files in the defined function
     for idx, fname_iter in enumerate(f_names):
         hist = history_strain_func(fname_iter, model, cv, ch)
         if progress_bar:
