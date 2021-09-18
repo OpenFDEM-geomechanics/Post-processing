@@ -410,8 +410,9 @@ class Model:
         self.sample_width = sample_x_max - sample_x_min
         self.sample_height = sample_y_max - sample_y_min
         self.sample_thickness = sample_z_max - sample_z_min
+        self.rock_model_extents = [sample_x_min, sample_x_max, sample_y_min, sample_y_max, sample_z_min, sample_z_max]
 
-        return self.sample_width, self.sample_height, self.sample_thickness
+        return self.sample_width, self.sample_height, self.sample_thickness, self.rock_model_extents
 
     def simulation_type(self):
         """ Identifies the type of simulation running. BD or UCS.
@@ -536,6 +537,8 @@ class Model:
         :type cell_id: int
         :param arrays_needed: list of array names to extract
         :type arrays_needed: list[str]
+        :param progress_bar: Show/Hide progress bar
+        :type progress_bar: bool
 
         :return: unpacked DataFrame
         :rtype: pandas.DataFrame
@@ -615,6 +618,8 @@ class Model:
         :type gauge_width: float
         :param gauge_length: length of the virtual strain gauge
         :type gauge_length: float
+        :param progress_bar: Show/Hide progress bar
+        :type progress_bar: bool
 
         :return: full stress-strain information
         :rtype: pandas.DataFrame
@@ -866,6 +871,78 @@ class Model:
         Eavg = (delta_stress / delta_strain) * 100
 
         return Eavg
+
+
+    def extract_based_coord(self, thres_model, coord_xyz, location, include_cells=False, adjacent_cells=False):
+        """
+        Extract the vtkdata set based on the defined coord location in the x=0 y=1 z=2 location.
+
+        :param thres_model: threshold dataset of the material id of the rock
+        :type thres_model: pyvista.core.pointset.UnstructuredGrid
+        :param coord_xyz: x=0 y=1 z=2
+        :type coord_xyz: int
+        :param location: Xmin/Xmax/Ymin/Ymax/Zmin/Zmax
+        :type location: float
+        :param include_cells: If True, extract the cells that contain at least one of the extracted points. If False, extract the cells that contain exclusively points from the extracted points list.
+        :type include_cells: bool
+        :param adjacent_cells: Specifies if the cells shall be returned or not
+        :type adjacent_cells: bool
+
+        :return: Pointset of the data being filtered
+        :rtype: pyvista.core.pointset.UnstructuredGrid
+        """
+
+        extracted_cells = thres_model.extract_points(thres_model.points[:, coord_xyz] == location, include_cells=False,
+                                                   adjacent_cells=False)
+
+        return extracted_cells
+
+    def rotary_shear_calculation(self, platen_id, array, progress_bar=False):
+        """
+
+        :param platen_id: Material id of the platen
+        :type platen_id: int
+        :param array: the name of the array to be extracted
+        :type array: str
+        :param progress_bar: Show/Hide progress bar
+        :type progress_bar: bool
+
+        :return: DataFrame containing the absolute value of the array for each identified corner. Absolute sum of the extracted array split in Top/Bottom ane Left/Rigth sub-set into Top/Bottom.
+        :rtype: pandas.DataFrame
+
+        :Example:
+        >>> import openfdem as fdem
+        >>> data = fdem.Model("/external/2D_shear_4mm_profile_normal_load_test")
+        >>> df = data.rotary_shear_calculation(1, 'platen_force', progress_bar=True)
+        User Defined Platen ID
+            Platen Material ID found as 1
+        No. of points
+            Left	158
+            Left_Top	78
+            Left_Bottom	80
+            Right	158
+            Right_Top	76
+            Right_Bottom	82
+            Top	35
+            Bottom	38
+        >>> import matplotlib.pyplot as plt
+        >>> plt.plot(df['Left_Top'], label='Left Top')
+        [<matplotlib.lines.Line2D object at 0x7fe71f187320>]
+        >>> plt.plot(df['Left_Bottom'], label='Left Bottom')
+        [<matplotlib.lines.Line2D object at 0x7f65cf8975f8>]
+        >>> plt.plot(df['Left'], label='Left')
+        [<matplotlib.lines.Line2D object at 0x7fe71f187390>]
+        >>> plt.legend()
+        <matplotlib.legend.Legend object at 0x7fe71f187668>
+        >>> plt.show()
+        """
+
+        try:
+            from . import rotary_ds_thread_pool_generators
+        except ImportError:
+            import rotary_ds_thread_pool_generators
+
+        return rotary_ds_thread_pool_generators.main(self, platen_id, self.var_data[array], progress_bar)
 
     # def process_BD(self):
 
