@@ -17,6 +17,9 @@ import concurrent.futures
 from multiprocessing import Process
 from threading import Thread
 
+#TODO:
+# Default progress_bar to TRUE
+# Change rotary shear to direct shear
 
 # import complete_UCS_thread_pool_generators
 # import complete_BD_thread_pool_generators
@@ -55,12 +58,14 @@ class Model:
                                  "platen_force": "Force",
                                  "platen_displacement": "Displacement",
                                  "gauge_displacement": "Displacement",
+                                 "temperature": 'temperature',
                                  },
                     "IRAZU": {"mineral_type": "material property ID",
                               "boundary": "boundary condition ID",
                               "platen_force": "force",
                               "platen_displacement": "displacement",
                               "gauge_displacement": "displacement",
+                              "temperature": 'temperature',
                               },
                     }
 
