@@ -5,21 +5,19 @@
 # import _data_func
 
 import glob
-import os
 import os.path as path
 import re
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 
 import pyvista as pv
-import time
-import concurrent.futures
-from multiprocessing import Process
-from threading import Thread
 
-#TODO:
-# Default progress_bar to TRUE
-# Change rotary shear to direct shear
+# TODO:
+#  Change rotary shear to direct shear
+#  3D Model - Does the script works
+#  Threshold by boundary condition
+#  Process 3D PLT Tests
 
 # import complete_UCS_thread_pool_generators
 # import complete_BD_thread_pool_generators
@@ -259,15 +257,14 @@ class Model:
         else:
             self.thresholds_FDEM_output_files = self.first_file
 
-        sample_x_min, sample_x_max  = self.thresholds_FDEM_output_files.bounds[0], self.thresholds_FDEM_output_files.bounds[1]
-        sample_y_min, sample_y_max  = self.thresholds_FDEM_output_files.bounds[2], self.thresholds_FDEM_output_files.bounds[3]
+        sample_x_min, sample_x_max = self.thresholds_FDEM_output_files.bounds[0], self.thresholds_FDEM_output_files.bounds[1]
+        sample_y_min, sample_y_max = self.thresholds_FDEM_output_files.bounds[2], self.thresholds_FDEM_output_files.bounds[3]
         sample_z_min, sample_z_max = self.thresholds_FDEM_output_files.bounds[4], self.thresholds_FDEM_output_files.bounds[5]
         self.model_width = sample_x_max - sample_x_min
         self.model_height = sample_y_max - sample_y_min
         self.model_thickness = sample_z_max - sample_z_min
 
         return self.model_width, self.model_height, self.model_thickness
-
 
     def model_domain(self):
         """
@@ -298,7 +295,6 @@ class Model:
 
         return node_skip
 
-
     def mat_bound_check(self, mat_id):
         """
         Checks the material ID is a valid choice.
@@ -321,10 +317,10 @@ class Model:
             Material Range 0-1
         """
 
-        min, max = self.first_file.get_data_range(self.var_data["mineral_type"])
+        min_mat_id, max_mat_id = self.first_file.get_data_range(self.var_data["mineral_type"])
 
-        if mat_id not in range(min, max + 1):
-            raise IndexError("Material ID for platen out of range.\nMaterial Range %s-%s" % (min, max))
+        if mat_id not in range(min_mat_id, max_mat_id + 1):
+            raise IndexError("Material ID for platen out of range.\nMaterial Range %s-%s" % (min_mat_id, max_mat_id))
         else:
             return mat_id
 
@@ -390,7 +386,7 @@ class Model:
 
         top_center_cell = self.first_file.extract_cells(self.first_file.find_closest_cell(top_center_point))
 
-        if platen_id == None:
+        if platen_id is None:
             print("Script Identifying Platen")
             if top_center_cell == -1:
                 print("Unable to identify Platen ID Correctly.")
@@ -532,7 +528,7 @@ class Model:
 
         return unpacked_DataFrame
 
-    def extract_cell_info(self, cell_id, arrays_needed, progress_bar=False):
+    def extract_cell_info(self, cell_id, arrays_needed, progress_bar=True):
         """
         Returns the information of the cell based on the array requested.
         If the array is a point data, the array is suffixed with _Nx where x is the node on that cell.
@@ -611,7 +607,7 @@ class Model:
 
     # def set_strain_gauge(self,point,axis):
 
-    def complete_stress_strain(self, platen_id=None, st_status=False, gauge_width=0, gauge_length=0, progress_bar=False):
+    def complete_stress_strain(self, platen_id=None, st_status=False, gauge_width=0, gauge_length=0, progress_bar=True):
         """
         Calculate the full stress-strain curve
 
@@ -659,7 +655,7 @@ class Model:
         """
 
         # TODO:
-        # Ability to define the center point of the SG.
+        #  Ability to define the center point of the SG.
 
         try:
             from . import complete_UCS_thread_pool_generators
@@ -668,7 +664,7 @@ class Model:
 
         return complete_UCS_thread_pool_generators.main(self, platen_id, st_status, gauge_width, gauge_length, progress_bar)
 
-    def complete_BD_stress_strain(self, st_status=False, gauge_width=0, gauge_length=0, progress_bar=False):
+    def complete_BD_stress_strain(self, st_status=False, gauge_width=0, gauge_length=0, progress_bar=True):
         """
         Calculate the full stress-strain curve
 
@@ -678,6 +674,8 @@ class Model:
         :type gauge_width: float
         :param gauge_length: length of the virtual strain gauge
         :type gauge_length: float
+        :param progress_bar: Show/Hide progress bar
+        :type progress_bar: bool
 
         :return: full stress-strain information
         :rtype: pandas.DataFrame
@@ -746,41 +744,62 @@ class Model:
 
         return ax
 
-    def Etan50_mod(self, ucs_data, loc_strain='Platen Strain'):
+    def Etan50_mod(self, ucs_data, linear_bestfit=True, loc_stress='Platen Stress', loc_strain='Platen Strain', plusminus_range=1):
         """
-        Tangent Elastic modulus at 50%. Calculates +/- 1 datapoint from the 50% Stress
+        Tangent Elastic modulus at 50%. Calculates +/- number of datapoint from the 50% Stress. Defaults to +/- 1 datapoint.
 
         :param ucs_data: DataFrame containing the stress-strain data
         :type ucs_data: pandas.DataFrame
+        :param linear_bestfit: Calculate data based on range extents or linear best fit line.
+        :type linear_bestfit: bool
+        :param loc_stress: Column to obtain stress from. Defaults to Platen Stress
+        :type loc_stress: str
         :param loc_strain: Column to obtain strain from. Defaults to Platen Strain
         :type loc_strain: str
+        :param plusminus_range: Range over which to calculate the Elastic modulus
+        :type plusminus_range: int
 
-        :return: Tangent Elastic modulus at 50%
-        :rtype: float
+        :return: Tangent Elastic modulus at 50% as a slope and Y-Intercept. Y-Intercept = 0 if linear_bestfit is False
+        :rtype: list[float]
 
         :Example:
             >>> data = pv.read("../example_outputs/Irazu_UCS")
-            >>> df_1 = data.complete_stress_strain(True)
-            >>> data.Etan_mod(df_1)
-            51539.9101160927
-            >>> data.Etan_mod(df_1, 'Gauge Displacement Y')
-            51043.327845235595
+            >>> df_1 = data.complete_stress_strain()
+            >>> data.Etan50_mod(df_1)[0]
+            51683.94337878284
+            >>> data.Etan50_mod(df_1, linear_bestfit=False)[0]
+            51639.21679789497
+            >>> df_1 = data.complete_stress_strain(st_status=True)
+            >>> data.Etan50_mod(df_1, loc_strain='Gauge Displacement Y', plusminus_range=1)[0]
+            51216.33411269702
         """
 
         # Find the nearest match to the 50% max stress value.
-        df_sort = ucs_data.iloc[(ucs_data['Platen Stress'] - (max(ucs_data['Platen Stress']) / 2)).abs().argsort()[:1]]
+        ucs_data = ucs_data.reset_index(drop=True)
+        df_sorttomax = ucs_data.iloc[0: ucs_data[loc_stress].idxmax()]
+
+        df_sort = df_sorttomax.loc[(df_sorttomax[loc_stress] - (max(df_sorttomax[loc_stress]) / 2)).abs().argsort()[:1]]
+
         # Return the index of the nearest match
         mid_stress_id = df_sort.index[0]
 
-        # Calculate delta stress/strain between at +/- 1 from the index of the 50% max stress value
-        delta_stress = (ucs_data['Platen Stress'][mid_stress_id + 1] - ucs_data['Platen Stress'][mid_stress_id - 1])
-        delta_strain = (ucs_data[loc_strain][mid_stress_id + 1] - ucs_data[loc_strain][mid_stress_id - 1])
+        if linear_bestfit:
+            ucs_data_trim = ucs_data.iloc[mid_stress_id - plusminus_range: mid_stress_id + plusminus_range]
+            Etan50, b = np.polyfit(ucs_data_trim[loc_strain], ucs_data_trim[loc_stress], deg=1)
+        else:
+            # Calculate delta stress/strain between at +/- 1 from the index of the 50% max stress value
+            delta_stress = (ucs_data[loc_stress][mid_stress_id + plusminus_range] - ucs_data[loc_stress][
+                mid_stress_id - plusminus_range])
+            delta_strain = (ucs_data[loc_strain][mid_stress_id + plusminus_range] - ucs_data[loc_strain][
+                mid_stress_id - plusminus_range])
 
-        Etan50 = (delta_stress / delta_strain) * 100
+            Etan50, b = delta_stress / delta_strain, 0
 
-        return Etan50
+        Etan50, b = Etan50 * 100, b
 
-    def Esec_mod(self, ucs_data, upperrange, loc_strain='Platen Strain'):
+        return Etan50, b
+
+    def Esec_mod(self, ucs_data, upperrange, loc_stress='Platen Stress', loc_strain='Platen Strain'):
         """
         Secant Modulus between 0 and upperrange. The upperrange can be a % or a fraction.
 
@@ -788,6 +807,8 @@ class Model:
         :type ucs_data: pandas.DataFrame
         :param upperrange: Range over which to calculate the Secant Modulus
         :type upperrange: float
+        :param loc_stress: Column to obtain stress from. Defaults to Platen Stress
+        :type loc_stress: str
         :param loc_strain: Column to obtain strain from. Defaults to Platen Strain
         :type loc_strain: str
 
@@ -796,10 +817,10 @@ class Model:
 
         :Example:
             >>> data = pv.read("../example_outputs/Irazu_UCS")
-            >>> df_1 = data.complete_stress_strain(True)
+            >>> df_1 = data.complete_stress_strain(st_status=True)
             >>> data.Esec_mod(df_1, 0.5)
             51751.010161057035
-            >>> data.Esec_mod(df_1, 0.5, 'Gauge Displacement Y')
+            >>> data.Esec_mod(df_1, 0.5, loc_strain='Gauge Displacement Y')
             51279.95421163901
         """
 
@@ -808,20 +829,23 @@ class Model:
             upperrange = upperrange / 100
 
         # Find the nearest match to the (upperrange * max stress) value.
-        df_sort = ucs_data.iloc[
-            (ucs_data['Platen Stress'] - (max(ucs_data['Platen Stress']) * upperrange)).abs().argsort()[:1]]
+        ucs_data = ucs_data.reset_index(drop=True)
+        df_sorttomax = ucs_data.iloc[0: ucs_data[loc_stress].idxmax()]
+        df_sort = df_sorttomax.iloc[
+            (df_sorttomax[loc_stress] - (max(df_sorttomax[loc_stress]) * upperrange)).abs().argsort()[:1]]
         # Return the index of the nearest match
         sec_stress_id = df_sort.index[0]
 
         # Calculate delta stress/strain between 0 and the defined value
-        delta_stress = (ucs_data['Platen Stress'][sec_stress_id + 1])
-        delta_strain = (ucs_data[loc_strain][sec_stress_id + 1])
+        delta_stress = (df_sorttomax[loc_stress][sec_stress_id + 1])
+        delta_strain = (df_sorttomax[loc_strain][sec_stress_id + 1])
 
         Esec = (delta_stress / delta_strain) * 100
 
         return Esec
 
-    def Eavg_mod(self, ucs_data, upperrange, lowerrange, loc_strain='Platen Strain'):
+    def Eavg_mod(self, ucs_data, upperrange, lowerrange, linear_bestfit=True, loc_stress='Platen Stress',
+                 loc_strain='Platen Strain'):
         """
         Average Elastic modulus between two ranges
 
@@ -831,20 +855,24 @@ class Model:
         :type upperrange: float
         :param lowerrange: Lower range to calculate the average
         :type lowerrange: float
+        :param linear_bestfit: Calculate data based on range extents or linear best fit line.
+        :type linear_bestfit: bool
+        :param loc_stress: Column to obtain stress from. Defaults to Platen Stress
+        :type loc_stress: str
         :param loc_strain: Column to obtain strain from. Defaults to Platen Strain
         :type loc_strain: str
 
         :return: Average Elastic modulus
-        :rtype: float
+        :rtype: list[float]
 
         :raise ZeroDivisionError: The range over which to calculate the Eavg is too small. Consider a larger range.
 
         :Example:
             >>> data = pv.read("../example_outputs/Irazu_UCS")
-            >>> df_1 = data.complete_stress_strain(True)
-            >>> data.Eavg_mod(df_1, 0.5, 0.6)
+            >>> df_1 = data.complete_stress_strain(st_status=True)
+            >>> data.Eavg_mod(df_1, 0.5, 0.6)[0]
             51485.33001517835
-            >>> data.Eavg_mod(df_1, 0.5, 0.6, 'Gauge Displacement Y')
+            >>> data.Eavg_mod(df_1, 0.5, 0.6, 'Gauge Displacement Y')[0]
             50976.62587224803
         """
 
@@ -855,11 +883,14 @@ class Model:
             lowerrange = lowerrange / 100
 
         # Find the nearest match to the (upperrange * max stress) value.
-        df_sort_upper = ucs_data.iloc[
-            (ucs_data['Platen Stress'] - (max(ucs_data['Platen Stress']) * upperrange)).abs().argsort()[:1]]
+        ucs_data = ucs_data.reset_index(drop=True)
+        df_max = ucs_data[loc_stress].idxmax()
+        df_sort = ucs_data.iloc[0:df_max]
+        df_sort_upper = df_sort.iloc[
+            (df_sort[loc_stress] - (max(df_sort[loc_stress]) * upperrange)).abs().argsort()[:1]]
         # Find the nearest match to the (lowerrange * max stress) value.
-        df_sort_lower = ucs_data.iloc[
-            (ucs_data['Platen Stress'] - (max(ucs_data['Platen Stress']) * lowerrange)).abs().argsort()[:1]]
+        df_sort_lower = df_sort.iloc[
+            (df_sort[loc_stress] - (max(df_sort[loc_stress]) * lowerrange)).abs().argsort()[:1]]
 
         # Return the index of the nearest match
         upper_stress_id = df_sort_upper.index[0]
@@ -869,14 +900,19 @@ class Model:
         if upper_stress_id == lower_stress_id:
             raise ZeroDivisionError("The range over which to calculate the Eavg is too small. Consider a larger range.")
 
-        # Calculate delta stress/strain between the defined value
-        delta_stress = (ucs_data['Platen Stress'][upper_stress_id] - ucs_data['Platen Stress'][lower_stress_id])
-        delta_strain = (ucs_data[loc_strain][upper_stress_id] - ucs_data[loc_strain][lower_stress_id])
+        if linear_bestfit:
+            ucs_data_trim = ucs_data.loc[upper_stress_id: lower_stress_id]
+            Eavg, b = np.polyfit(ucs_data_trim[loc_strain], ucs_data_trim[loc_stress], deg=1)
+        else:
+            # Calculate delta stress/strain between the defined value
+            delta_stress = (ucs_data[loc_stress][upper_stress_id] - ucs_data[loc_stress][lower_stress_id])
+            delta_strain = (ucs_data[loc_strain][upper_stress_id] - ucs_data[loc_strain][lower_stress_id])
 
-        Eavg = (delta_stress / delta_strain) * 100
+            Eavg, b = delta_stress / delta_strain, 0
 
-        return Eavg
+        Eavg, b = Eavg * 100, b
 
+        return Eavg, b
 
     def extract_based_coord(self, thres_model, coord_xyz, location, include_cells=False, adjacent_cells=False):
         """
@@ -902,7 +938,7 @@ class Model:
 
         return extracted_cells
 
-    def rotary_shear_calculation(self, platen_id, array, progress_bar=False):
+    def rotary_shear_calculation(self, platen_id, array, progress_bar=True):
         """
 
         :param platen_id: Material id of the platen
