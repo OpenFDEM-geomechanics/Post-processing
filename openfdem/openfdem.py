@@ -10,13 +10,15 @@ import re
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-
+import math
+import itertools
 import pyvista as pv
+import windrose
+import random
 
 # TODO:
-#  Change rotary shear to direct shear
-#  3D Model - Does the script works
 #  Threshold by boundary condition
+#  3D Model - Does the script works
 #  Process 3D PLT Tests
 
 # import complete_UCS_thread_pool_generators
@@ -225,6 +227,27 @@ class Model:
     # def __len__(self):
     # """ Number of timestep files """
 
+    def __scale_range__(self, scale_data):
+        """
+        Set the range of the scale min/max for the rosette diagram
+
+        :param scale_data: Data
+        :type scale_data: list[float]
+
+        :return: Min/Max range of data and the data interval
+        :rtype: list[float]
+        """
+
+        if (max(scale_data) - min(scale_data)) > 1:
+            max_range = int(max(scale_data) + 1)
+            min_range = int(min(scale_data))
+            inter = 1
+        else:
+            max_range = (max(scale_data) + 0.1) // 0.1 * 0.1
+            min_range = (min(scale_data)) // 0.1 * 0.1
+            inter = 0.1
+        return min_range, max_range, inter
+
     def model_dimensions(self, mat_id=None):
         """
         Function to get the "INITIAL" model bounds and returns the width, height, thickness
@@ -251,7 +274,7 @@ class Model:
         """
 
         if mat_id is not None:
-            self.mat_bound_check(mat_id)
+            self.threshold_bound_check(mat_id)
             self.thresholds_FDEM_output_files = self.first_file.threshold([mat_id, mat_id],
                                                                           self.var_data["mineral_type"])
         else:
@@ -295,34 +318,36 @@ class Model:
 
         return node_skip
 
-    def mat_bound_check(self, mat_id):
+    def threshold_bound_check(self, thres_id, thres_array='boundary'):
         """
         Checks the material ID is a valid choice.
 
-        :param mat_id: Material ID
-        :type mat_id: int
+        :param thres_id: ID of the item ot be threshold
+        :type thres_id: int
+        :param thres_array: Array name of the item ot be threshold
+        :type thres_array: str
 
         :return: ID of the material
         :rtype: int
 
-        :raise IndexError: Material ID for platen out of range.
+        :raise IndexError: ID out of range.
 
         :Example:
             >>> import openfdem as fdem
             >>> model = fdem.Model("../example_outputs/Irazu_UCS")
-            >>> model.mat_bound_check(0)
+            >>> model.threshold_bound_check(0)
             0
-            >>> model.mat_bound_check(5)
+            >>> model.threshold_bound_check(5)
             IndexError: Material ID for platen out of range.
             Material Range 0-1
         """
 
-        min_mat_id, max_mat_id = self.first_file.get_data_range(self.var_data["mineral_type"])
+        min_thres_id, max_thres_id = self.first_file.get_data_range(self.var_data[thres_array])
 
-        if mat_id not in range(min_mat_id, max_mat_id + 1):
-            raise IndexError("Material ID for platen out of range.\nMaterial Range %s-%s" % (min_mat_id, max_mat_id))
+        if thres_id not in range(min_thres_id, max_thres_id + 1):
+            raise IndexError("Threshold ID out of range.\n%s Range %s-%s" % (thres_array, min_thres_id, max_thres_id))
         else:
-            return mat_id
+            return thres_id
 
     def openfdem_att_check(self, att):
         """
@@ -393,7 +418,7 @@ class Model:
             self.platen_cells_elem_id = pv.cell_array(top_center_cell, self.var_data['mineral_type'])
         else:
             print("User Defined Platen ID")
-            self.mat_bound_check(platen_id)
+            self.threshold_bound_check(platen_id)
             self.platen_cells_elem_id = platen_id
 
         print("\tPlaten Material ID found as %s" % self.platen_cells_elem_id)
@@ -432,7 +457,7 @@ class Model:
             >>> data.simulation_type()
             'UCS Simulation'
         """
-        self.check_edge_point = [self.rock_model.bounds[1], self.rock_model.bounds[3], 0]
+        self.check_edge_point = [self.rock_model.bounds[1], self.rock_model.bounds[3], self.rock_model.bounds[5]]
         self.check_edge_cell = self.first_file.extract_cells(self.first_file.find_closest_cell(self.check_edge_point))
         self.check_edge_cell = pv.cell_array(self.check_edge_cell, self.var_data['mineral_type'])
 
@@ -704,7 +729,10 @@ class Model:
                 Name: Gauge Displacement Y, dtype=float64, nullable: False
         """
 
-        from . import complete_BD_thread_pool_generators
+        try:
+            from . import complete_BD_thread_pool_generators
+        except ImportError:
+            import complete_BD_thread_pool_generators
 
         return complete_BD_thread_pool_generators.main(self, st_status, gauge_width, gauge_length, progress_bar)
 
@@ -933,8 +961,7 @@ class Model:
         :rtype: pyvista.core.pointset.UnstructuredGrid
         """
 
-        extracted_cells = thres_model.extract_points(thres_model.points[:, coord_xyz] == location, include_cells=False,
-                                                   adjacent_cells=False)
+        extracted_cells = thres_model.extract_points(thres_model.points[:, coord_xyz] == location, include_cells=False, adjacent_cells=False)
 
         return extracted_cells
 
@@ -954,7 +981,7 @@ class Model:
         :Example:
         >>> import openfdem as fdem
         >>> data = fdem.Model("/external/2D_shear_4mm_profile_normal_load_test")
-        >>> df = data.rotary_shear_calculation(1, 'platen_force', progress_bar=True)
+        >>> df = data.rotary_shear_calculation(platen_id=1, array='platen_force', progress_bar=True)
         User Defined Platen ID
             Platen Material ID found as 1
         No. of points
@@ -979,11 +1006,231 @@ class Model:
         """
 
         try:
-            from . import rotary_ds_thread_pool_generators
+            from . import direct_shear_thread_pool_generators
         except ImportError:
-            import rotary_ds_thread_pool_generators
+            import direct_shear_thread_pool_generators
 
-        return rotary_ds_thread_pool_generators.main(self, platen_id, self.var_data[array], progress_bar)
+        return direct_shear_thread_pool_generators.main(self, platen_id, self.var_data[array], progress_bar)
+
+    def model_vertices(self, t_step=0, thres_id=None, thres_array="mineral_type"):
+        """
+        Returns a list of the vertices in the form of Point1, Point 2
+
+        :param t_step: Time step in model. Default 0
+        :type t_step: int
+        :param thres_id: ID of item to threshold. Default None.
+        :type thres_id: int
+        :param thres_array: Array name of item to threshold. Default "mineral_type".
+        :type thres_array: str
+        :return: list of the verticies in the model and/or the threshold of it.
+        :rtype: list[tuples]
+
+        :Example:
+        >>> import openfdem as fdem
+        >>> data = fdem.Model("../example_outputs/Irazu_UCS")
+        >>> len(data.model_vertices(t_step=0, thres_id=0, thres_array='mineral_type'))
+        11196
+        >>> len(data.model_vertices(t_step=0, thres_id=1, thres_array='boundary'))
+        354
+        """
+
+        # Load time step data
+        vertices = []
+        openfdem_model_ts = pv.read(self._basic_files[t_step])
+
+        # Check is user defined threshold based on array and ID
+        if thres_id is not None:
+            self.threshold_bound_check(thres_id, thres_array)
+            openfdem_model_ts = openfdem_model_ts.threshold([thres_id, thres_id], self.var_data[thres_array])
+
+        # Lookup each cell and get the co-ordinates and vertices to obtain element connectivity.
+        for elem_id in range(0, openfdem_model_ts.n_cells):
+            vertex = openfdem_model_ts.cell_points(elem_id)
+            tuples = [tuple(x) for x in vertex]
+            elem_connectivity = itertools.combinations(tuples, 2)
+            # Sort the connectivity of points small to big
+            for jj in elem_connectivity:
+                if jj[0] > jj[1]:
+                    jj = (jj[1], jj[0])
+                vertices.append(tuple(jj))
+
+        return vertices
+
+    def mesh_geometry(self, vertices):
+        """
+        Returns a unique set of vertices and calculates their length and orientation.
+
+        :param vertices: list of vertices in the model at a given time step
+        :type vertices: list[tuples]
+        :return: DataFrame of the vertices length and orientation
+        :rtype: pandas.DataFrame
+
+        :Example:
+        >>> import openfdem as fdem
+        >>> data = fdem.Model("../example_outputs/Irazu_UCS")
+        >>> vert = data.model_vertices(t_step=0, thres_id=1, thres_array='mineral_type')
+        >>> data.mesh_geometry(vert)
+               Length       Angle
+        0    2.236068   63.434949
+        1    2.000000    0.000000
+        2    2.363608   59.436301
+        3    2.000000    0.000000
+        4    2.244731  117.123188
+        ..        ...         ...
+        409  2.116948    0.287685
+        410  2.000000    0.000000
+        411  2.000000    0.000000
+        412  1.802781   45.829911
+        413  2.227619  116.002627
+        <BLANKLINE>
+        [414 rows x 2 columns]
+        """
+
+        ver_angles, ver_linelen = [], []
+        # Get unique vector set
+        unique_vertices = set(vertices)
+
+        # Unzip into two points (p1 and p2)
+        for un_vertex in unique_vertices:
+            p1, p2 = un_vertex[0], un_vertex[1]
+            # calculate Orientation and Length
+            cal_angle = self.__GetAngleOfLineBetweenTwoPoints__(p1, p2)
+            cal_len = self.__GetDistanceBetweenTwoPoints__(p1, p2)
+            # append to list
+            ver_angles.append(cal_angle)
+            ver_linelen.append(cal_len)
+
+        # convert to DataFrame
+        ver_data = pd.DataFrame(list(zip(ver_linelen, ver_angles)), columns=['Length', 'Angle'])
+
+        return ver_data
+
+    def draw_rose_diagram(self, t_step, rose_data=None, thres_id=None, thres_array="mineral_type", rose_range="Length"):
+        """
+        Draw a wind rose diagram based on the information passed.
+
+        :param t_step: Time step in model. Default 0
+        :type t_step: int
+        :param rose_data: User can bypass requirement and pass a DataFrame with the data. Should be 2 columns with the Angle being the 2nd. Default None
+        :type rose_data: DataFrame
+        :param thres_id: ID of item to threshold. Default None.
+        :type thres_id: int
+        :param thres_array: Array name of item to threshold. Default "mineral_type".
+        :type thres_array: str
+        :param rose_range: Range to calculate the windrose bins. Default "length"
+        :type rose_range: str
+
+        :return: windrose figure
+        :rtype: matplotlib.pyplot
+
+        :Example:
+        >>> import openfdem as fdem
+
+        >>> data = fdem.Model("../example_outputs/Irazu_UCS")
+        >>> data.draw_rose_diagram(t_step=0)
+        <module 'matplotlib.pyplot' from '/usr/local/lib/python3.8/dist-packages/matplotlib/pyplot.py'>
+        >>> data.draw_rose_diagram(t_step=0, rose_range='Length', thres_id=0, thres_array='boundary')
+        <module 'matplotlib.pyplot' from '/usr/local/lib/python3.8/dist-packages/matplotlib/pyplot.py'>
+        >>> # If you want to save the figure to a pyplot format.
+        >>> figure_name = data.draw_rose_diagram(t_step=0, rose_range='Length', thres_id=0, thres_array='boundary')
+        >>> figure_name.savefig('/hdd/home/aly/Desktop/Dropbox/Python_Codes/OpenFDEM-Post-Processing/example_outputs/example.pdf')
+        """
+
+        if rose_data is not None:
+            rose_data = rose_data
+        else:
+            if thres_id is not None:
+                self.threshold_bound_check(thres_id, thres_array)
+                vert = self.model_vertices(t_step, thres_id, thres_array)
+            else:
+                vert = self.model_vertices(t_step)
+
+            rose_data = self.mesh_geometry(vert)
+
+        min_range, max_range, inter = self.__scale_range__(rose_data[rose_range])
+
+        ''' Initialise Figure '''
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='windrose')
+        viridis = plt.get_cmap('viridis')
+
+        # Plot Sector -90 to 90
+        # Set locations of X-Axis
+        ax.set_thetagrids([90, 45, 0, -45, -90], labels=['0$^o$', '', '90$^o$', '', '0$^o$'])
+        ax.set_thetamin(-90)
+        ax.set_thetamax(90)
+        ax.set_theta_zero_location("N")
+        # Location of Radial Labels
+        ax.set_rlabel_position(270)
+
+        # Format the grid/plot
+        plt.grid(alpha=0.5)
+        plt.tight_layout()
+
+        ''' Generate appropriate y-axis division'''
+        # Create bins and counters to find mode value. Bins of 10 degrees.
+        counts, bins = np.histogram(rose_data["Angle"], bins=19, range=(-5, 185))
+        divisions = (int(str(1).ljust(len(str(max(counts))) - 1, '0')))
+        count = (int(math.ceil((max(counts) + divisions) / divisions)) * divisions)
+        grid_labels = np.linspace(0, count, 11, endpoint=True, dtype=int)
+
+        ax.bar(rose_data["Angle"], rose_data[rose_range], opening=0.8, edgecolor='white', nsector=36, cmap=viridis,
+               bins=np.arange(min_range, max_range, inter))
+
+        # Set Legend And Legend Properties
+        legend = ax.set_legend(title=rose_range, bbox_to_anchor=(0.5, 0.05), loc='center', ncol=4)
+        legend.get_title().set_fontsize('10')
+        legend.get_title().set_weight('bold')
+        plt.setp(plt.gca().get_legend().get_texts(), fontsize='10')  # legend 'list' fontsize
+
+        # Set locations of Y-Axis & Label
+        ax.set_yticks(grid_labels)
+        ax.tick_params(axis='y', pad=7.5, rotation=45)
+        ax.set_yticklabels(grid_labels, verticalalignment="top", horizontalalignment='center',
+                           size=8)  # works ONLY for on matplotlib 2.2.3+
+        ax.text(0.75, 0.15, 'Frequency', horizontalalignment='center', verticalalignment='center', size=10,
+                weight="bold", transform=ax.transAxes)
+
+        # Figure Information
+        plt.suptitle("Mesh Plot at Time Step %s\n%s lines" % (t_step, len(rose_data["Angle"])), fontsize=16, y=0.85, weight="bold")
+
+        return plt
+
+    def __GetDistanceBetweenTwoPoints__(self, p1, p2):
+        """  Calculate distance between two points
+
+        :param p1: First co-ordinate
+        :type p1: list[float, float, float]
+        :param p2: Second co-ordinate
+        :type p2: list[float, float, float]
+        :return: Edge length
+        :rtype: float
+        """
+
+        x2, y2, z2 = p1
+        x1, y1, z1 = p2
+        edg_len = ((float(x2) - float(x1)) ** 2 +
+                   (float(y2) - float(y1)) ** 2 +
+                   (float(z2) - float(z1)) ** 2) ** 0.5
+        return edg_len
+
+    def __GetAngleOfLineBetweenTwoPoints__(self, p1, p2):
+        """  Calculate angle between two points
+
+        :param p1: First co-ordinate
+        :type p1: list[float, float, float]
+        :param p2: Second co-ordinate
+        :type p2: list[float, float, float]
+        :return: Angle 0-180
+        :rtype: float
+        """
+
+        xDiff = p2[0] - p1[0]
+        yDiff = p2[1] - p1[1]
+        ang = math.degrees(math.atan2(yDiff, xDiff))
+        if ang < 0:
+            ang += 180
+        return ang
 
     # def process_BD(self):
 
