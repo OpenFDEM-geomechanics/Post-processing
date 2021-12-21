@@ -5,7 +5,10 @@ from itertools import repeat
 import pandas as pd
 import pyvista as pv
 
-from . import formatting_codes
+try:
+    from . import formatting_codes
+except ImportError:
+    import formatting_codes
 
 # Initialise Variables
 history_strain, history_stress = [], []
