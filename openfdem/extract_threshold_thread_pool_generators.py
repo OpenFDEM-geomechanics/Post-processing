@@ -10,9 +10,9 @@ try:
 except ImportError:
     import formatting_codes
 
-def history_modelthreshold_func(f_name, model, thres_id, thres_name, array_needed):
+def history_modelthreshold_func(f_name, model, thres_id, thres_array, array_needed):
     """
-    Generate a dictionary of the various array being interrogated for the said cell ID
+    Generate a dictionary of the various array being interrogated for the said cell threshold criteria
 
     :param f_name: name of vtu file being processed
     :type f_name: str
@@ -20,6 +20,8 @@ def history_modelthreshold_func(f_name, model, thres_id, thres_name, array_neede
     :type model:  openfdem.openfdem.Model
     :param thres_id: ID of the threshold from which the data needs to be extracted
     :type thres_id: int
+    :param thres_array: Array name of item to threshold.
+    :type thres_array: str
     :param array_needed: Name of the property to extract
     :type array_needed: list[str]
 
@@ -32,13 +34,13 @@ def history_modelthreshold_func(f_name, model, thres_id, thres_name, array_neede
     # Extract Data and convert to list and get value
 
     for i_array_needed in array_needed:
-        ts_values = openfdem_model_ts.threshold([thres_id, thres_id], model.var_data[thres_name]).get_array(model.var_data[i_array_needed]).tolist()
+        ts_values = openfdem_model_ts.threshold([thres_id, thres_id], model.var_data[thres_array]).get_array(model.var_data[i_array_needed]).tolist()
         dict_array[i_array_needed].append(ts_values)
 
     yield dict_array
 
 
-def main(model, thresid, thresname, arrayname, progress_bar=False):
+def main(model, thresid, thresarray, arrayname, progress_bar=False):
     """
     Main concurrent Thread Pool to get value of the property from the cell being extracted
 
@@ -46,10 +48,12 @@ def main(model, thresid, thresname, arrayname, progress_bar=False):
     :type model:  openfdem.openfdem.Model
     :param thresid: ID of the cell from which the data needs to be extracted
     :type thresid: int
+    :param thresarray: Array name of item to threshold. Default "mineral_type".
+    :type thresarray: str
     :param arrayname: Name of the property to extract
     :type arrayname: list[str]
     :param progress_bar: Show/Hide progress bar
-    :type gauge_length: bool
+    :type progress_bar: bool
 
     :return: DataFrame of the values of the property from the cell being extracted
     :rtype: pandas.DataFrame
@@ -76,11 +80,11 @@ def main(model, thresid, thresname, arrayname, progress_bar=False):
     # Load basic files in the concurrent Thread Pool
     for fname in f_names:
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            results = list(executor.map(history_modelthreshold_func, fname, repeat(model), [thresid], thresname, arrayname))  # is self the list we are iterating over
+            results = list(executor.map(history_modelthreshold_func, fname, repeat(model), [thresid], thresarray, arrayname))  # is self the list we are iterating over
 
     # Iterate through the files in the defined function
     for idx, fname_iter in enumerate(f_names):
-        hist = history_modelthreshold_func(fname_iter, model, thresid, thresname, arrayname)
+        hist = history_modelthreshold_func(fname_iter, model, thresid, thresarray, arrayname)
         if progress_bar:
             formatting_codes.print_progress(idx + 1, len(f_names), prefix='Progress:', suffix='Complete')
         hist.__next__()

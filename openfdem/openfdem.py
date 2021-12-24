@@ -299,7 +299,7 @@ class Model:
         :return: number of nodes to skip in analysis
         :rtype: int
 
-        :raise Exception: The simulation is not currently supported.
+        :raise Warning: Simulation partially supported.
 
         :Example:
             >>> import openfdem as fdem
@@ -315,7 +315,7 @@ class Model:
         else:  # 3D (Tetrahedral)
             print("3D Simulation")
             node_skip = 6
-            raise Exception("3D Simulation not supported")
+            raise Warning("3D Simulation partially supported")
 
         return node_skip
 
@@ -574,32 +574,40 @@ class Model:
             >>> import openfdem as fdem
             >>> import matplotlib.pyplot as plt
             >>> data = fdem.Model("../example_outputs/Irazu_UCS")
-            # Extract data platen_force', 'mineral_type' from Cell ID 1683
+            >>> # Extract data platen_force', 'mineral_type' from Cell ID 1683
             >>> extraction_of_cellinfo = data.extract_cell_info(1683, ['platen_force', 'mineral_type'])
             Columns:
                 Name: platen_force_N1, dtype=object, nullable: False
                 Name: platen_force_N2, dtype=object, nullable: False
                 Name: platen_force_N3, dtype=object, nullable: False
                 Name: mineral_type, dtype=object, nullable: False
-            # For noded information => PLOTTING METHOD ONE
+            >>> # For noded information => PLOTTING METHOD ONE
             >>> x, y = [], []
             >>> for i, row in extraction_of_cellinfo.iterrows():
             >>>     x.append(i)
             >>>     y.append(row['platen_force_N2'][0])
             >>> plt.plot(x, y, c='red', label='platen_force_N2_x')
+            [<matplotlib.lines.Line2D object at 0x7f08fe98a310>]
             >>> plt.legend()
+             <matplotlib.legend.Legend object at 0x7f08fe9854c0>
             >>> plt.show()
             # For noded information => PLOTTING METHOD TWO
             >>> lx = extraction_of_cellinfo['platen_force_N2'].to_list()
             >>> lx1 = list(zip(*lx))
             >>> plt.plot(lx1[0], label='platen_force_N2_x')
+            [<matplotlib.lines.Line2D object at 0x7f08fe859b20>]
             >>> plt.plot(lx1[1], label='platen_force_N2_y')
+            [<matplotlib.lines.Line2D object at 0x7f08fe859e50>]
             >>> plt.plot(lx1[2], label='platen_force_N2_z')
+            [<matplotlib.lines.Line2D object at 0x7f08fe86a160>]
             >>> plt.legend()
+            <matplotlib.legend.Legend object at 0x7f08fe86a340>
             >>> plt.show()
             # For non-nonded information
             >>> plt.plot(lx1[0], label='mineral_type')
+            [<matplotlib.lines.Line2D object at 0x7f08fe7e39a0>]
             >>> plt.legend()
+            <matplotlib.legend.Legend object at 0x7f08fe7e39d0>
             >>> plt.show()
 
         """
@@ -622,32 +630,69 @@ class Model:
         return unpacked_df
 
     def convert_to_xyz_array(self, node_df):
+        """
+        Convert extracted node information into summation based on X, Y and Z
+
+        :param node_df: Extracted node information
+        :type node_df: pandas.DataFrame
+
+        :return: A DataFrame with summations along X, Y, Z axis. Column names are ["sum_X", "sum_Y", "sum_Z"]
+        :rtype: pandas.DataFrame
+
+        :Example:
+            >>> import openfdem as fdem
+            >>> data = fdem.Model("../example_outputs/Irazu_3D_UCS")
+            >>> # # Extract all cells that meet the criteria and split to nodewise data for each time step.
+            >>> # In this case "BOUNDARY CONDITION" is set to "1" for the threshold with the "FORCE" being extracted at each node.
+            >>> df = data.extract_threshold_info(thres_id=1, thres_array='boundary', arrays_needed=['platen_force'])
+            >>> # Sum the X,Y,Z of all nodes for each time step.
+            >>> df_sum = data.convert_to_xyz_array(df)
+            >>> print(df_sum)
+                           sum_X         sum_Y         sum_Z
+                0   0.000000e+00  0.000000e+00  0.000000e+00
+                1  -1.224291e+05 -2.348118e+09  4.645789e+04
+                2  -8.768720e+04 -4.663436e+09  7.953211e+03
+                3  -5.580583e+04 -6.948494e+09 -1.039933e+04
+                4  -1.602602e+05 -9.240063e+09  1.065935e+04
+                5  -1.588623e+05 -1.152608e+10  4.616695e+04
+                ...
+
+        """
 
         list_sum = np.array(node_df.to_numpy().tolist()).sum(axis=1).tolist()
         df_xyz = pandas.DataFrame(list_sum, columns=["sum_X", "sum_Y", "sum_Z"])
 
         return df_xyz
 
-    def extract_threshold_info(self, thres_id, thres_name, arrays_needed, progress_bar=True):
+    def extract_threshold_info(self, thres_id, thres_array, arrays_needed, progress_bar=True):
         """
         Returns the information of the cell based on the array requested.
-        If the array is a point data, the array is suffixed with _Nx where x is the node on that cell.
+        If the array is a point data, the array is suffixed with _Nx where x is cell ID.
         Also shows a quick example on how to plot the information extracted.
 
         :param thres_id: Threshold ID to extract
         :type thres_id: int
+        :param thres_array: Array name of item to threshold.
+        :type thres_array: str
         :param arrays_needed: list of array names to extract
         :type arrays_needed: list[str]
         :param progress_bar: Show/Hide progress bar
         :type progress_bar: bool
 
-        :return: unpacked DataFrame
-        :rtype: pandas.DataFrame
+        :return: A DataFrame or a series of DataFrames nested in a dictionary with the key being the name of the array needed
+        :rtype: pandas.DataFrame or dict[pandas.DataFrame]
 
         :Example:
             >>> import openfdem as fdem
             >>> import matplotlib.pyplot as plt
-
+            >>> data = fdem.Model("../example_outputs/Irazu_3D_UCS")
+            >>> # Extract all cells that meet the criteria and split to nodewise data for each time step.
+            >>> # In this case "BOUNDARY CONDITION" is set to "1" for the threshold with the "FORCE" being extracted at each node.
+            >>> df = data.extract_threshold_info(thres_id=1, thres_array='boundary', arrays_needed=['platen_force'])
+            Progress: |//////////////////////////////////////////////////| 100.0% Complete
+            54.74 seconds.
+            >>> # Sum the X,Y,Z of all nodes for each time step.
+            >>> df_sum = data.convert_to_xyz_array(df)
 
         """
 
@@ -662,11 +707,17 @@ class Model:
         except ImportError:
             import extract_threshold_thread_pool_generators
 
-        packed_df = extract_threshold_thread_pool_generators.main(self, thres_id, thres_name, arrays_needed, progress_bar)
+        packed_df = extract_threshold_thread_pool_generators.main(self, thres_id, thres_array, arrays_needed, progress_bar)
 
         unpacked_df = self.unpack_DataFrame(packed_df)
 
-        return unpacked_df
+        if type(arrays_needed) == list and len(arrays_needed) > 1:
+            df_dict = {}
+            for array_needed in arrays_needed:
+                df_dict[array_needed] = unpacked_df.filter(regex=array_needed)
+            return df_dict
+        else:
+            return unpacked_df
 
     # def model_composition(self):
     # if not self._basic_0_loaded:
@@ -1070,6 +1121,7 @@ class Model:
         :type thres_id: int
         :param thres_array: Array name of item to threshold. Default "mineral_type".
         :type thres_array: str
+
         :return: list of the verticies in the model and/or the threshold of it.
         :rtype: list[tuples]
 
@@ -1110,6 +1162,7 @@ class Model:
 
         :param vertices: list of vertices in the model at a given time step
         :type vertices: list[tuples]
+
         :return: DataFrame of the vertices length and orientation
         :rtype: pandas.DataFrame
 
