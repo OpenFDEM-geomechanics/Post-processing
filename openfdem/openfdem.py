@@ -8,6 +8,7 @@ import glob
 import os.path as path
 import re
 import matplotlib.pyplot as plt
+import pandas
 import pandas as pd
 import numpy as np
 import math
@@ -615,6 +616,53 @@ class Model:
             import extract_cell_thread_pool_generators
 
         packed_df = extract_cell_thread_pool_generators.main(self, cell_id, arrays_needed, progress_bar)
+
+        unpacked_df = self.unpack_DataFrame(packed_df)
+
+        return unpacked_df
+
+    def convert_to_xyz_array(self, node_df):
+
+        list_sum = np.array(node_df.to_numpy().tolist()).sum(axis=1).tolist()
+        df_xyz = pandas.DataFrame(list_sum, columns=["sum_X", "sum_Y", "sum_Z"])
+
+        return df_xyz
+
+    def extract_threshold_info(self, thres_id, thres_name, arrays_needed, progress_bar=True):
+        """
+        Returns the information of the cell based on the array requested.
+        If the array is a point data, the array is suffixed with _Nx where x is the node on that cell.
+        Also shows a quick example on how to plot the information extracted.
+
+        :param thres_id: Threshold ID to extract
+        :type thres_id: int
+        :param arrays_needed: list of array names to extract
+        :type arrays_needed: list[str]
+        :param progress_bar: Show/Hide progress bar
+        :type progress_bar: bool
+
+        :return: unpacked DataFrame
+        :rtype: pandas.DataFrame
+
+        :Example:
+            >>> import openfdem as fdem
+            >>> import matplotlib.pyplot as plt
+
+
+        """
+
+        if not type(arrays_needed) == list:
+            self.openfdem_att_check(arrays_needed)
+        else:
+            for array_needed in arrays_needed:
+                self.openfdem_att_check(array_needed)
+
+        try:
+            from . import extract_threshold_thread_pool_generators
+        except ImportError:
+            import extract_threshold_thread_pool_generators
+
+        packed_df = extract_threshold_thread_pool_generators.main(self, thres_id, thres_name, arrays_needed, progress_bar)
 
         unpacked_df = self.unpack_DataFrame(packed_df)
 
