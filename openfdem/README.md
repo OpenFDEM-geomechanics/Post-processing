@@ -1,13 +1,20 @@
 # OpenFDEM Post-Processing Package
 ### University of Toronto, 2021
 
-This Python package performs transformations on FDEM models in vtk/vtu format. 
-Functions calculated include:
-- Stress
-- Strain
+### Support
+This Python package performs transformations on hybrid finite-discrete element method (FDEM) models with an unstructured grid in vtk/vtu/vtp format. It currently supports arrays of simulation files from Irazu, Y-Geo (and its common derivatives), as well as OpenFDEM.
+
+###Functionality
+Functions include:
+- Extract information within the FDEM Model based on the name of the array (e.g., Stress, Strain, Temperature, etc...)
+- Extract stress-strain information for UCS and BD Simulations. Optional addition of virtual strain gauges.
 - Plotting stress vs strain curves
-- Tan modulus
-- Shear
+- Calculate the Elastic Modulus of the dataset. Eavg, Esec and Etan can be evaluated. 
+- Extract information of a particular cell based on a sequence of array names. This can be extended to extracting information along a line.
+- Extract information of a threshold dataset criteria based on a sequence of array names (**Currently only 1 is supported**).
+- Extraction of information for cells/thresholds extended to 3D Models as well. 
+
+Please refer to the user manual for more in-depth on the various functions and their usage. 
 
 # Installation
 1. Ensure that you have a Python version 3.5-3.9 installed on your machine.
@@ -33,7 +40,7 @@ Functions calculated include:
    pip freeze
    ```
 
-## How to use it - Termimal
+## How to use it - Terminal
 1. After installation is complete, in a terminal/cmd session where you keep your Python projects, type the following command:
     ```python
     python
