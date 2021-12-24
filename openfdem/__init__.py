@@ -28,9 +28,10 @@ from .openfdem import (
 
 # Load sub-routine modules py files
 from . import (
-    complete_UCS_thread_pool_generators,
     formatting_codes,
+    complete_UCS_thread_pool_generators,
     complete_BD_thread_pool_generators,
+    direct_shear_thread_pool_generators,
     extract_cell_thread_pool_generators,
-    rotary_ds_thread_pool_generators
+    extract_threshold_thread_pool_generators
 )
