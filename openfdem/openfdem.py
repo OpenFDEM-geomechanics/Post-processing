@@ -18,8 +18,7 @@ import windrose
 import random
 
 # TODO:
-#  Threshold by boundary condition
-#  3D Model - Does the script works
+#  3D Model - UCS/BD processing
 #  Process 3D PLT Tests
 
 # import complete_UCS_thread_pool_generators
@@ -731,7 +730,7 @@ class Model:
 
     # def set_strain_gauge(self,point,axis):
 
-    def complete_stress_strain(self, platen_id=None, st_status=False, gauge_width=0, gauge_length=0, progress_bar=True):
+    def complete_stress_strain(self, platen_id=None, st_status=False, gauge_width=0, gauge_length=0, c_center=None, progress_bar=True):
         """
         Calculate the full stress-strain curve
 
@@ -743,6 +742,8 @@ class Model:
         :type gauge_width: float
         :param gauge_length: length of the virtual strain gauge
         :type gauge_length: float
+        :param c_center: User-defined center of the SG
+        :type c_center: None or list[float, float, float]
         :param progress_bar: Show/Hide progress bar
         :type progress_bar: bool
 
@@ -778,17 +779,14 @@ class Model:
                 Name: Gauge Displacement Y, dtype=float64, nullable: False
         """
 
-        # TODO:
-        #  Ability to define the center point of the SG.
-
         try:
             from . import complete_UCS_thread_pool_generators
         except ImportError:
             import complete_UCS_thread_pool_generators
 
-        return complete_UCS_thread_pool_generators.main(self, platen_id, st_status, gauge_width, gauge_length, progress_bar)
+        return complete_UCS_thread_pool_generators.main(self, platen_id, st_status, gauge_width, gauge_length, c_center, progress_bar)
 
-    def complete_BD_stress_strain(self, st_status=False, gauge_width=0, gauge_length=0, progress_bar=True):
+    def complete_BD_stress_strain(self, st_status=False, gauge_width=0, gauge_length=0, c_center=None, progress_bar=True):
         """
         Calculate the full stress-strain curve
 
@@ -798,6 +796,8 @@ class Model:
         :type gauge_width: float
         :param gauge_length: length of the virtual strain gauge
         :type gauge_length: float
+        :param c_center: User-defined center of the SG
+        :type c_center: None or list[float, float, float]
         :param progress_bar: Show/Hide progress bar
         :type progress_bar: bool
 
@@ -833,7 +833,7 @@ class Model:
         except ImportError:
             import complete_BD_thread_pool_generators
 
-        return complete_BD_thread_pool_generators.main(self, st_status, gauge_width, gauge_length, progress_bar)
+        return complete_BD_thread_pool_generators.main(self, st_status, gauge_width, gauge_length, c_center, progress_bar)
 
     def plot_stress_strain(self, strain, stress, ax=None, **plt_kwargs):
         """
