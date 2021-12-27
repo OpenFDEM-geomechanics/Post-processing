@@ -103,10 +103,10 @@ def history_strain_func(f_name, model, cv, ch):
     yield history_stress, history_strain, gauge_disp_x, gauge_disp_y
 
 
-def set_strain_gauge(model, gauge_length=None, gauge_width=None):
+def set_strain_gauge(model, gauge_length=None, gauge_width=None, c_center=None):
     """
     Calculate local strain based on the dimensions of a virtual strain gauge placed at the center of teh model with
-    x/y dimensions. By default set to 0.25 of the length/width.
+    x/y dimensions. By default, set to 0.25 of the length/width.
 
     :param model: FDEM Model Class
     :type model:  openfdem.openfdem.Model
@@ -114,6 +114,8 @@ def set_strain_gauge(model, gauge_length=None, gauge_width=None):
     :type gauge_length: float
     :param gauge_width: width of the virtual strain gauge
     :type gauge_width: float
+    :param c_center: User-defined center of the SG
+    :type c_center: None or list[float, float, float]
 
     :return: Cells that cover the horizontal and vertical gauges as well as the gauge width and length
     :rtype: [list, list, float, float]
@@ -126,32 +128,35 @@ def set_strain_gauge(model, gauge_length=None, gauge_width=None):
     if not gauge_length or gauge_length == 0:
         gauge_length = 0.25 * model.sample_height
 
-    specimen_center = model.rock_model.center
+    if c_center:
+        x_cor, y_cor, z_cor = c_center[0], c_center[1], c_center[2]
+    else:
+        x_cor, y_cor, z_cor = model.rock_model.center
 
-    # Points the constitute the SG
-    pv.append([specimen_center[0] + gauge_width / 2.0,
-               specimen_center[1] - gauge_length / 2.0,
+    # Points that constitute the SG
+    pv.append([x_cor + gauge_width / 2.0,
+               y_cor - gauge_length / 2.0,
                0.0])
-    pv.append([specimen_center[0] - gauge_width / 2.0,
-               specimen_center[1] - gauge_length / 2.0,
+    pv.append([x_cor - gauge_width / 2.0,
+               y_cor - gauge_length / 2.0,
                0.0])
-    pv.append([specimen_center[0] + gauge_width / 2.0,
-               specimen_center[1] + gauge_length / 2.0,
+    pv.append([x_cor + gauge_width / 2.0,
+               y_cor + gauge_length / 2.0,
                0.0])
-    pv.append([specimen_center[0] - gauge_width / 2.0,
-               specimen_center[1] + gauge_length / 2.0,
+    pv.append([x_cor - gauge_width / 2.0,
+               y_cor + gauge_length / 2.0,
                0.0])
-    ph.append([specimen_center[0] + gauge_length / 2.0,
-               specimen_center[1] + gauge_width / 2.0,
+    ph.append([x_cor + gauge_length / 2.0,
+               y_cor + gauge_width / 2.0,
                0.0])
-    ph.append([specimen_center[0] + gauge_length / 2.0,
-               specimen_center[1] - gauge_width / 2.0,
+    ph.append([x_cor + gauge_length / 2.0,
+               y_cor - gauge_width / 2.0,
                0.0])
-    ph.append([specimen_center[0] - gauge_length / 2.0,
-               specimen_center[1] + gauge_width / 2.0,
+    ph.append([x_cor - gauge_length / 2.0,
+               y_cor + gauge_width / 2.0,
                0.0])
-    ph.append([specimen_center[0] - gauge_length / 2.0,
-               specimen_center[1] - gauge_width / 2.0,
+    ph.append([x_cor - gauge_length / 2.0,
+               y_cor - gauge_width / 2.0,
                0.0])
     print('\tDimensions of SG are %s x %s' % (gauge_length, gauge_width))
 
@@ -163,8 +168,8 @@ def set_strain_gauge(model, gauge_length=None, gauge_width=None):
         ch.append(model.first_file.find_closest_cell(ph[ps]))
 
     # Verify that SG points are within the domain and return valid cells
-    if -1 in pv or -1 in ph:
-        print("Check Strain Gauge Dimensions\nWill not process the strain gauges")
+    if -1 in cv or -1 in ch:
+        print(formatting_codes.red_text("Check Strain Gauge Dimensions\nWill not process the strain gauges"))
         st_status = False
     else:
         print('\tVertical Gauges\n\t\textends between %s\n\t\tcover cells ID %s' % (pv, cv))
@@ -177,7 +182,7 @@ def set_strain_gauge(model, gauge_length=None, gauge_width=None):
     return ch, cv, gauge_width, gauge_length
 
 
-def main(model, platen_id, st_status, gauge_width, gauge_length, progress_bar=False):
+def main(model, platen_id, st_status, gauge_width, gauge_length, c_center, progress_bar=False):
     """
     Main concurrent Thread Pool to calculate the full stress-strain
 
@@ -191,6 +196,8 @@ def main(model, platen_id, st_status, gauge_width, gauge_length, progress_bar=Fa
     :type gauge_width:  float
     :param gauge_length: SG length
     :type gauge_length: float
+    :param c_center: User-defined center of the SG
+    :type c_center: None or list[float, float, float]
     :param progress_bar: Show/Hide progress bar
     :type progress_bar: bool
 
@@ -214,7 +221,7 @@ def main(model, platen_id, st_status, gauge_width, gauge_length, progress_bar=Fa
 
     # Initialise the Strain Gauges
     if st_status:  # Enabled SG st_status == True
-        cv, ch, gauge_width, gauge_length = set_strain_gauge(model, gauge_width, gauge_length)
+        cv, ch, gauge_width, gauge_length = set_strain_gauge(model, gauge_width, gauge_length, c_center)
     else:
         cv, ch, gauge_width, gauge_length = [], [], 0, 0
 

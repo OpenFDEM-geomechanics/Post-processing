@@ -1,10 +1,8 @@
 # /////////////////////////////////////////////////////////////// #
 # !python3.6
 # -*- coding: utf-8 -*-
-# Python Script initially created on 2019-04-17 
 # Compiled by Aly @ Grasselli Geomechanics Group, UofT, 2019 
-# Created using PyCharm 
-# Current Version - Dated Apr 23, 2018
+# Created using PyCharm
 # /////////////////////////////////////////////////////////////// #
 
 
@@ -73,7 +71,7 @@ def bold_text(val):
 
 def docstring_creator(df):
     """
-    Write the example output for a doctstring DataFrame
+    Write the example output for a docstring DataFrame
 
     :param df: DataFrame to be read
     :type df: pandas.DataFrame
@@ -81,6 +79,7 @@ def docstring_creator(df):
     :return: prints the docstring and type for each element in the DataFrame
     :rtype: str
     """
+
     docstring = 'Index:\n'
     docstring = docstring + f'    {df.index}\n'
     docstring = docstring + 'Columns:\n'
@@ -111,7 +110,6 @@ def print_progress(iteration, total, prefix='', suffix='', decimals=1, bar_lengt
     :rtype:
     """
 
-
     import sys
 
     str_format = "{0:." + str(decimals) + "f}"
@@ -133,6 +131,5 @@ if __name__ == "__main__":
         green_text(text)
         bold_text(text)
     except KeyboardInterrupt:
-        # print("\n\033[1;31;0mTERMINATED BY USER\n")
         exit("TERMINATED BY USER")
 
