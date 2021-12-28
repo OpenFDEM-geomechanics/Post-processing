@@ -10,10 +10,6 @@ try:
 except ImportError:
     import formatting_codes
 
-# Initialise Variables
-history_strain, history_stress = [], []
-gauge_disp_x, gauge_disp_y = [], []
-
 
 def history_strain_func(f_name, model, cv, ch):
     """
@@ -202,6 +198,15 @@ def main(model, st_status, gauge_width, gauge_length, c_center, progress_bar=Fal
     :rtype: pd.DataFrame
     """
 
+    # Global declarations
+    start = time.time()
+
+    # Initialise Variables
+    global history_strain, history_stress, gauge_disp_x, gauge_disp_y
+    # To reset the value everytime the function is called.
+    history_strain, history_stress = [], []
+    gauge_disp_x, gauge_disp_y = [], []
+
     # File names of the basic files
     f_names = model._basic_files
 
@@ -213,8 +218,6 @@ def main(model, st_status, gauge_width, gauge_length, c_center, progress_bar=Fal
         print("Simulation appears to be not for indirect tensile strength")
         exit("Simulation appears to be not for indirect tensile strength")
 
-    # Global declarations
-    start = time.time()
 
     # Initialise the Strain Gauges
     if st_status:  # Enabled SG st_status == True
