@@ -472,7 +472,7 @@ class Model:
         This function thresholds cells based on boundary condition and sums them based on the defined parameter var_property
 
         :param pv_cells:
-        :type pv_cells: pyvista.core.pointset.UnstructuredGrid
+        :type pv_cells: pyvista.core.pointset.UnstructuredGrid or DataSet
         :param platen_boundary_id: boundary id that the threshold should be based on
         :type platen_boundary_id: float
         :param var_property: name of the property (array to b returned)
@@ -730,7 +730,7 @@ class Model:
 
     # def set_strain_gauge(self,point,axis):
 
-    def complete_stress_strain(self, platen_id=None, st_status=False, gauge_width=0, gauge_length=0, c_center=None, progress_bar=True):
+    def complete_stress_strain(self, platen_id=None, st_status=False, axis_of_loading=None , gauge_width=0, gauge_length=0, c_center=None, progress_bar=True):
         """
         Calculate the full stress-strain curve
 
@@ -738,6 +738,8 @@ class Model:
         :type platen_id: None or int
         :param st_status: Enable/Disable SG
         :type st_status: bool
+        :param axis_of_loading: Loading Direction
+        :type axis_of_loading: None or int
         :param gauge_width: width of the virtual strain gauge
         :type gauge_width: float
         :param gauge_length: length of the virtual strain gauge
@@ -784,7 +786,7 @@ class Model:
         except ImportError:
             import complete_UCS_thread_pool_generators
 
-        return complete_UCS_thread_pool_generators.main(self, platen_id, st_status, gauge_width, gauge_length, c_center, progress_bar)
+        return complete_UCS_thread_pool_generators.main(self, platen_id, st_status, axis_of_loading, gauge_width, gauge_length, c_center, progress_bar)
 
     def complete_BD_stress_strain(self, st_status=False, gauge_width=0, gauge_length=0, c_center=None, progress_bar=True):
         """
