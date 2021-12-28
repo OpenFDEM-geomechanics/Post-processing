@@ -1,4 +1,5 @@
 import concurrent.futures
+import math
 import time
 from itertools import repeat
 
@@ -11,7 +12,6 @@ except ImportError:
     import formatting_codes
 
 loading_dir_dict = {0: "X", 1: "Y", 2: "Z"}
-
 
 def history_strain_func(f_name, model, cv, ch, axis):
     """
@@ -55,11 +55,11 @@ def history_strain_func(f_name, model, cv, ch, axis):
         avg_platen_disp[i] = abs(avg_top_platen_disp[i]) + abs(avg_bottom_platen_disp[i])
 
     # Calculate the stress in MPa (force in kN & area in mm^2)
-    stress_from_platen = avg_platen_force[load_axis] / model.sample_width * 1.0e3
+    stress_from_platen = avg_platen_force[load_axis] / samp_W * 1.0e3
     history_stress.append(stress_from_platen)
 
     # Calculate strains in percentage (%)
-    strain_from_platen = avg_platen_disp[load_axis] / model.sample_height * 100.0
+    strain_from_platen = avg_platen_disp[load_axis] / samp_L * 100.0
     history_strain.append(strain_from_platen)
 
     '''STRAIN GAUGE ANALYSIS'''
@@ -204,8 +204,6 @@ def check_loading_direction(model, f1, f2):
 
     return diff_loading.index(max(diff_loading))
 
-
-
 def main(model, platen_id, st_status, axis_of_loading, gauge_width, gauge_length, c_center, progress_bar=False):
     """
     Main concurrent Thread Pool to calculate the full stress-strain
@@ -231,6 +229,9 @@ def main(model, platen_id, st_status, axis_of_loading, gauge_width, gauge_length
     :rtype: pd.DataFrame
     """
 
+    # Global declarations
+    start = time.time()
+
     # Initialise Variables
     global history_strain, history_stress, gauge_disp_x, gauge_disp_y
     history_strain, history_stress = [], []
@@ -240,15 +241,13 @@ def main(model, platen_id, st_status, axis_of_loading, gauge_width, gauge_length
     f_names = model._basic_files
 
     # Get rock dimension.
-    model.rock_sample_dimensions(platen_id)
+    x_dim, y_dim, z_dim, md_extent = model.rock_sample_dimensions(platen_id)
+    dim_list = [x_dim, y_dim, z_dim]
 
     # Check UCS Simulation
     if model.simulation_type() != "UCS Simulation":
         print("Simulation appears to be not for compressive strength")
         exit("Simulation appears to be not for compressive strength")
-
-    # Global declarations
-    start = time.time()
 
     if axis_of_loading:
         print("\tPredefined user-defined loading axis [%s] is %s-direction" % (axis_of_loading, loading_dir_dict[axis_of_loading]))
@@ -260,6 +259,29 @@ def main(model, platen_id, st_status, axis_of_loading, gauge_width, gauge_length
         print("\tPredefined loading Axis [1] is Y-direction")
         axis_of_loading = [1]
 
+    # Determine A and L for Stress and Strain.
+    global samp_W, samp_L
+    samp_L = dim_list[axis_of_loading[0]]
+    temp_dim = [x for x in dim_list if x != samp_L]
+    if model.number_of_points_per_cell == 3:
+        samp_W = max(temp_dim)
+    else:
+        x_extent, y_extent, z_extent = md_extent[0:2], md_extent[2:4], md_extent[4:6]
+        model_extent = [x_extent, y_extent, z_extent]
+        f_cell_coord = []
+        for idx in range(0, len(model_extent)):
+            if idx == axis_of_loading[0]:
+                f_cell_coord.append(0)
+            else:
+                f_cell_coord.append(model_extent[idx][0])
+        try:
+            model.find_cell(f_cell_coord)
+            samp_W = math.prod(temp_dim)
+        except IndexError:
+            if temp_dim[0] == temp_dim[1]:
+                samp_W = 3.142 * temp_dim[0] * temp_dim[0] / 4
+
+    print(samp_W, samp_L)
     # Initialise the Strain Gauges
     if model.number_of_points_per_cell != 3 and st_status:
         print(formatting_codes.red_text('Strain Gauges not supported in 3D\nWill not process the strain gauges'))

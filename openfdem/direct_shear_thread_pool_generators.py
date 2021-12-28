@@ -11,11 +11,6 @@ except ImportError:
     import formatting_codes
 
 
-# Initialise Variables
-abs_sum_array_data = []  # Stores "array" in each timestep
-ts_data = {}  # Compiles all data into a dictionary
-
-
 def abs_sum_array(f_name, model, array, edge_list):
     """
     Calculates the absolute sum of the array being interrogated in the sample.
@@ -96,6 +91,12 @@ def main(model, platen_id, array, progress_bar=True):
     :return: Absolute sum of the extracted array split in Top/Bottom ane Left/Rigth sub-set into Top/Bottom.
     :rtype: pd.DataFrame
     """
+
+    # Initialise Variables
+    global abs_sum_array_data, ts_data
+    # To reset the value everytime the function is called.
+    abs_sum_array_data = []  # Stores "array" in each timestep
+    ts_data = {}  # Compiles all data into a dictionary
 
     # File names of the basic files
     f_names = model._basic_files

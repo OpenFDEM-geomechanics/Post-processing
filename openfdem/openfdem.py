@@ -18,7 +18,7 @@ import windrose
 import random
 
 # TODO:
-#  3D Model - UCS/BD processing
+#  3D Model - BD processing
 #  Process 3D PLT Tests
 
 # import complete_UCS_thread_pool_generators
@@ -730,7 +730,7 @@ class Model:
 
     # def set_strain_gauge(self,point,axis):
 
-    def complete_stress_strain(self, platen_id=None, st_status=False, axis_of_loading=None , gauge_width=0, gauge_length=0, c_center=None, progress_bar=True):
+    def complete_UCS_stress_strain(self, platen_id=None, st_status=False, axis_of_loading=None, gauge_width=0, gauge_length=0, c_center=None, progress_bar=True):
         """
         Calculate the full stress-strain curve
 
@@ -756,24 +756,24 @@ class Model:
             >>> import openfdem as fdem
             >>> data = fdem.Model("../example_outputs/Irazu_UCS")
             # Minimal Arguments
-            >>> df_wo_SG = data.complete_stress_strain()
+            >>> df_wo_SG = data.complete_UCS_stress_strain()
             Columns:
                 Name: Platen Stress, dtype=float64, nullable: False
                 Name: Platen Strain, dtype=float64, nullable: False
             # full stress-strain without SG
-            >>> df_wo_SG = data.complete_stress_strain(None, False)
+            >>> df_wo_SG = data.complete_UCS_stress_strain(None, False)
             Columns:
                 Name: Platen Stress, dtype=float64, nullable: False
                 Name: Platen Strain, dtype=float64, nullable: False
             # full stress-strain with SG and default dimensions
-            >>> df_Def_SG = data.complete_stress_strain(None, True)
+            >>> df_Def_SG = data.complete_UCS_stress_strain(None, True)
             Columns:
                 Name: Platen Stress, dtype=float64, nullable: False
                 Name: Platen Strain, dtype=float64, nullable: False
                 Name: Gauge Displacement X, dtype=float64, nullable: False
                 Name: Gauge Displacement Y, dtype=float64, nullable: False
             # full stress-strain with SG and user-defined dimensions
-            >>> df_userdf_SG = data.complete_stress_strain(None, True, 10, 10)
+            >>> df_userdf_SG = data.complete_UCS_stress_strain(None, True, 10, 10)
             Columns:
                 Name: Platen Stress, dtype=float64, nullable: False
                 Name: Platen Strain, dtype=float64, nullable: False
@@ -857,7 +857,7 @@ class Model:
             >>> import openfdem as fdem
             >>> data = fdem.Model("../example_outputs/OpenFDEM_BD")
             # Minimal Arguments
-            >>> df_wo_SG = data.complete_stress_strain()
+            >>> df_wo_SG = data.complete_UCS_stress_strain()
             Columns:
                 Name: Platen Stress, dtype=float64, nullable: False
                 Name: Platen Strain, dtype=float64, nullable: False
@@ -893,12 +893,12 @@ class Model:
 
         :Example:
             >>> data = pv.read("../example_outputs/Irazu_UCS")
-            >>> df_1 = data.complete_stress_strain()
+            >>> df_1 = data.complete_UCS_stress_strain()
             >>> data.Etan50_mod(df_1)[0]
             51683.94337878284
             >>> data.Etan50_mod(df_1, linear_bestfit=False)[0]
             51639.21679789497
-            >>> df_1 = data.complete_stress_strain(st_status=True)
+            >>> df_1 = data.complete_UCS_stress_strain(st_status=True)
             >>> data.Etan50_mod(df_1, loc_strain='Gauge Displacement Y', plusminus_range=1)[0]
             51216.33411269702
         """
@@ -946,7 +946,7 @@ class Model:
 
         :Example:
             >>> data = pv.read("../example_outputs/Irazu_UCS")
-            >>> df_1 = data.complete_stress_strain(st_status=True)
+            >>> df_1 = data.complete_UCS_stress_strain(st_status=True)
             >>> data.Esec_mod(df_1, 0.5)
             51751.010161057035
             >>> data.Esec_mod(df_1, 0.5, loc_strain='Gauge Displacement Y')
@@ -998,7 +998,7 @@ class Model:
 
         :Example:
             >>> data = pv.read("../example_outputs/Irazu_UCS")
-            >>> df_1 = data.complete_stress_strain(st_status=True)
+            >>> df_1 = data.complete_UCS_stress_strain(st_status=True)
             >>> data.Eavg_mod(df_1, 0.5, 0.6)[0]
             51485.33001517835
             >>> data.Eavg_mod(df_1, 0.5, 0.6, 'Gauge Displacement Y')[0]
@@ -1066,7 +1066,7 @@ class Model:
 
         return extracted_cells
 
-    def rotary_shear_calculation(self, platen_id, array, progress_bar=True):
+    def direct_shear_calculation(self, platen_id, array, progress_bar=True):
         """
 
         :param platen_id: Material id of the platen
@@ -1082,7 +1082,7 @@ class Model:
         :Example:
         >>> import openfdem as fdem
         >>> data = fdem.Model("/external/2D_shear_4mm_profile_normal_load_test")
-        >>> df = data.rotary_shear_calculation(platen_id=1, array='platen_force', progress_bar=True)
+        >>> df = data.direct_shear_calculation(platen_id=1, array='platen_force', progress_bar=True)
         User Defined Platen ID
             Platen Material ID found as 1
         No. of points
