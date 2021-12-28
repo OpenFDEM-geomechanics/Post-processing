@@ -67,7 +67,7 @@ Please refer to the user manual for more in-depth on the various functions and t
 
 2. Getting the stress-strain for platen:
    ```python
-       model.complete_stress_strain(progress_bar=True)
+       model.complete_UCS_stress_strain(progress_bar=True)
    ```
    Output:
    ```python
