@@ -19,7 +19,8 @@ import random
 
 # TODO:
 #  3D Model - BD processing
-#  Process 3D PLT Tests
+#  Process 3D PLT Tests (Check that the platen ID is loaded correctly in all directions)
+#  Process 3D UCS Tests (Check that the platen ID is loaded correctly in all directions)
 
 # import complete_UCS_thread_pool_generators
 # import complete_BD_thread_pool_generators
@@ -68,6 +69,10 @@ class Model:
                               "temperature": 'temperature',
                               },
                     }
+
+    _plt_test_types = {"A": "Axial",
+                      "B": "Blocky",
+                      "D": "Diametral"}
 
     def _numericalSort(value):
         """Strip the numerical portion of the file.
@@ -836,6 +841,65 @@ class Model:
             import complete_BD_thread_pool_generators
 
         return complete_BD_thread_pool_generators.main(self, st_status, gauge_width, gauge_length, c_center, progress_bar)
+
+    def complete_PLT_stress_strain(self, load_config, platen_id=None, axis_of_loading=None, De_squared=None, progress_bar=True):
+        """
+        Calculate the full stress-strain curve
+        :param load_config: type of PLT Test. "A" "D" "B"
+        :type load_config: str
+        :param platen_id: Manual override of Platen ID
+        :type platen_id: None or int
+        :param axis_of_loading: Loading Direction
+        :type axis_of_loading: None or int
+        :param De_squared: equivalent core diameter (i.e., the value of De_squared)
+        :type De_squared: None or float
+        :param progress_bar: Show/Hide progress bar
+        :type progress_bar: bool
+
+        :return: full stress-strain information
+        :rtype: pandas.DataFrame
+
+        :Example:
+            >>> import openfdem as fdem
+            >>> data = fdem.Model("../example_outputs/Irazu_UCS")
+            # Minimal Arguments
+            >>> df_wo_SG = data.complete_UCS_stress_strain()
+            Columns:
+                Name: Platen Stress, dtype=float64, nullable: False
+                Name: Platen Strain, dtype=float64, nullable: False
+            # full stress-strain without SG
+            >>> df_wo_SG = data.complete_UCS_stress_strain(None, False)
+            Columns:
+                Name: Platen Stress, dtype=float64, nullable: False
+                Name: Platen Strain, dtype=float64, nullable: False
+            # full stress-strain with SG and default dimensions
+            >>> df_Def_SG = data.complete_UCS_stress_strain(None, True)
+            Columns:
+                Name: Platen Stress, dtype=float64, nullable: False
+                Name: Platen Strain, dtype=float64, nullable: False
+                Name: Gauge Displacement X, dtype=float64, nullable: False
+                Name: Gauge Displacement Y, dtype=float64, nullable: False
+            # full stress-strain with SG and user-defined dimensions
+            >>> df_userdf_SG = data.complete_UCS_stress_strain(None, True, 10, 10)
+            Columns:
+                Name: Platen Stress, dtype=float64, nullable: False
+                Name: Platen Strain, dtype=float64, nullable: False
+                Name: Gauge Displacement X, dtype=float64, nullable: False
+                Name: Gauge Displacement Y, dtype=float64, nullable: False
+        """
+
+        try:
+            from . import complete_PLT_thread_pool_generators
+        except ImportError:
+            import complete_PLT_thread_pool_generators
+
+        if load_config not in self._plt_test_types.keys():
+            raise IndexError("Unknown PLT Simulation. Supported simulations are %s which correspond to %s" % (", ".join(list(self._plt_test_types.keys())),
+                                                                                                              ", ".join(list(self._plt_test_types.values())))
+                             )
+
+        return complete_PLT_thread_pool_generators.main(self, load_config, platen_id, axis_of_loading, De_squared, progress_bar)
+
 
     def plot_stress_strain(self, strain, stress, ax=None, **plt_kwargs):
         """
