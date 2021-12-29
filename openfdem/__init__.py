@@ -30,6 +30,7 @@ from .openfdem import (
 from . import (
     formatting_codes,
     complete_UCS_thread_pool_generators,
+    complete_PLT_thread_pool_generators,
     complete_BD_thread_pool_generators,
     direct_shear_thread_pool_generators,
     extract_cell_thread_pool_generators,
