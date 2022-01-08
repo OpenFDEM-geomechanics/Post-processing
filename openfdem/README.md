@@ -4,7 +4,7 @@
 ### Support
 This Python package performs transformations on hybrid finite-discrete element method (FDEM) models with an unstructured grid in vtk/vtu/vtp format. It currently supports arrays of simulation files from Irazu, Y-Geo (and its common derivatives), as well as OpenFDEM.
 
-###Functionality
+### Functionality
 Functions include:
 - Extract information within the FDEM Model based on the name of the array (e.g., Stress, Strain, Temperature, etc...)
 - Extract stress-strain information for UCS and BD Simulations. Optional addition of virtual strain gauges.
