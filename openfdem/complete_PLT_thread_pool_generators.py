@@ -164,7 +164,7 @@ def main(model, load_config, platen_id, axis_of_loading, De, progress_bar=False)
         print("User defined De_squared")
         samp_De_square = De
 
-    print("De used in calculation is %0.2f" % samp_De_square)
+    print("De_squared used in calculation is %0.2f" % samp_De_square)
 
     # samp_L = dim_list[axis_of_loading[0]]
     # temp_dim = [x for x in dim_list if x != samp_L]
