@@ -55,7 +55,7 @@ def history_strain_func(f_name, model, cv, ch, axis):
         avg_platen_disp[i] = abs(avg_top_platen_disp[i]) + abs(avg_bottom_platen_disp[i])
 
     # Calculate the stress in MPa (force in kN & area in mm^2)
-    stress_from_platen = avg_platen_force[load_axis] / samp_W * 1.0e3
+    stress_from_platen = avg_platen_force[load_axis] / samp_A * 1.0e3
     history_stress.append(stress_from_platen)
 
     # Calculate strains in percentage (%)
@@ -204,7 +204,7 @@ def check_loading_direction(model, f1, f2):
 
     return diff_loading.index(max(diff_loading))
 
-def main(model, platen_id, st_status, axis_of_loading, gauge_width, gauge_length, c_center, progress_bar=False):
+def main(model, platen_id, st_status, axis_of_loading, gauge_width, gauge_length, c_center, user_samp_A=None, user_samp_L=None, progress_bar=False):
     """
     Main concurrent Thread Pool to calculate the full stress-strain
 
@@ -222,6 +222,10 @@ def main(model, platen_id, st_status, axis_of_loading, gauge_width, gauge_length
     :type gauge_length: float
     :param c_center: User-defined center of the SG
     :type c_center: None or list[float, float, float]
+    :param user_samp_A: Sample Area
+    :type user_samp_A: None or float
+    :param user_samp_L: Sample Length
+    :type user_samp_L: None or float
     :param progress_bar: Show/Hide progress bar
     :type progress_bar: bool
 
@@ -260,28 +264,42 @@ def main(model, platen_id, st_status, axis_of_loading, gauge_width, gauge_length
         axis_of_loading = [1]
 
     # Determine A and L for Stress and Strain.
-    global samp_W, samp_L
-    samp_L = dim_list[axis_of_loading[0]]
-    temp_dim = [x for x in dim_list if x != samp_L]
-    if model.number_of_points_per_cell == 3:
-        samp_W = max(temp_dim)
+    global samp_A, samp_L
+    # Sample length is the dimension in the direction of loading
+    if user_samp_L is None:
+        samp_L = dim_list[axis_of_loading[0]]
     else:
-        x_extent, y_extent, z_extent = md_extent[0:2], md_extent[2:4], md_extent[4:6]
-        model_extent = [x_extent, y_extent, z_extent]
-        f_cell_coord = []
-        for idx in range(0, len(model_extent)):
-            if idx == axis_of_loading[0]:
-                f_cell_coord.append(0)
-            else:
-                f_cell_coord.append(model_extent[idx][0])
-        try:
-            model.find_cell(f_cell_coord)
-            samp_W = math.prod(temp_dim)
-        except IndexError:
-            if temp_dim[0] == temp_dim[1]:
-                samp_W = 3.142 * temp_dim[0] * temp_dim[0] / 4
+        samp_L = user_samp_L
+    # del that dimension and keep the remaining ones.
+    del dim_list[axis_of_loading[0]]
+    temp_dim = dim_list
 
-    print(samp_W, samp_L)
+    # If 2D - the reduced list will be 0 and the width. Get width.
+    if user_samp_A is None:
+        if model.number_of_points_per_cell == 3:
+            samp_A = max(temp_dim)
+        # If 3D - locate [x, y, z] at the corner of the model.
+        else:
+            x_extent, y_extent, z_extent = md_extent[0:2], md_extent[2:4], md_extent[4:6]
+            model_extent = [x_extent, y_extent, z_extent]
+            f_cell_coord = []
+            for idx in range(0, len(model_extent)):
+                if idx == axis_of_loading[0]:
+                    f_cell_coord.append(0)
+                else:
+                    f_cell_coord.append(model_extent[idx][0])
+            # Check location. If -1 [IndexError] then circle, else square.
+            try:
+                model.find_cell(f_cell_coord)
+                samp_A = math.prod(temp_dim)
+            except IndexError:
+                if temp_dim[0] == temp_dim[1]:
+                    samp_A = 3.142 * temp_dim[0] * temp_dim[0] / 4
+    else:
+        samp_A = user_samp_A
+
+    print("Values used in calculations are\n\tArea\t%0.2f\n\tLength\t%0.2f" % (samp_A, samp_L))
+
     # Initialise the Strain Gauges
     if model.number_of_points_per_cell != 3 and st_status:
         print(formatting_codes.red_text('Strain Gauges not supported in 3D\nWill not process the strain gauges'))

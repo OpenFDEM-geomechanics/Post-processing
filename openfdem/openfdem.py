@@ -20,6 +20,7 @@ import random
 # TODO:
 #  3D Model - BD processing
 #  Process 3D PLT Tests (Check that the platen ID is loaded correctly in all directions)
+#  Process 3D PLT Tests (Identify platen ID automatically)
 #  Process 3D UCS Tests (Check that the platen ID is loaded correctly in all directions)
 
 # import complete_UCS_thread_pool_generators
@@ -663,8 +664,13 @@ class Model:
 
         """
 
-        list_sum = np.array(node_df.to_numpy().tolist()).sum(axis=1).tolist()
-        df_xyz = pandas.DataFrame(list_sum, columns=["sum_X", "sum_Y", "sum_Z"])
+        if isinstance(node_df, pd.DataFrame):
+            list_sum = np.array(node_df.to_numpy().tolist()).sum(axis=1).tolist()
+            df_xyz = pandas.DataFrame(list_sum, columns=["sum_X", "sum_Y", "sum_Z"])
+        elif type(node_df) is dict:
+            raise AttributeError("Please pass a name of the key. Available keys are %s" % ", ".join(list(node_df.keys())))
+        else:
+            raise AttributeError("Unknown data type.")
 
         return df_xyz
 
@@ -735,7 +741,7 @@ class Model:
 
     # def set_strain_gauge(self,point,axis):
 
-    def complete_UCS_stress_strain(self, platen_id=None, st_status=False, axis_of_loading=None, gauge_width=0, gauge_length=0, c_center=None, progress_bar=True):
+    def complete_UCS_stress_strain(self, platen_id=None, st_status=False, axis_of_loading=None, gauge_width=0, gauge_length=0, c_center=None, samp_A=None, samp_L=None, progress_bar=True):
         """
         Calculate the full stress-strain curve
 
@@ -751,6 +757,10 @@ class Model:
         :type gauge_length: float
         :param c_center: User-defined center of the SG
         :type c_center: None or list[float, float, float]
+        :param samp_A: Sample Area
+        :type samp_A: None or float
+        :param samp_L: Sample Length
+        :type samp_L: None or float
         :param progress_bar: Show/Hide progress bar
         :type progress_bar: bool
 
@@ -791,7 +801,7 @@ class Model:
         except ImportError:
             import complete_UCS_thread_pool_generators
 
-        return complete_UCS_thread_pool_generators.main(self, platen_id, st_status, axis_of_loading, gauge_width, gauge_length, c_center, progress_bar)
+        return complete_UCS_thread_pool_generators.main(self, platen_id, st_status, axis_of_loading, gauge_width, gauge_length, c_center, samp_A, samp_L, progress_bar)
 
     def complete_BD_stress_strain(self, st_status=False, gauge_width=0, gauge_length=0, c_center=None, progress_bar=True):
         """
