@@ -61,6 +61,7 @@ class Model:
                                  "platen_displacement": "Displacement",
                                  "gauge_displacement": "Displacement",
                                  "temperature": 'temperature',
+                                 "principal stresses": "principal stresses"
                                  },
                     "IRAZU": {"mineral_type": "material property ID",
                               "boundary": "boundary condition ID",
@@ -68,6 +69,8 @@ class Model:
                               "platen_displacement": "displacement",
                               "gauge_displacement": "displacement",
                               "temperature": 'temperature',
+                              "principal stresses": "principal stresses",
+                              "mass": "mass",
                               },
                     }
 
