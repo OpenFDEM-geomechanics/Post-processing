@@ -60,14 +60,6 @@ openfdem.model\_reader module
    :undoc-members:
    :show-inheritance:
 
-openfdem.rotary\_ds\_thread\_pool\_generators module
-----------------------------------------------------
-
-.. automodule:: openfdem.rotary_ds_thread_pool_generators
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Module contents
 ---------------
 

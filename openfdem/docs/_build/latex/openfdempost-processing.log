@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.9.7)  22 SEP 2021 08:49
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.9.7)  12 OCT 2022 23:02
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -680,494 +680,521 @@ LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 1
 (/usr/local/texlive/2021/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 )
+Underfull \hbox (badness 7064) in paragraph at lines 126--126
+[]\T1/ptm/m/it/10 ucs_data\T1/ptm/m/n/10 , \T1/ptm/m/it/10 up-per-range\T1/ptm/
+m/n/10 , \T1/ptm/m/it/10 low-er-range\T1/ptm/m/n/10 , \T1/ptm/m/it/10 lin-ear_b
+estfit=True\T1/ptm/m/n/10 , \T1/ptm/m/it/10 loc_stress=\TS1/ptm/m/it/10 '\T1/pt
+m/m/it/10 Platen Stress\TS1/ptm/m/it/10 '\T1/ptm/m/n/10 ,
+ []
+
 LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <10> not available
 (Font)              Font shape `T1/pcr/m/sl' tried instead on input line 131.
 LaTeX Font Info:    Trying to load font information for TS1+pcr on input line 1
-59.
-
+65.
 (/usr/local/texlive/2021/texmf-dist/tex/latex/psnfss/ts1pcr.fd
 File: ts1pcr.fd 2001/06/04 font definitions for TS1/pcr.
 ) [1
 
-]
-Underfull \hbox (badness 10000) in paragraph at lines 243--243
+] [2]
+Underfull \hbox (badness 10000) in paragraph at lines 264--264
 []\T1/ptm/m/it/10 st_status=False\T1/ptm/m/n/10 , \T1/ptm/m/it/10 gauge_width=0
 \T1/ptm/m/n/10 , \T1/ptm/m/it/10 gauge_length=0\T1/ptm/m/n/10 ,
  []
 
-[2]
-Overfull \vbox (2.35071pt too high) detected at line 351
+
+Underfull \hbox (badness 10000) in paragraph at lines 323--323
+[]\T1/ptm/m/it/10 load_config\T1/ptm/m/n/10 , \T1/ptm/m/it/10 platen_id=None\T1
+/ptm/m/n/10 , \T1/ptm/m/it/10 axis_of_loading=None\T1/ptm/m/n/10 ,
  []
 
 [3]
-Underfull \hbox (badness 10000) in paragraph at lines 360--360
+Underfull \hbox (badness 10000) in paragraph at lines 379--379
+[]\T1/ptm/m/it/10 platen_id=None\T1/ptm/m/n/10 , \T1/ptm/m/it/10 st_status=Fals
+e\T1/ptm/m/n/10 , \T1/ptm/m/it/10 axis_of_loading=None\T1/ptm/m/n/10 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 379--379
+\T1/ptm/m/it/10 gauge_width=0\T1/ptm/m/n/10 , \T1/ptm/m/it/10 gauge_length=0\T1
+/ptm/m/n/10 , \T1/ptm/m/it/10 c_center=None\T1/ptm/m/n/10 ,
+ []
+
+[4]
+LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <9> not available
+(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 471.
+ [5]
+Underfull \hbox (badness 10000) in paragraph at lines 548--548
+[]\T1/ptm/m/it/10 t_step\T1/ptm/m/n/10 , \T1/ptm/m/it/10 rose_data=None\T1/ptm/
+m/n/10 , \T1/ptm/m/it/10 thres_id=None\T1/ptm/m/n/10 , \T1/ptm/m/it/10 thres_ar
+ray=\TS1/ptm/m/it/10 '\T1/ptm/m/it/10 mineral_type\TS1/ptm/m/it/10 '\T1/ptm/m/n
+/10 ,
+ []
+
+[6]
+Underfull \hbox (badness 10000) in paragraph at lines 598--598
 []\T1/ptm/m/it/10 thres_model\T1/ptm/m/n/10 , \T1/ptm/m/it/10 co-ord_xyz\T1/ptm
 /m/n/10 , \T1/ptm/m/it/10 lo-ca-tion\T1/ptm/m/n/10 , \T1/ptm/m/it/10 in-clude_c
 ells=False\T1/ptm/m/n/10 , \T1/ptm/m/it/10 ad-ja-
  []
 
-[4] [5]
-LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <9> not available
-(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 540.
- [6] [7] [8]
-Underfull \hbox (badness 10000) in paragraph at lines 861--861
+LaTeX Font Info:    Font shape `TS1/pcr/m/it' in size <9> not available
+(Font)              Font shape `TS1/pcr/m/sl' tried instead on input line 660.
+[7] [8] [9] [10] [11] [12]
+Underfull \hbox (badness 10000) in paragraph at lines 1185--1185
 \T1/ptm/m/it/10 over-write=False\T1/ptm/m/n/10 , \T1/ptm/m/it/10 com-pres-
  []
 
-[9]
-Underfull \hbox (badness 10000) in paragraph at lines 933--933
+[13]
+Underfull \hbox (badness 10000) in paragraph at lines 1257--1257
 []\T1/ptm/m/it/10 f_name\T1/ptm/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 964--964
+Underfull \hbox (badness 10000) in paragraph at lines 1288--1288
 []\T1/ptm/m/it/10 model\T1/ptm/m/n/10 , \T1/ptm/m/it/10 st_status\T1/ptm/m/n/10
  , \T1/ptm/m/it/10 gauge_width\T1/ptm/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 998--998
+Underfull \hbox (badness 10000) in paragraph at lines 1288--1288
+\T1/ptm/m/it/10 gauge_length\T1/ptm/m/n/10 , \T1/ptm/m/it/10 c_center\T1/ptm/m/
+n/10 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1325--1325
 []\T1/ptm/m/it/10 model\T1/ptm/m/n/10 ,
  []
 
 
-Overfull \hbox (5.94455pt too wide) in paragraph at lines 998--998
+Overfull \hbox (5.94455pt too wide) in paragraph at lines 1325--1325
 \T1/ptm/m/it/10 gauge_length=None\T1/ptm/m/n/10 ,
  []
 
 
-Overfull \hbox (6.67453pt too wide) in paragraph at lines 998--998
-\T1/ptm/m/it/10 gauge_width=None\T1/pcr/m/n/10 ) 
+Overfull \hbox (3.17453pt too wide) in paragraph at lines 1325--1325
+\T1/ptm/m/it/10 gauge_width=None\T1/ptm/m/n/10 ,
  []
 
-[10]
-Underfull \hbox (badness 10000) in paragraph at lines 1030--1030
+[14]
+Underfull \hbox (badness 10000) in paragraph at lines 1360--1360
+[]\T1/ptm/m/it/10 model\T1/ptm/m/n/10 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1366--1366
 []\T1/ptm/m/it/10 f_name\T1/ptm/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1030--1030
-\T1/ptm/m/it/10 model\T1/ptm/m/n/10 , \T1/ptm/m/it/10 cv\T1/ptm/m/n/10 ,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1061--1061
+Underfull \hbox (badness 10000) in paragraph at lines 1397--1397
 []\T1/ptm/m/it/10 model\T1/ptm/m/n/10 , \T1/ptm/m/it/10 platen_id\T1/ptm/m/n/10
  , \T1/ptm/m/it/10 st_status\T1/ptm/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1061--1061
-\T1/ptm/m/it/10 gauge_width\T1/ptm/m/n/10 , \T1/ptm/m/it/10 gauge_length\T1/ptm
-/m/n/10 ,
+Underfull \hbox (badness 10000) in paragraph at lines 1397--1397
+\T1/ptm/m/it/10 axis_of_loading\T1/ptm/m/n/10 , \T1/ptm/m/it/10 gauge_width\T1/
+ptm/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1098--1098
+Underfull \hbox (badness 10000) in paragraph at lines 1397--1397
+\T1/ptm/m/it/10 gauge_length\T1/ptm/m/n/10 , \T1/ptm/m/it/10 c_center\T1/ptm/m/
+n/10 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1397--1397
+\T1/ptm/m/it/10 user_samp_A=None\T1/ptm/m/n/10 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1397--1397
+\T1/ptm/m/it/10 user_samp_L=None\T1/ptm/m/n/10 ,
+ []
+
+[15]
+Underfull \hbox (badness 10000) in paragraph at lines 1446--1446
 []\T1/ptm/m/it/10 model\T1/ptm/m/n/10 ,
  []
 
 
-Overfull \hbox (11.94455pt too wide) in paragraph at lines 1098--1098
+Overfull \hbox (11.94455pt too wide) in paragraph at lines 1446--1446
 \T1/ptm/m/it/10 gauge_length=None\T1/ptm/m/n/10 ,
  []
 
 
-Overfull \hbox (12.67453pt too wide) in paragraph at lines 1098--1098
-\T1/ptm/m/it/10 gauge_width=None\T1/pcr/m/n/10 ) 
+Overfull \hbox (9.17453pt too wide) in paragraph at lines 1446--1446
+\T1/ptm/m/it/10 gauge_width=None\T1/ptm/m/n/10 ,
  []
 
-[11]
-Underfull \hbox (badness 10000) in paragraph at lines 1130--1130
+
+Underfull \hbox (badness 10000) in paragraph at lines 1481--1481
 []\T1/ptm/m/it/10 f_name\T1/ptm/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1130--1130
+Underfull \hbox (badness 10000) in paragraph at lines 1481--1481
 \T1/ptm/m/it/10 model\T1/ptm/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1130--1130
+Underfull \hbox (badness 10000) in paragraph at lines 1481--1481
 \T1/ptm/m/it/10 cell_id\T1/ptm/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1130--1130
+Underfull \hbox (badness 10000) in paragraph at lines 1481--1481
 \T1/ptm/m/it/10 ar-
  []
 
 
-Overfull \hbox (10.01466pt too wide) in paragraph at lines 1130--1130
+Overfull \hbox (10.01466pt too wide) in paragraph at lines 1481--1481
 \T1/ptm/m/it/10 ray_needed\T1/pcr/m/n/10 ) 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1161--1161
+Underfull \hbox (badness 10000) in paragraph at lines 1512--1512
 []\T1/ptm/m/it/10 model\T1/ptm/m/n/10 , \T1/ptm/m/it/10 cel-lid\T1/ptm/m/n/10 ,
  \T1/ptm/m/it/10 ar-ray-name\T1/ptm/m/n/10 ,
  []
 
-[12] [13]
-Underfull \hbox (badness 10000) in paragraph at lines 1376--1376
-[]\T1/ptm/m/it/10 f_name\T1/ptm/m/n/10 , \T1/ptm/m/it/10 model\T1/ptm/m/n/10 , 
-\T1/ptm/m/it/10 ar-ray\T1/ptm/m/n/10 ,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1410--1410
-[]\T1/ptm/m/it/10 model\T1/ptm/m/n/10 , \T1/ptm/m/it/10 platen_id\T1/ptm/m/n/10
- , \T1/ptm/m/it/10 ar-ray\T1/ptm/m/n/10 ,
- []
-
-[14] [15] [16
-
-]
+[16] [17] [18]
 Chapter 2.
-[17] [18
+[19
+
+] [20
 
 ]
-Overfull \hbox (30.6225pt too wide) in paragraph at lines 1488--1489
+Overfull \hbox (30.6225pt too wide) in paragraph at lines 1746--1747
 []\T1/pcr/m/n/10 openfdem.complete_BD_thread_pool_generators\T1/ptm/m/n/10 ,
  []
 
 
-Overfull \hbox (36.6225pt too wide) in paragraph at lines 1489--1490
+Overfull \hbox (36.6225pt too wide) in paragraph at lines 1747--1748
 []\T1/pcr/m/n/10 openfdem.complete_UCS_thread_pool_generators\T1/ptm/m/n/10 ,
  []
 
 
-Overfull \hbox (36.6225pt too wide) in paragraph at lines 1490--1491
+Overfull \hbox (36.6225pt too wide) in paragraph at lines 1748--1749
 []\T1/pcr/m/n/10 openfdem.extract_cell_thread_pool_generators\T1/ptm/m/n/10 ,
  []
 
-
-Overfull \hbox (18.6225pt too wide) in paragraph at lines 1494--1495
-[]\T1/pcr/m/n/10 openfdem.rotary_ds_thread_pool_generators\T1/ptm/m/n/10 ,
- []
-
-[19
+[21
 
 
-] (./openfdempost-processing.ind [20
+] (./openfdempost-processing.ind [22
 
 
 ]
 Underfull \hbox (badness 10000) in paragraph at lines 8--10
-[]\T1/pcr/m/n/10 abs_sum_array() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule ope
-nf-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 8--10
-\T1/ptm/m/it/10 dem.rotary_ds_thread_pool_generators\T1/ptm/m/n/10 ),
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 10--11
 []\T1/pcr/m/n/10 aggregate_storage \T1/ptm/m/n/10 (\T1/ptm/m/it/10 class in ope
 nf-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 18--20
+Underfull \hbox (badness 10000) in paragraph at lines 17--19
 []\T1/pcr/m/n/10 calc_timer_values() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule
  openf-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 20--22
+Underfull \hbox (badness 10000) in paragraph at lines 19--21
+\T1/ptm/m/it/10 dem.complete_UCS_thread_pool_generators\T1/ptm/m/n/10 ),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 21--23
 []\T1/pcr/m/n/10 complete_BD_stress_strain() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 op
 enf-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 22--24
-[]\T1/pcr/m/n/10 complete_stress_strain() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 openf
--
+Underfull \hbox (badness 10000) in paragraph at lines 23--25
+[]\T1/pcr/m/n/10 complete_PLT_stress_strain() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 o
+penf-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 25--27
+[]\T1/pcr/m/n/10 complete_UCS_stress_strain() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 o
+penf-
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 27--29
+[]\T1/pcr/m/n/10 convert_to_xyz_array() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 openf-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 32--34
+[]\T1/pcr/m/n/10 direct_shear_calculation() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 ope
+nf-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 34--36
 []\T1/pcr/m/n/10 docstring_creator() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule
  openf-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 35--36
+Underfull \hbox (badness 10000) in paragraph at lines 43--44
 []\T1/pcr/m/n/10 extract_based_coord() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 openf-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 40--42
+Underfull \hbox (badness 10000) in paragraph at lines 45--47
+[]\T1/pcr/m/n/10 extract_threshold_info() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 openf
+-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 50--52
 []\T1/pcr/m/n/10 file_group_key() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 openf-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 40--42
+Underfull \hbox (badness 10000) in paragraph at lines 50--52
 \T1/ptm/m/it/10 dem.aggregate_storage.aggregate_storage
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 46--47
+Underfull \hbox (badness 10000) in paragraph at lines 56--57
 []\T1/pcr/m/n/10 green_text() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule openf-
 
  []
 
 
-Underfull \hbox (badness 6691) in paragraph at lines 50--52
+Underfull \hbox (badness 6691) in paragraph at lines 60--62
 []\T1/pcr/m/n/10 history_cellinfo_func() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod
 -ule openf-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 52--54
+Underfull \hbox (badness 10000) in paragraph at lines 62--64
 []\T1/pcr/m/n/10 history_strain_func() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-u
 le openf-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 52--54
+Underfull \hbox (badness 10000) in paragraph at lines 62--64
 \T1/ptm/m/it/10 dem.complete_BD_thread_pool_generators\T1/ptm/m/n/10 ),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 54--56
+Underfull \hbox (badness 10000) in paragraph at lines 64--66
 []\T1/pcr/m/n/10 history_strain_func() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-u
 le openf-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 54--56
+Underfull \hbox (badness 10000) in paragraph at lines 64--66
 \T1/ptm/m/it/10 dem.complete_UCS_thread_pool_generators\T1/ptm/m/n/10 ),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 59--61
+Underfull \hbox (badness 10000) in paragraph at lines 69--71
 []\T1/pcr/m/n/10 main() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule openf-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 59--61
+Underfull \hbox (badness 10000) in paragraph at lines 69--71
 \T1/ptm/m/it/10 dem.complete_BD_thread_pool_generators\T1/ptm/m/n/10 ),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 61--63
+Underfull \hbox (badness 10000) in paragraph at lines 71--73
 []\T1/pcr/m/n/10 main() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule openf-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 61--63
+Underfull \hbox (badness 10000) in paragraph at lines 71--73
 \T1/ptm/m/it/10 dem.complete_UCS_thread_pool_generators\T1/ptm/m/n/10 ),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 63--65
+Underfull \hbox (badness 10000) in paragraph at lines 73--75
 []\T1/pcr/m/n/10 main() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule openf-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 63--65
+Underfull \hbox (badness 10000) in paragraph at lines 73--75
 \T1/ptm/m/it/10 dem.extract_cell_thread_pool_generators\T1/ptm/m/n/10 ),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 65--67
-[]\T1/pcr/m/n/10 main() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule openf-
+Underfull \hbox (badness 10000) in paragraph at lines 75--76
+[]\T1/pcr/m/n/10 mesh_geometry() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 openf-dem.open
+fdem.Model
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 65--67
-\T1/ptm/m/it/10 dem.rotary_ds_thread_pool_generators\T1/ptm/m/n/10 ),
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 67--68
-[]\T1/pcr/m/n/10 mat_bound_check() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 openf-dem.op
-enfdem.Model
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 69--70
+Underfull \hbox (badness 10000) in paragraph at lines 77--78
 []\T1/pcr/m/n/10 model_dimensions() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 openf-dem.o
 penfdem.Model
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 70--71
+Underfull \hbox (badness 10000) in paragraph at lines 78--79
 []\T1/pcr/m/n/10 model_domain() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 openf-dem.openf
 dem.Model
  []
 
 
-Overfull \hbox (50.6225pt too wide) in paragraph at lines 74--75
-[]| \T1/pcr/m/n/10 openfdem.complete_BD_thread_pool_generators\T1/ptm/m/n/10 ,
+Underfull \hbox (badness 10000) in paragraph at lines 79--80
+[]\T1/pcr/m/n/10 model_vertices() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 openf-dem.ope
+nfdem.Model
  []
 
 
-Overfull \hbox (56.6225pt too wide) in paragraph at lines 75--76
+Overfull \hbox (50.6225pt too wide) in paragraph at lines 83--84
+[]| \T1/pcr/m/n/10 openfdem.complete_BD_thread_pool_generators\T1/ptm/m/n/10 ,
+ []
+
+[23
+
+]
+Overfull \hbox (56.6225pt too wide) in paragraph at lines 84--85
 []| \T1/pcr/m/n/10 openfdem.complete_UCS_thread_pool_generators\T1/ptm/m/n/10 ,
 
  []
 
 
-Overfull \hbox (56.6225pt too wide) in paragraph at lines 76--77
+Overfull \hbox (56.6225pt too wide) in paragraph at lines 85--86
 []| \T1/pcr/m/n/10 openfdem.extract_cell_thread_pool_generators\T1/ptm/m/n/10 ,
 
  []
 
 
-Overfull \hbox (38.6225pt too wide) in paragraph at lines 80--81
-[]| \T1/pcr/m/n/10 openfdem.rotary_ds_thread_pool_generators\T1/ptm/m/n/10 ,
- []
-
-[21
-
-]
-Underfull \hbox (badness 10000) in paragraph at lines 82--83
+Underfull \hbox (badness 10000) in paragraph at lines 90--91
 []\T1/pcr/m/n/10 multiprocess_async() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ul
 e openf-
  []
 
 
-Underfull \hbox (badness 6691) in paragraph at lines 83--85
+Underfull \hbox (badness 6691) in paragraph at lines 91--93
 []\T1/pcr/m/n/10 multiprocess_lib_read() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod
 -ule openf-
  []
 
 
-Overfull \hbox (28.1225pt too wide) in paragraph at lines 96--97
+Overfull \hbox (28.1225pt too wide) in paragraph at lines 104--105
 []\T1/pcr/m/n/10 openfdem.complete_BD_thread_pool_generators 
  []
 
 
-Overfull \hbox (34.1225pt too wide) in paragraph at lines 98--99
+Overfull \hbox (34.1225pt too wide) in paragraph at lines 106--107
 []\T1/pcr/m/n/10 openfdem.complete_UCS_thread_pool_generators 
  []
 
 
-Overfull \hbox (34.1225pt too wide) in paragraph at lines 100--101
+Overfull \hbox (34.1225pt too wide) in paragraph at lines 108--109
 []\T1/pcr/m/n/10 openfdem.extract_cell_thread_pool_generators 
  []
 
 
-Overfull \hbox (16.1225pt too wide) in paragraph at lines 108--109
-[]\T1/pcr/m/n/10 openfdem.rotary_ds_thread_pool_generators 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 110--111
+Underfull \hbox (badness 10000) in paragraph at lines 116--117
 []\T1/pcr/m/n/10 openfdem_att_check() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 openf-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 115--116
+Underfull \hbox (badness 10000) in paragraph at lines 121--122
 []\T1/pcr/m/n/10 plot_stress_strain() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 openf-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 116--117
+Underfull \hbox (badness 10000) in paragraph at lines 122--123
 []\T1/pcr/m/n/10 print_progress() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule op
 enf-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 118--119
+Underfull \hbox (badness 10000) in paragraph at lines 124--125
 []\T1/pcr/m/n/10 pv_read_queue() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule ope
 nf-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 122--124
+Underfull \hbox (badness 10000) in paragraph at lines 128--130
 []\T1/pcr/m/n/10 read_file() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 openf-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 122--124
+Underfull \hbox (badness 10000) in paragraph at lines 128--130
 \T1/ptm/m/it/10 dem.aggregate_storage.aggregate_storage
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 125--127
+Underfull \hbox (badness 10000) in paragraph at lines 131--133
 []\T1/pcr/m/n/10 rock_sample_dimensions() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 openf
 -
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 127--129
-[]\T1/pcr/m/n/10 rotary_shear_calculation() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 ope
-nf-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 132--134
+Underfull \hbox (badness 10000) in paragraph at lines 136--138
 []\T1/pcr/m/n/10 set_strain_gauge() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule 
 openf-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 132--134
+Underfull \hbox (badness 10000) in paragraph at lines 136--138
 \T1/ptm/m/it/10 dem.complete_BD_thread_pool_generators\T1/ptm/m/n/10 ),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 134--136
+Underfull \hbox (badness 10000) in paragraph at lines 138--140
 []\T1/pcr/m/n/10 set_strain_gauge() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule 
 openf-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 134--136
+Underfull \hbox (badness 10000) in paragraph at lines 138--140
 \T1/ptm/m/it/10 dem.complete_UCS_thread_pool_generators\T1/ptm/m/n/10 ),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 136--137
+Underfull \hbox (badness 10000) in paragraph at lines 140--141
 []\T1/pcr/m/n/10 simulation_type() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 openf-dem.op
 enfdem.Model
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 137--139
+Underfull \hbox (badness 10000) in paragraph at lines 141--143
 []\T1/pcr/m/n/10 store_file() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 openf-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 137--139
+Underfull \hbox (badness 10000) in paragraph at lines 141--143
 \T1/ptm/m/it/10 dem.aggregate_storage.aggregate_storage
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 139--141
-[]\T1/pcr/m/n/10 sub_filter() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 in mod-ule openf-
+Underfull \hbox (badness 10000) in paragraph at lines 146--148
+[]\T1/pcr/m/n/10 threshold_bound_check() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 openf-
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 139--141
-\T1/ptm/m/it/10 dem.rotary_ds_thread_pool_generators\T1/ptm/m/n/10 ),
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 149--150
+Underfull \hbox (badness 10000) in paragraph at lines 153--154
 []\T1/pcr/m/n/10 unpack_DataFrame() \T1/ptm/m/n/10 (\T1/ptm/m/it/10 openf-dem.o
 penfdem.Model
  []
 
-[22]) (./openfdempost-processing.aux)
+[24]) (./openfdempost-processing.aux)
 Package rerunfilecheck Info: File `openfdempost-processing.out' has not changed
 .
-(rerunfilecheck)             Checksum: 53A4BB2C27FED6AEFA343AB6C18E811D;575.
+(rerunfilecheck)             Checksum: FC24259D97AC6A9AD6A9102E4E0E8358;575.
  ) 
 Here is how much of TeX's memory you used:
- 13346 strings out of 478994
- 194881 string characters out of 5858185
- 594783 words of memory out of 5000000
- 30399 multiletter control sequences out of 15000+600000
- 454794 words of font info for 92 fonts, out of 8000000 for 9000
+ 13356 strings out of 478994
+ 195064 string characters out of 5858185
+ 611845 words of memory out of 5000000
+ 30403 multiletter control sequences out of 15000+600000
+ 455106 words of font info for 93 fonts, out of 8000000 for 9000
  1142 hyphenation exceptions out of 8191
- 83i,11n,88p,683b,747s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 83i,11n,88p,910b,749s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
 exlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/local/tex
 live/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texli
@@ -1179,10 +1206,10 @@ s/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1
 elvetic/uhvr8a.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/urw/times/ut
 mb8a.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><
 /usr/local/texlive/2021/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on openfdempost-processing.pdf (26 pages, 170342 bytes).
+Output written on openfdempost-processing.pdf (28 pages, 185253 bytes).
 PDF statistics:
- 358 PDF objects out of 1000 (max. 8388607)
- 310 compressed objects within 4 object streams
- 90 named destinations out of 1000 (max. 500000)
+ 369 PDF objects out of 1000 (max. 8388607)
+ 319 compressed objects within 4 object streams
+ 95 named destinations out of 1000 (max. 500000)
  61 words of extra memory for PDF output out of 10000 (max. 10000000)
 

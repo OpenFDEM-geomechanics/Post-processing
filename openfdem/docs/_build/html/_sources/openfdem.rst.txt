@@ -4,10 +4,10 @@ openfdem package
 Submodules
 ----------
 
-openfdem.aa\_test\_fdem module
-------------------------------
+openfdem.openfdem module
+------------------------
 
-.. automodule:: openfdem.aa_test_fdem
+.. automodule:: openfdem.openfdem
    :members:
    :undoc-members:
    :show-inheritance:
@@ -56,22 +56,6 @@ openfdem.model\_reader module
 -----------------------------
 
 .. automodule:: openfdem.model_reader
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-openfdem.openfdem module
-------------------------
-
-.. automodule:: openfdem.openfdem
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-openfdem.rotary\_ds\_thread\_pool\_generators module
-----------------------------------------------------
-
-.. automodule:: openfdem.rotary_ds_thread_pool_generators
    :members:
    :undoc-members:
    :show-inheritance:
