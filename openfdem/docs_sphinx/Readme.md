@@ -1,5 +1,5 @@
 # About Documentation
-Documentation was put together using `Sphinx`, pointing at the .py files in [openfdem] (../) folder. 
+Documentation was put together using `Sphinx`, pointing at the .py files in openfdem folder. 
 
 # Where to Find Config Files
 All build settings for documentation are controlled in [conf.py] (conf.py). The start page and display menu are found under the file [index.rst] (index.rst).
