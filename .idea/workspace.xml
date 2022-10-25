@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="37700c31-0cd6-4add-9b6f-b066e40d9550" name="Default Changelist" comment="Added Sphinx documentation into post-processing repository">
+      <change beforePath="$PROJECT_DIR$/openfdem.egg-info/PKG-INFO" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/openfdem.egg-info/SOURCES.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/openfdem.egg-info/dependency_links.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/openfdem.egg-info/requires.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/openfdem.egg-info/top_level.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/openfdem/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/openfdem/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="EO-Sept20-DocumentationUpdate" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="ProjectId" id="1v0YybYJDui71Z3nsg4IRAwN5bv" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/sphinx-intro-tutorial/docs" />
+      <recent name="$PROJECT_DIR$/sphinx-intro-tutorial" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/" />
+      <recent name="$PROJECT_DIR$/openfdem" />
+      <recent name="$PROJECT_DIR$/sphinx-intro-tutorial/docs" />
+      <recent name="$PROJECT_DIR$/example_outputs/OpenFDEM_BD/vtp" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.displacement">
+    <configuration name="displacement" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="OpenFDEM-Post-Processing" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/openfdem" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/openfdem/displacement.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="displacement_thread_pool" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="OpenFDEM-Post-Processing" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/openfdem" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/openfdem/displacement_thread_pool.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="displacement_thread_pool_generators" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="OpenFDEM-Post-Processing" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/openfdem" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/openfdem/displacement_thread_pool_generators.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="displacement_vtk" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="OpenFDEM-Post-Processing" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/openfdem" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/openfdem/displacement_vtk.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="displacement_vtk_file" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="OpenFDEM-Post-Processing" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/openfdem" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/openfdem/displacement_vtk_file.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.displacement" />
+      <item itemvalue="Python.displacement_thread_pool" />
+      <item itemvalue="Python.displacement_thread_pool_generators" />
+      <item itemvalue="Python.displacement_vtk" />
+      <item itemvalue="Python.displacement_vtk_file" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.displacement_thread_pool_generators" />
+        <item itemvalue="Python.displacement_thread_pool" />
+        <item itemvalue="Python.displacement_vtk" />
+        <item itemvalue="Python.displacement_vtk_file" />
+        <item itemvalue="Python.displacement" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="37700c31-0cd6-4add-9b6f-b066e40d9550" name="Default Changelist" comment="" />
+      <created>1625700729348</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1625700729348</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Adding multi processing (based on cpu_count present in machine running). Lines 406 to 418.">
+      <created>1626222013559</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1626222013559</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Added multi-threading for strain threshold - lines 488 to 501">
+      <created>1626233930099</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1626233930099</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Modified multi-processing bit (lines 407 t0 418)">
+      <created>1626273434840</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1626273434840</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Modified multi-threading bit (lines 489 to 502)">
+      <created>1626273892830</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1626273892830</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Added openfdem_mini_multiproc.py, into sub folder openfdem, which has a working multi process pool! Super exciting :)">
+      <created>1626308839116</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1626308839116</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Updated multi process example with append* &#10;Needs to be moved into the loop with the multiprocess to work correctly. Not the original function...">
+      <created>1626312158583</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1626312158583</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Added one more working example of concurrent = iterable inside the main again*">
+      <created>1626659551317</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1626659551317</updated>
+    </task>
+    <task id="LOCAL-00008" summary="alter to openfdem.py">
+      <created>1626661491019</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1626661491019</updated>
+    </task>
+    <task id="LOCAL-00009" summary="alter to openfdem.py">
+      <created>1626667326961</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1626667326961</updated>
+    </task>
+    <task id="LOCAL-00010" summary="alter to openfdem.py">
+      <created>1626705038810</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1626705038810</updated>
+    </task>
+    <task id="LOCAL-00011" summary="added displacement_numba.py">
+      <created>1626787634452</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1626787634452</updated>
+    </task>
+    <task id="LOCAL-00012" summary="added displacement_numba.py">
+      <created>1626791792524</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1626791792524</updated>
+    </task>
+    <task id="LOCAL-00013" summary="added 2 files working with parfor">
+      <created>1626898414139</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1626898414139</updated>
+    </task>
+    <task id="LOCAL-00014" summary="added 2 files working with parfor">
+      <created>1627061225980</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1627061225980</updated>
+    </task>
+    <task id="LOCAL-00015" summary="added displacement_thread_pool.py which uses the threadpoolexecutor&#10;also, added a break statement in displacement.py to make the executor map function work">
+      <created>1627308020147</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1627308020147</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Fixed formatting of break statement when chunksize &lt;=1">
+      <created>1627436990371</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1627436990371</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Added generator and iterable to thread pool generator">
+      <created>1627619724317</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1627619724317</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Added generator and iterable to thread pool generator">
+      <created>1628223860148</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1628223860148</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Added generator and iterable to thread pool generator">
+      <created>1628224029521</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1628224029522</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Added Sphinx documentation into post-processing repository">
+      <created>1631103764042</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1631103764043</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Added Sphinx documentation into post-processing repository">
+      <created>1632230170873</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1632230170873</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Adding multi processing (based on cpu_count present in machine running). Lines 406 to 418." />
+    <MESSAGE value="Added multi-threading for strain threshold - lines 488 to 501" />
+    <MESSAGE value="Modified multi-processing bit (lines 407 t0 418)" />
+    <MESSAGE value="Modified multi-threading bit (lines 489 to 502)" />
+    <MESSAGE value="Added openfdem_mini_multiproc.py, into sub folder openfdem, which has a working multi process pool! Super exciting :)" />
+    <MESSAGE value="Updated multi process example with append* &#10;Needs to be moved into the loop with the multiprocess to work correctly. Not the original function..." />
+    <MESSAGE value="Added one more working example of concurrent = iterable inside the main again*" />
+    <MESSAGE value="alter to openfdem.py" />
+    <MESSAGE value="added displacement_numba.py" />
+    <MESSAGE value="added 2 files working with parfor" />
+    <MESSAGE value="added displacement_thread_pool.py which uses the threadpoolexecutor&#10;also, added a break statement in displacement.py to make the executor map function work" />
+    <MESSAGE value="Fixed formatting of break statement when chunksize &lt;=1" />
+    <MESSAGE value="Added generator and iterable to thread pool generator" />
+    <MESSAGE value="Added Sphinx documentation into post-processing repository" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Sphinx documentation into post-processing repository" />
+  </component>
+</project>
