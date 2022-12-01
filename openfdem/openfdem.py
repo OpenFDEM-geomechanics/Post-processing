@@ -17,6 +17,11 @@ import pyvista as pv
 import windrose
 import random
 
+try:
+    from . import formatting_codes
+except ImportError:
+    import formatting_codes
+
 # TODO:
 #  3D Model - BD processing
 #  Process 3D PLT Tests (Check that the platen ID is loaded correctly in all directions)
@@ -55,22 +60,57 @@ class Model:
                              }
                    }
 
-    _var_dataset = {"openFDEM": {"mineral_type": "Property_id",
-                                 "boundary": "boundary condition ID",
-                                 "platen_force": "Force",
-                                 "platen_displacement": "Displacement",
-                                 "gauge_displacement": "Displacement",
-                                 "temperature": 'temperature',
-                                 "principal stresses": "principal stresses"
+    _var_dataset = {"openFDEM": {"basic":
+                                     {"mineral_type": "Property_id",
+                                      "boundary": "boundary condition ID",
+                                      "platen_force": "Force",
+                                      "force": "Force",
+                                      "platen_displacement": "Displacement",
+                                      "gauge_displacement": "Displacement",
+                                      "displacement": "Displacement",
+                                      "temperature": 'temperature'
+                                      },
+                                 "broken_joint":
+                                     {"crack_LUT": [0, 1, 1, 1.5, 2, 2, 3],
+                                      "crack_LUT_name": ['edge', 'pure tensile', 'tensile dominant',
+                                                         'shear dominant', 'pure shear', 'mixed mode'],
+                                      "failure_mode": "failure mode",
+                                      "area": "area",
+                                      "length": "length",
+                                      "opening 0": "opening 0",
+                                      "opening 1": "opening 1",
+                                      "opening 2": "opening 2",
+                                      "slip 0": "slip 0",
+                                      "slip 1": "slip 1",
+                                      "slip 2": "slip 2",
+                                      },
                                  },
-                    "IRAZU": {"mineral_type": "material property ID",
-                              "boundary": "boundary condition ID",
-                              "platen_force": "force",
-                              "platen_displacement": "displacement",
-                              "gauge_displacement": "displacement",
-                              "temperature": 'temperature',
-                              "principal stresses": "principal stresses",
-                              "mass": "mass",
+                    "IRAZU": {"basic":
+                                  {"mineral_type": "material property ID",
+                                   "boundary": "boundary condition ID",
+                                   "platen_force": "force",
+                                   "force": "force",
+                                   "platen_displacement": "displacement",
+                                   "gauge_displacement": "displacement",
+                                   "displacement": "displacement",
+                                   "temperature": 'temperature',
+                                   "principal stresses": "principal stresses",
+                                   "mass": "mass",
+                                   },
+                              "broken_joint":
+                                  {"crack_LUT": [0, 1, 1, 1.5, 2, 2, 3],
+                                   "crack_LUT_name": ['edge', 'pure tensile', 'tensile dominant',
+                                                      'shear dominant', 'pure shear', 'mixed mode'],
+                                  "failure_mode": "failure mode",
+                                  "area": "area",
+                                  "length": "length",
+                                  "opening 0": "opening 0",
+                                  "opening 1": "opening 1",
+                                  "opening 2": "opening 2",
+                                  "slip 0": "slip 0",
+                                  "slip 1": "slip 1",
+                                  "slip 2": "slip 2",
+                                   },
                               },
                     }
 
@@ -150,6 +190,7 @@ class Model:
         self._folder = folder
         self._runfile = runfile
         self._fdem_engine = fdem_engine
+        self._cell_skip = 2
         if runfile is not None:
             if fdem_engine is None:
                 if runfile.endswith(".y"):
@@ -168,6 +209,8 @@ class Model:
                 raise LookupError('Folder does not appear to exist or does not have valid output files.')
 
             self._broken_files = self._findOutputFiles(folder, extensions, "broken_joint")
+            if len(self._broken_files) == 0:
+                raise LookupError('Folder does not have any broken joints.')
             self._soft_files = self._findOutputFiles(folder, extensions, "soften_joint")
             self._pstress_dir_files = self._findOutputFiles(folder, extensions, "principal_stress_direction")
             self._acoustic_files = self._findOutputFiles(folder, extensions, "acoustic_emission")
@@ -183,6 +226,21 @@ class Model:
             self.var_data = Model._var_dataset["IRAZU"]
         elif self._fdem_engine == "OpenFDEM":
             self.var_data = Model._var_dataset["openFDEM"]
+
+    def __datasource__file__(self, datasource):
+        data_file = ''
+
+        for i in self._file_names[self._fdem_engine].values():
+            if datasource[0].__contains__(i):
+                data_file = i
+            else:
+                AttributeError("Unknown datafile type")
+        data_type = [k for k, v in self._file_names[self._fdem_engine].items() if v == data_file][0]
+
+        return data_type
+
+
+
 
     def __getitem__(self, key):
         """ Obtain all arrays by timestep access.
@@ -282,10 +340,12 @@ class Model:
             Material Range 0-1
         """
 
+        data_file = self.__datasource__file__(self._basic_files)
+
         if mat_id is not None:
             self.threshold_bound_check(mat_id)
             self.thresholds_FDEM_output_files = self.first_file.threshold([mat_id, mat_id],
-                                                                          self.var_data["mineral_type"])
+                                                                          self.var_data[data_file]["mineral_type"])
         else:
             self.thresholds_FDEM_output_files = self.first_file
 
@@ -351,14 +411,16 @@ class Model:
             Material Range 0-1
         """
 
-        min_thres_id, max_thres_id = self.first_file.get_data_range(self.var_data[thres_array])
+        data_file = self.__datasource__file__(self._basic_files)
+
+        min_thres_id, max_thres_id = self.first_file.get_data_range(self.var_data[data_file][thres_array])
 
         if thres_id not in range(min_thres_id, max_thres_id + 1):
             raise IndexError("Threshold ID out of range.\n%s Range %s-%s" % (thres_array, min_thres_id, max_thres_id))
         else:
             return thres_id
 
-    def openfdem_att_check(self, att):
+    def openfdem_att_check(self, att, dict_to_check=None):
         """
         Checks that the attribute is a valid choice.
 
@@ -380,9 +442,13 @@ class Model:
             Available options are mineral_type, boundary, platen_force, platen_displacement, gauge_displacement'
         """
 
-        if att not in self.var_data.keys():
+        if dict_to_check is None:
+            data_file = self.__datasource__file__(self._basic_files)
+
+        print(data_file)
+        if att not in self.var_data[data_file].keys():
             raise KeyError(
-                "Attribute does not exist.\nAvailable options are %s" % ", ".join(list(self.var_data.keys())))
+                "Attribute does not exist.\nAvailable options are %s" % ", ".join(list(self.var_data[dict_to_check].keys())))
         else:
             return att
 
@@ -416,6 +482,8 @@ class Model:
             Material Range 0-1
         """
 
+        data_file = self.__datasource__file__(self._basic_files)
+
         top_center_point = [self.first_file.GetCenter()[0], self.first_file.bounds[3], self.first_file.bounds[5]]
 
         top_center_cell = self.first_file.extract_cells(self.first_file.find_closest_cell(top_center_point))
@@ -424,7 +492,7 @@ class Model:
             print("Script Identifying Platen")
             if top_center_cell == -1:
                 print("Unable to identify Platen ID Correctly.")
-            self.platen_cells_elem_id = pv.cell_array(top_center_cell, self.var_data['mineral_type'])
+            self.platen_cells_elem_id = pv.cell_array(top_center_cell, self.var_data[data_file]['mineral_type'])
         else:
             print("User Defined Platen ID")
             self.threshold_bound_check(platen_id)
@@ -432,12 +500,12 @@ class Model:
 
         print("\tPlaten Material ID found as %s" % self.platen_cells_elem_id)
 
-        self.all_elem_id = list(set(self.first_file.get_array(self.var_data["mineral_type"])))
+        self.all_elem_id = list(set(self.first_file.get_array(self.var_data[data_file]["mineral_type"])))
         self.rock_elem_ids = [x for x in self.all_elem_id if x != self.platen_cells_elem_id]
         self.rock_elem_ids_max, self.rock_elem_ids_min = max(self.rock_elem_ids), min(self.rock_elem_ids)
 
-        self.rock_model = (self.first_file.threshold([self.rock_elem_ids_min, self.rock_elem_ids_max], self.var_data["mineral_type"]))
-        self.platen = (self.first_file.threshold([self.platen_cells_elem_id, self.platen_cells_elem_id], self.var_data["mineral_type"]))
+        self.rock_model = (self.first_file.threshold([self.rock_elem_ids_min, self.rock_elem_ids_max], self.var_data[data_file]["mineral_type"]))
+        self.platen = (self.first_file.threshold([self.platen_cells_elem_id, self.platen_cells_elem_id], self.var_data[data_file]["mineral_type"]))
 
         sample_x_min, sample_x_max = self.rock_model.bounds[0], self.rock_model.bounds[1]
         sample_y_min, sample_y_max = self.rock_model.bounds[2], self.rock_model.bounds[3]
@@ -466,9 +534,11 @@ class Model:
             >>> data.simulation_type()
             'UCS Simulation'
         """
+        data_file = self.__datasource__file__(self._basic_files)
+
         self.check_edge_point = [self.rock_model.bounds[1], self.rock_model.bounds[3], self.rock_model.bounds[5]]
         self.check_edge_cell = self.first_file.extract_cells(self.first_file.find_closest_cell(self.check_edge_point))
-        self.check_edge_cell = pv.cell_array(self.check_edge_cell, self.var_data['mineral_type'])
+        self.check_edge_cell = pv.cell_array(self.check_edge_cell, self.var_data[data_file]['mineral_type'])
 
         if self.check_edge_cell == -1:
             self.sim_type = "BD Simulation"
@@ -491,7 +561,9 @@ class Model:
         :rtype: ndarray
         """
 
-        platen_cell_ids = pv_cells.threshold([platen_boundary_id, platen_boundary_id], self.var_data["boundary"])
+        data_file = self.__datasource__file__(self._basic_files)
+
+        platen_cell_ids = pv_cells.threshold([platen_boundary_id, platen_boundary_id], self.var_data[data_file]["boundary"])
         platen_var_prop_list = sum(platen_cell_ids.get_array(var_property))
 
         if var_property == 'displacement':
@@ -624,7 +696,7 @@ class Model:
             self.openfdem_att_check(arrays_needed)
         else:
             for array_needed in arrays_needed:
-                self.openfdem_att_check(array_needed)
+                self.openfdem_att_check(array_needed, dict_to_check=None)
 
         try:
             from . import extract_cell_thread_pool_generators
@@ -1183,12 +1255,14 @@ class Model:
         >>> plt.show()
         """
 
+        data_file = self.__datasource__file__(self._basic_files)
+
         try:
             from . import direct_shear_thread_pool_generators
         except ImportError:
             import direct_shear_thread_pool_generators
 
-        return direct_shear_thread_pool_generators.main(self, platen_id, self.var_data[array], progress_bar)
+        return direct_shear_thread_pool_generators.main(self, platen_id, self.var_data[data_file][array], progress_bar)
 
     def model_vertices(self, t_step=0, thres_id=None, thres_array="mineral_type"):
         """
@@ -1213,6 +1287,8 @@ class Model:
         354
         """
 
+        data_file = self.__datasource__file__(self._basic_files)
+
         # Load time step data
         vertices = []
         openfdem_model_ts = pv.read(self._basic_files[t_step])
@@ -1220,7 +1296,7 @@ class Model:
         # Check is user defined threshold based on array and ID
         if thres_id is not None:
             self.threshold_bound_check(thres_id, thres_array)
-            openfdem_model_ts = openfdem_model_ts.threshold([thres_id, thres_id], self.var_data[thres_array])
+            openfdem_model_ts = openfdem_model_ts.threshold([thres_id, thres_id], self.var_data[data_file][thres_array])
 
         # Lookup each cell and get the co-ordinates and vertices to obtain element connectivity.
         for elem_id in range(0, openfdem_model_ts.n_cells):
@@ -1313,7 +1389,7 @@ class Model:
         <module 'matplotlib.pyplot' from '/usr/local/lib/python3.8/dist-packages/matplotlib/pyplot.py'>
         >>> # If you want to save the figure to a pyplot format.
         >>> figure_name = data.draw_rose_diagram(t_step=0, rose_range='Length', thres_id=0, thres_array='boundary')
-        >>> figure_name.savefig('/hdd/home/aly/Desktop/Dropbox/Python_Codes/OpenFDEM-Post-Processing/example_outputs/example.pdf')
+        >>> figure_name.savefig('../example_outputs/example.pdf')
         """
 
         if rose_data is not None:
@@ -1412,11 +1488,237 @@ class Model:
             ang += 180
         return ang
 
-    # def process_BD(self):
+    def crack_number(self, progress_bar=True):
+        """ Get the total number of cracks at every timestep. Excluding boundaries.
+
+        :param progress_bar: Show/Hide progress bar
+        :type progress_bar: bool
+
+        :return: A DataFrame containing the total number of cracks at every time step.
+        :rtype: pd.DataFrame
+
+        :Example:
+        >>> import openfdem as fdem
+        >>> data = fdem.Model("../example_outputs/Irazu_UCS")
+        >>> crack_number_total = data.crack_number()
+        >>> max(crack_number_total['crack number'])
+        222.0
+        >>> crack_number_total
+                    crack number
+        0            0.0
+        1            0.0
+        2            0.0
+        3            0.0
+        4            0.0
+        5            0.0
+        6            0.0
+        7            0.0
+        8            0.0
+        9          117.0
+        10         212.0
+        11         219.0
+        12         221.0
+        13         221.0
+        14         221.0
+        15         221.0
+        16         221.0
+        17         221.0
+        18         222.0
+        19         222.0
+        20         222.0
+        21         222.0
+        22         222.0
+        23         222.0
+        24         222.0
+        25         222.0
+        26         222.0
+        27         222.0
+        28         222.0
+        29         222.0
+        30         222.0
+        """
+
+        data_file = self.__datasource__file__(self._broken_files)
+
+        crack_list = []
+        # Obtain the failure mode for each time step
+
+        for idx, i in enumerate(self._broken_files):
+            open_fdem_ts = pv.read(i)
+
+            if progress_bar:
+                formatting_codes.print_progress(idx + 1, len(self._broken_files), prefix='Progress:', suffix='Complete')
+
+            cracks_in_ts = open_fdem_ts.get_array(self.var_data[data_file]['failure_mode'])
+            # Remove the failure mode == 0 as they are the edges.
+            # Divide by self._cell_skip to avoid repetition.
+            crack_list.append(len(cracks_in_ts.nonzero()[0]) / self._cell_skip)
+
+        # Convert list to DataFrame
+        df_crack_number = pd.DataFrame(crack_list, columns=['crack number'])
+
+        return df_crack_number
+
+    def crack_failure_mode(self, remove_boundary=True, progress_bar=True):
+        """
+        Get all failure modes in every timestep. Boundaries Optional.
+        This will create a dataframe that has te failure mode for every crack. The time the crack first appears would be the time it inititated.
+
+        :param remove_boundary: Optional. Keep or remove boundaries in DataFrame
+        :type remove_boundary: bool
+        :param progress_bar: Show/Hide progress bar
+        :type progress_bar: bool
+
+        :return: A DataFrame containing the failure mode for each crack at every time step.
+        :rtype: pd.DataFrame
+
+        :Example:
+        >>> import openfdem as fdem
+        >>> data = fdem.Model("../example_outputs/Irazu_UCS")
+        >>> df_cracks = data.crack_failure_mode()
+        """
+
+        data_file = self.__datasource__file__(self._broken_files)
+
+        crack_dict = {}
+        # Obtain the failure mode for each time step
+        for idx, i in enumerate(self._broken_files):
+            open_fdem_ts = pv.read(i)
+            cracks_in_ts = open_fdem_ts.get_array(self.var_data[data_file]['failure_mode'])
+            if remove_boundary:
+                cracks_in_ts = cracks_in_ts[cracks_in_ts != 0]
+
+            if progress_bar:
+                formatting_codes.print_progress(idx + 1, len(self._broken_files), prefix='Progress:', suffix='Complete')
+
+            # Remove by self._cell_skip to avoid repetition.
+            cracks_in_ts = np.delete(cracks_in_ts, np.arange(0, cracks_in_ts.size, self._cell_skip))
+            crack_dict[idx] = list(cracks_in_ts)
+
+        # Convert list to DataFrame
+        df_crack_number = pd.DataFrame.from_dict(crack_dict, orient='index')
+
+        return df_crack_number
+
+    # function to count elements within given range
+    def _countInRange(self, arr, n, x, y):
+
+        # initialize result
+        count = 0
+
+        for i in range(n):
+            if x == y:
+                # check if element is in range
+                if (arr[i] == x and arr[i] == y):
+                    count += 1
+            else:
+                # check if element is in range
+                if (arr[i] > x and arr[i] < y):
+                    count += 1
+        return count
+
+    def crack_failure_mode_clustering(self, crack_LUT=None,
+                                      crack_LUT_name=None, remove_boundary=True,
+                                      progress_bar=True):
+        """
+
+        :param crack_LUT: LUT range for the crack failure (float)
+        :type crack_LUT: list[float]
+        :param crack_LUT_name: LUT range for the crack failure (name)
+        :type crack_LUT_name: list[str]
+        :param remove_boundary: Optional. Keep or remove boundaries in DataFrame
+        :type remove_boundary: bool
+        :param progress_bar: Show/Hide progress bar
+        :type progress_bar: bool
+
+        :return: A DataFrame containing the total number of cracks in every time step.
+        :rtype: pd.DataFrame
+
+        :Example:
+        >>> import openfdem as fdem
+        >>> data = fdem.Model("../example_outputs/Irazu_UCS")
+        >>> df_crack_default_clustering = data.crack_failure_mode_clustering()
+        >>> df_crack_userdefined_clustering = data.crack_failure_mode_clustering(crack_LUT=[1,2], crack_LUT_name=['tensile_and_shear'])
+        """
+
+        data_file = self.__datasource__file__(self._broken_files)
+
+        if crack_LUT is None:
+            crack_LUT = self.var_data[data_file]['crack_LUT']
+        if crack_LUT_name is None:
+            crack_LUT_name = self.var_data[data_file]['crack_LUT_name']
+
+        crack_dict = {}
+        # Obtain the failure mode for each time step
+        for idx, i in enumerate(self._broken_files):
+            open_fdem_ts = pv.read(i)
+            cracks_in_ts = open_fdem_ts.get_array(self.var_data[data_file]['failure_mode'])
+            if remove_boundary:
+                cracks_in_ts = cracks_in_ts[cracks_in_ts != 0]
+
+            if progress_bar:
+                formatting_codes.print_progress(idx + 1, len(self._broken_files), prefix='Progress:', suffix='Complete')
+
+            # Remove by self._cell_skip to avoid repetition.
+            cracks_in_ts = np.delete(cracks_in_ts, np.arange(0, cracks_in_ts.size, self._cell_skip))
+
+            crack_count = []
+            for crack_range in range(0, len(crack_LUT)-1, 1):
+                count = self._countInRange(cracks_in_ts, len(cracks_in_ts), crack_LUT[crack_range], crack_LUT[crack_range+1])
+                crack_count.append(count)
+
+            crack_dict[idx] = crack_count
+
+        # Convert list to DataFrame
+        df_crack_number = pd.DataFrame.from_dict(crack_dict, orient='index', columns=crack_LUT_name)
+
+        return df_crack_number
+
+    def extract_crack_info(self, arrays_needed, progress_bar=True):
+        """
+        Returns the information based on the array requested.
+
+        :param arrays_needed: list of array names to extract
+        :type arrays_needed: list[str]
+        :param progress_bar: Show/Hide progress bar
+        :type progress_bar: bool
+
+        :return: unpacked DataFrame
+        :rtype: pandas.DataFrame
+
+        :Example:
+            >>> import openfdem as fdem
+            >>> data = fdem.Model("../example_outputs/Irazu_UCS")
+            >>> extraction_of_cracks = data.extract_crack_info(arrays_needed=['area', 'length'])
+            Progress: |//////////////////////////////////////////////////| 100.0% Complete
+
+        """
+
+        data_source = self._broken_files
+        data_file = self.__datasource__file__(self._broken_files)
+
+        if not type(arrays_needed) == list:
+            self.openfdem_att_check(arrays_needed, data_file)
+        else:
+            for array_needed in arrays_needed:
+                self.openfdem_att_check(array_needed, data_file)
+
+        try:
+            from . import extract_thread_pool_generators
+        except ImportError:
+            import extract_thread_pool_generators
+
+        packed_df = extract_thread_pool_generators.main(self, data_source, data_file, arrays_needed, progress_bar)
+
+        if type(arrays_needed) == list and len(arrays_needed) > 1:
+            df_dict = {}
+            for array_needed in arrays_needed:
+                df_dict[array_needed] = packed_df.filter(regex=array_needed)
+            return df_dict
+        else:
+            return packed_df
 
     # def magnitude_histogram(self):
-
-    # def process_BD(self):
 
     # def magnitude_histogram(self):
 
