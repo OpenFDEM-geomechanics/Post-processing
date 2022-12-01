@@ -10,7 +10,7 @@ try:
 except ImportError:
     import formatting_codes
 
-def history_cellinfo_func(f_name, model, cell_id, array_needed):
+def history_cellinfo_func(f_name, model, cell_id, array_needed, thres_array=None):
     """
     Generate a dictionary of the various array being interrogated for the said cell ID
 
@@ -31,8 +31,11 @@ def history_cellinfo_func(f_name, model, cell_id, array_needed):
     ts_values = []
     # Extract Data and convert to list and get value
 
+    if thres_array is None:
+        thres_array = "basic"
+
     for i_array_needed in array_needed:
-        ts_values = openfdem_model_ts.extract_cells([cell_id][0]).get_array(model.var_data[i_array_needed]).tolist()
+        ts_values = openfdem_model_ts.extract_cells([cell_id][0]).get_array(model.var_data[thres_array][i_array_needed]).tolist()
         dict_array[i_array_needed].append(ts_values)
 
     yield dict_array

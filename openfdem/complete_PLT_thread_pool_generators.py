@@ -35,11 +35,11 @@ def history_strain_func(f_name, model, axis, load_config):
     '''STRESS-STRAIN PLATENS'''
 
     platen = (openfdem_model_ts.threshold([model.platen_cells_elem_id, model.platen_cells_elem_id],
-                                          model.var_data["mineral_type"]))
-    top, bottom = (platen.get_data_range(model.var_data["boundary"]))
+                                          model.var_data['basic']["mineral_type"]))
+    top, bottom = (platen.get_data_range(model.var_data['basic']["boundary"]))
 
-    top_platen_force_list = model.platen_info(openfdem_model_ts, top, model.var_data["platen_force"])
-    bot_platen_force_list = model.platen_info(openfdem_model_ts, bottom, model.var_data["platen_force"])
+    top_platen_force_list = model.platen_info(openfdem_model_ts, top, model.var_data['basic']["platen_force"])
+    bot_platen_force_list = model.platen_info(openfdem_model_ts, bottom, model.var_data['basic']["platen_force"])
 
     # avg_top_platen_disp = model.platen_info(openfdem_model_ts, top, model.var_data["platen_displacement"])
     # avg_bottom_platen_disp = model.platen_info(openfdem_model_ts, bottom,
@@ -73,11 +73,11 @@ def check_loading_direction(model, f1, f2):
     '''STRESS-STRAIN PLATENS'''
 
     platen = (openfdem_model_ts_init.threshold([model.platen_cells_elem_id, model.platen_cells_elem_id],
-                                          model.var_data["mineral_type"]))
-    top, bottom = (platen.get_data_range(model.var_data["boundary"]))
+                                          model.var_data['basic']["mineral_type"]))
+    top, bottom = (platen.get_data_range(model.var_data['basic']["boundary"]))
 
-    disp_init = model.platen_info(openfdem_model_ts_init, top, model.var_data["platen_displacement"])
-    disp_final = model.platen_info(openfdem_model_ts_final, top, model.var_data["platen_displacement"])
+    disp_init = model.platen_info(openfdem_model_ts_init, top, model.var_data['basic']["platen_displacement"])
+    disp_final = model.platen_info(openfdem_model_ts_final, top, model.var_data['basic']["platen_displacement"])
 
     avg_platen_init = [0.0, 0.0, 0.0] # Dummy cell
     avg_platen_final = [0.0, 0.0, 0.0] # Dummy cell
