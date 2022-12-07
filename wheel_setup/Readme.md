@@ -13,3 +13,7 @@ To recreate the wheel using the setup file, use the following two terminal comma
 To push the wheel to TestPyPi, use `twine`:
 
 - `twine upload -r testpypi dist/*`
+
+To push the wheel to PyPi production, use `twine`:
+
+- `twine upload dist/*`

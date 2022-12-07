@@ -1,0 +1,6 @@
+h5py>=2
+joblib
+numpy>=1.0
+pandas>=0.0
+pyvista>=0.20
+tqdm

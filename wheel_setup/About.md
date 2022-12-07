@@ -1,15 +1,15 @@
 Metadata-Version: 2.1
-Name: openfdem
-Version: 4.3
-Summary: Wheel file of openfdem modules
+Name: fdem_visualizer
+Version: 1.0
+Summary: Wheel file of fdem visualizer modules
 Home-page: UNKNOWN
 Author: University of Toronto, 2022
 License: UNKNOWN
 Platform: UNKNOWN
-Requires-Python: >=3.5,<=3.8
+Requires-Python: >=3.5,<=3.9
 Description-Content-Type: text/markdown
 
-# OpenFDEM Post-Processing Package
+# FDEM Visualizer Post-Processing Package
 ### University of Toronto, 2022
 
 This Python package performs transformations on FDEM models in vtk/vtu format. 

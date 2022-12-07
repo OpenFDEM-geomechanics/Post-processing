@@ -1,6 +1,0 @@
-setup.py
-openfdem.egg-info/PKG-INFO
-openfdem.egg-info/SOURCES.txt
-openfdem.egg-info/dependency_links.txt
-openfdem.egg-info/requires.txt
-openfdem.egg-info/top_level.txt
