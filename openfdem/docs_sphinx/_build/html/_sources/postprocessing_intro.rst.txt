@@ -1,0 +1,52 @@
+# FDEM Post-Processing Package
+### University of Toronto, 2021
+
+### Support
+This Python package performs transformations on hybrid finite-discrete element method (FDEM) models with an unstructured grid in vtk/vtu/vtp format. It currently supports arrays of simulation files from the FDEM solvers:
+- [Irazu](https://www.geomechanica.com/software/),
+- [Y-Geo](https://geogroup.utoronto.ca/software/) (and its common derivatives), as well as 
+- [OpenFDEM](https://openfdem.com/html/index.html).
+
+### Functionality
+Functions include:
+- Extract information within the FDEM Model based on the name of the array (e.g., Stress, Strain, Temperature, etc...)
+
+- Extract stress-strain information for UCS and BD Simulations. Optional addition of virtual strain gauges.
+
+- Plotting stress vs strain curve.
+<p style="text-align:center;">
+<img src="./images/stress_strain.png" alt="stress-strain curve" style="height: 250px; width:250px;"/>
+</p>
+
+- Calculate the Elastic Modulus of the dataset. Eavg, Esec and Etan can be evaluated. 
+
+- Extract information of a particular cell based on a sequence of array names. This can be extended to extracting information along a line.
+<p style="text-align:center;">
+<img src="./images/plot_point_over_time.png" alt="stress-strain curve for a UCS simulation." style="height: 250px; width:250px;"/>
+</p>
+
+- Extract information of a threshold dataset criteria based on a sequence of array names.
+<p style="text-align:center;">
+<img src="./images/temp_evolution.png" alt="Temperature evolution over time." style="height: 250px; width:250px;"/>
+</p>
+
+- Extract mesh information and plot rosette/polar plots. 
+<p style="text-align:center;">
+<img src="./images/mesh_rose_diagram.png" alt="Rose diagram of mesh at TS2." style="height: 250px; width:250px;"/>
+</p>
+
+- Extraction of information for cells/thresholds extended to 3D Models as well. 
+
+- Automatic detection of loading direction when analysing mechanical simulations, namely UCS, BD, and PLT, in both 2D and 3D simulations
+
+```console
+Script Identifying Platen
+	Platen Material ID found as [1]
+	3D Loading direction detected as [1] is Y-direction
+Values used in calculations are
+	Area	3721.00
+	Length	122.00
+Progress: |//////////////////////////////////////////////////| 100.0% Complete
+```
+
+Please refer to the user manual for more in-depth on the various functions and their usage. For specific script requests and bug, please report them on our github page. 

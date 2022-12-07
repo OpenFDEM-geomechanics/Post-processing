@@ -34,11 +34,7 @@ except ImportError:
 
 
 class Model:
-    """Model class collects datafiles into one interface.
-    
-    Each data array returns as a list ordered by timestep
-    Collection of timesteps?
-    handles temporal manipulations
+    """Collects datafiles into one Class. Returns the data array ordered by simulation timestep.
     
     :Example:
         >>> import openfdem as fdem
@@ -46,7 +42,10 @@ class Model:
         
     """
 
-    _file_names = {"OpenFDEM": {"basic": "_field_",
+    # Each data array returns as a list ordered by timestep
+    # Collection of timesteps? handles temporal manipulations
+
+    _file_names = {"openfdem": {"basic": "_field_",
                                 "broken_joint": "_brokenjoint_",
                                 "soften_joint": "_softenjoint_",
                                 "principal_stress_direction": "_principalstress_",
@@ -60,7 +59,7 @@ class Model:
                              }
                    }
 
-    _var_dataset = {"openFDEM": {"basic":
+    _var_dataset = {"openfdem": {"basic":
                                      {"mineral_type": "Property_id",
                                       "boundary": "boundary condition ID",
                                       "platen_force": "Force",
@@ -85,7 +84,7 @@ class Model:
                                       "slip 2": "slip 2",
                                       },
                                  },
-                    "IRAZU": {"basic":
+                    "Irazu": {"basic":
                                   {"mineral_type": "material property ID",
                                    "boundary": "boundary condition ID",
                                    "platen_force": "force",
@@ -147,15 +146,19 @@ class Model:
         parts[1::2] = map(int, parts[1::2])  # Return the numerical portion of the file
         return parts
 
-    def _findOutputFiles(self, dir_path, file_extension, output_type):
-        """Find the collection of vtk files that belong to a specific group
-        
+    def _findOutputFiles(self, dir_path, file_extension=["vtu", "vtp"], output_type='basic'):
+        """Find the collection of visualisation files that belong to a specific group
+
         :param dir_path: Starting directory (full path is required)
         :type dir_path: str
+        :param file_extension: Extension of the visualisation toolkit files being loaded.
+        :type file_extension: list[str]
+        :param output_type: Load the array set of the output. Possible options [basic, broken_joints, soften_joint, principal_stress_direction, acoustic_emission]
+        :type output_type: str
 
         :return: A list of subdirectories
         :rtype: list[str]
-        
+
         :Example:
             >>> import openfdem as fdem
             >>> data = fdem.Model("../example_outputs/Irazu_UCS")
@@ -175,59 +178,87 @@ class Model:
         # Ensure it is in proper system path format
         list_of_files = [path.relpath(vtkfile) for vtkfile in list_of_files]
 
+        # Get loaded file extensions
+        if list_of_files:
+            self._file_extension = list_of_files[0].rsplit('.')[-1]
+
         return list_of_files
 
-    def __init__(self, folder=None, runfile=None, fdem_engine=None):
-        """Create a Model object that finds all the run files and organizes all the file names on creation.
+    def __init__(self, dir_path=None, runfile=None, fdem_engine=None):
+        """Create a Model object that finds all the run files and organizes all the file names on creation. WIll try to identfy the engine based on file extension. Will default to an Irazu ouptput format.
+
+        :param dir_path: Starting directory (full path is required)
+        :type dir_path: str
+        :param runfile: Look for the run file in the folder.
+        :type runfile: str
+        :param fdem_engine: Identify fdem engine based on file extension. Will default to an Irazu ouptput format.
+        :type fdem_engine: str
 
         :raise LookupError: Folder does not appear to exist or does not have valid output files.
-        
+
         :Example:
             >>> import openfdem as fdem
             >>> data = fdem.Model("../example_outputs/Irazu_UCS")
+
         """
 
-        self._folder = folder
+        # Load self.xx variables
+        self._dir_path = dir_path
         self._runfile = runfile
         self._fdem_engine = fdem_engine
         self._cell_skip = 2
+        # Try to identify the engine from the run file extension type
         if runfile is not None:
             if fdem_engine is None:
                 if runfile.endswith(".y"):
-                    self._fdem_engine = "OpenFDEM"
+                    self._fdem_engine = "openfdem"
                 elif runfile.endswith(".fdem"):
                     self._fdem_engine = "Irazu"
                 else:
-                    self._fdem_engine = "OpenFDEM"
+                    self._fdem_engine = "openfdem"
         else:
             if fdem_engine is None:
                 self._fdem_engine = "Irazu"
-        if folder is not None:
-            extensions = tuple(["vtu", "vtp"])
-            self._basic_files = self._findOutputFiles(folder, extensions, "basic")
+        # Load the various datasets in the Model Class
+        if dir_path is not None:
+            self._basic_files = self._findOutputFiles(dir_path, output_type="basic")
             if len(self._basic_files) == 0:
                 raise LookupError('Folder does not appear to exist or does not have valid output files.')
 
-            self._broken_files = self._findOutputFiles(folder, extensions, "broken_joint")
+            self._broken_files = self._findOutputFiles(dir_path, output_type="broken_joint")
             if len(self._broken_files) == 0:
                 raise LookupError('Folder does not have any broken joints.')
-            self._soft_files = self._findOutputFiles(folder, extensions, "soften_joint")
-            self._pstress_dir_files = self._findOutputFiles(folder, extensions, "principal_stress_direction")
-            self._acoustic_files = self._findOutputFiles(folder, extensions, "acoustic_emission")
 
-            self.first_file = pv.read(self._basic_files[0])
-            self.n_timesteps = len(self._basic_files)
-            self.n_points = self.first_file.number_of_points
-            self.n_elements = self.first_file.n_cells
-            self.number_of_points_per_cell = self.first_file.cell_n_points(0)
-            # self.storage = aggregate_storage(folder,verbose=True)
+            self._soft_files = self._findOutputFiles(dir_path, output_type="soften_joint")
+            self._pstress_dir_files = self._findOutputFiles(dir_path, output_type="principal_stress_direction")
+            self._acoustic_files = self._findOutputFiles(dir_path, output_type="acoustic_emission")
 
+        # Get Model information and save them as self.xx variables.
+        self.first_file = pv.read(self._basic_files[0])
+        self.n_timesteps = len(self._basic_files)
+        self.n_points = self.first_file.number_of_points
+        self.n_elements = self.first_file.n_cells
+        self.number_of_points_per_cell = self.first_file.cell_n_points(0)
+        # self.storage = aggregate_storage(folder,verbose=True)
+
+        # Load the names of the variables in the dataset
         if self._fdem_engine == "Irazu":
-            self.var_data = Model._var_dataset["IRAZU"]
-        elif self._fdem_engine == "OpenFDEM":
-            self.var_data = Model._var_dataset["openFDEM"]
+            self.var_data = Model._var_dataset["Irazu"]
+            self.file_names = Model._file_names["Irazu"]
+        elif self._fdem_engine == "openfdem":
+            self.var_data = Model._var_dataset["openfdem"]
+            self.file_names = Model._file_names["openfdem"]
 
     def __datasource__file__(self, datasource):
+        """Load the appropriate dataset files as a datasource
+
+        :param datasource: The Model dataset type. Options self._basic_files, self._broken_files, self._soft_files, self._pstress_dir_files, self._acoustic_files.
+        :type datasource: List[str]
+
+        :return: Name of the loaded datafiles
+        :rtype: str
+        """
+
         data_file = ''
 
         for i in self._file_names[self._fdem_engine].values():
@@ -240,10 +271,8 @@ class Model:
         return data_type
 
 
-
-
     def __getitem__(self, key):
-        """ Obtain all arrays by timestep access.
+        """ Obtain all arrays by accessing the specific timestep. Information can be obtain using the timestep as a text or its index in the list.
 
         :param key:Timestep accessible by index or string representing timestep
         :type key: Union[int, float]
@@ -313,6 +342,7 @@ class Model:
             max_range = (max(scale_data) + 0.1) // 0.1 * 0.1
             min_range = (min(scale_data)) // 0.1 * 0.1
             inter = 0.1
+
         return min_range, max_range, inter
 
     def model_dimensions(self, mat_id=None):
@@ -378,14 +408,14 @@ class Model:
         """
 
         if self.number_of_points_per_cell == 3:
-            print("2D Simulation")
-            node_skip = 4
+            self._model_type = "2D Simulation"
+            self._node_skip = 4
         else:  # 3D (Tetrahedral)
-            print("3D Simulation")
-            node_skip = 6
+            self._model_type = ("3D Simulation")
+            self._node_skip = 6
             raise Warning("3D Simulation partially supported")
 
-        return node_skip
+        return self._node_skip
 
     def threshold_bound_check(self, thres_id, thres_array='boundary'):
         """
@@ -444,18 +474,19 @@ class Model:
 
         if dict_to_check is None:
             data_file = self.__datasource__file__(self._basic_files)
+        elif dict_to_check == 'broken_joint':
+            data_file = self.__datasource__file__(self._broken_files)
 
-        print(data_file)
         if att not in self.var_data[data_file].keys():
             raise KeyError(
-                "Attribute does not exist.\nAvailable options are %s" % ", ".join(list(self.var_data[dict_to_check].keys())))
+                "Attribute does not exist.\nAvailable attribute are %s" % ", ".join(list(self.var_data[data_file].keys())))
         else:
             return att
 
     def rock_sample_dimensions(self, platen_id=None):
         """
         Lookup cell element ID on the top center and then trace points Using this information, we obtain the platen prop ID.
-        Alternatively the user can define the material ID to exclude
+        Alternatively the user can define the ID of thresholding
 
         :param platen_id: Manual override of Platen ID
         :type platen_id: None or int
@@ -470,25 +501,23 @@ class Model:
             >>> data.rock_sample_dimensions()
             Script Identifying Platen
                 Platen Material ID found as [1]
-            (52.0, 108.0, 0.0)
+            (52.0, 108.0, 0.0, [-26.0, 26.0, -54.0, 54.0, 0.0, 0.0])
             >>> # Explicitly defined the platen material ID
             >>> data.rock_sample_dimensions(0)
             User Defined Platen ID
-                Platen Material ID found as [0]
-            (56.0, 116.0, 0.0)
+                Platen Material ID found as 0
+            (56.0, 116.0, 0.0, [-28.0, 28.0, -58.0, 58.0, 0.0, 0.0])
             >>> # Explicitly defined the platen material ID is out of range
             >>> data.rock_sample_dimensions(3)
-            IndexError: Material ID for platen out of range.
-            Material Range 0-1
+            IndexError: Threshold ID out of range.
+            boundary Range -1-1
         """
 
         data_file = self.__datasource__file__(self._basic_files)
 
-        top_center_point = [self.first_file.GetCenter()[0], self.first_file.bounds[3], self.first_file.bounds[5]]
-
-        top_center_cell = self.first_file.extract_cells(self.first_file.find_closest_cell(top_center_point))
-
         if platen_id is None:
+            top_center_point = [self.first_file.GetCenter()[0], self.first_file.bounds[3], self.first_file.bounds[5]]
+            top_center_cell = self.first_file.extract_cells(self.first_file.find_closest_cell(top_center_point))
             print("Script Identifying Platen")
             if top_center_cell == -1:
                 print("Unable to identify Platen ID Correctly.")
@@ -530,15 +559,22 @@ class Model:
             >>> data.rock_sample_dimensions()
             Script Identifying Platen
                 Platen Material ID found as [1]
-            (52.0, 108.0, 0.0)
+            (52.0, 108.0, 0.0, [-26.0, 26.0, -54.0, 54.0, 0.0, 0.0])
             >>> data.simulation_type()
             'UCS Simulation'
+            >>> data_bd = fdem.Model("../example_outputs/openfdem_BD", runfile='.y')
+            >>> data_bd.rock_sample_dimensions()
+            Script Identifying Platen
+                Platen Material ID found as [1]
+            (100.0, 99.94999694824219, 0.0, [-50.0, 50.0, -49.974998474121094, 49.974998474121094, 0.0, 0.0])
+            >>> data_bd.simulation_type()
+            'BD Simulation'
         """
         data_file = self.__datasource__file__(self._basic_files)
 
-        self.check_edge_point = [self.rock_model.bounds[1], self.rock_model.bounds[3], self.rock_model.bounds[5]]
-        self.check_edge_cell = self.first_file.extract_cells(self.first_file.find_closest_cell(self.check_edge_point))
-        self.check_edge_cell = pv.cell_array(self.check_edge_cell, self.var_data[data_file]['mineral_type'])
+        self.check_edge_point = [self.rock_model_extents[1], self.rock_model_extents[3], self.rock_model_extents[5]]
+        self.check_edge_cell = self.first_file.find_containing_cell(self.check_edge_point)
+        # self.check_edge_cell = pv.cell_array(self.check_edge_cell, self.var_data[data_file]['mineral_type'])
 
         if self.check_edge_cell == -1:
             self.sim_type = "BD Simulation"
@@ -578,12 +614,12 @@ class Model:
 
     def find_cell(self, model_point):
         """
-        Identify the nearest cell in the model to the defined point
+        Identify the containing cell in the model to the defined point. Will return an error if the point is not within a cell.
 
         :param model_point: x,y,z of a point in the model which
         :type model_point: list[float, float, float]
 
-        :return: the cell nearest to the point
+        :return: The cell that contains the point.
         :rtype: int
 
         :raise IndexError: Point outside model domain.
@@ -593,13 +629,13 @@ class Model:
             >>> data = fdem.Model("../example_outputs/Irazu_UCS")
             >>> data.find_cell([0, 0, 0])
             2167
-            >>> data.find_cell([100, 100, 0])
+            >>> data.find_cell([2000, 2000, 0])
             IndexError: Point outside model domain.
             X=56.0, Y=116.0, Z=0.0
 
         """
 
-        if self.first_file.find_closest_cell(model_point) == -1:
+        if self.first_file.find_containing_cell(model_point) == -1:
             raise IndexError("Point outside model domain.\nX=%s, Y=%s, Z=%s" % (
                 self.model_dimensions()[0], self.model_dimensions()[1], self.model_dimensions()[2]))
 
@@ -736,7 +772,6 @@ class Model:
                 4  -1.602602e+05 -9.240063e+09  1.065935e+04
                 5  -1.588623e+05 -1.152608e+10  4.616695e+04
                 ...
-
         """
 
         if isinstance(node_df, pd.DataFrame):
@@ -749,7 +784,7 @@ class Model:
 
         return df_xyz
 
-    def extract_threshold_info(self, thres_id, thres_array, arrays_needed, progress_bar=True):
+    def extract_threshold_info(self, thres_id, thres_array, arrays_needed, dataset_to_load='basic', progress_bar=True):
         """
         Returns the information of the cell based on the array requested.
         If the array is a point data, the array is suffixed with _Nx where x is cell ID.
@@ -792,7 +827,7 @@ class Model:
         except ImportError:
             import extract_threshold_thread_pool_generators
 
-        packed_df = extract_threshold_thread_pool_generators.main(self, thres_id, thres_array, arrays_needed, progress_bar)
+        packed_df = extract_threshold_thread_pool_generators.main(self, thres_id, thres_array, arrays_needed, dataset_to_load, progress_bar)
 
         unpacked_df = self.unpack_DataFrame(packed_df)
 
@@ -818,7 +853,7 @@ class Model:
 
     def complete_UCS_stress_strain(self, platen_id=None, st_status=False, axis_of_loading=None, gauge_width=0, gauge_length=0, c_center=None, samp_A=None, samp_L=None, progress_bar=True):
         """
-        Calculate the full stress-strain curve
+        Calculate the full stress-strain curve for a uniaxial compressive strength simulation
 
         :param platen_id: Manual override of Platen ID
         :type platen_id: None or int
@@ -850,25 +885,55 @@ class Model:
             Columns:
                 Name: Platen Stress, dtype=float64, nullable: False
                 Name: Platen Strain, dtype=float64, nullable: False
+            Script Identifying Platen
+                Platen Material ID found as [1]
+                Predefined loading Axis [1] is Y-direction
+            Values used in calculations are
+                Area	52.00
+                Length	108.00
+            Progress: |//////////////////////////////////////////////////| 100.0% Complete
             # full stress-strain without SG
-            >>> df_wo_SG = data.complete_UCS_stress_strain(None, False)
-            Columns:
-                Name: Platen Stress, dtype=float64, nullable: False
-                Name: Platen Strain, dtype=float64, nullable: False
-            # full stress-strain with SG and default dimensions
             >>> df_Def_SG = data.complete_UCS_stress_strain(None, True)
             Columns:
                 Name: Platen Stress, dtype=float64, nullable: False
                 Name: Platen Strain, dtype=float64, nullable: False
                 Name: Gauge Displacement X, dtype=float64, nullable: False
                 Name: Gauge Displacement Y, dtype=float64, nullable: False
+            Script Identifying Platen
+                Platen Material ID found as [1]
+                    Predefined loading Axis [1] is Y-direction
+                Values used in calculations are
+                    Area	52.00
+                    Length	108.00
+                    Dimensions of SG are 27.0 x 13.0
+                    Vertical Gauges
+                        extends between [[6.5, -13.5, 0.0], [-6.5, -13.5, 0.0], [6.5, 13.5, 0.0], [-6.5, 13.5, 0.0]]
+                        cover cells ID [2744, 1377, 3466, 3789]
+                    Horizontal Gauges
+                        extends between [[13.5, 6.5, 0.0], [13.5, -6.5, 0.0], [-13.5, 6.5, 0.0], [-13.5, -6.5, 0.0]]
+                        cover cells ID [2089, 1582, 2210, 1504]
+                Progress: |//////////////////////////////////////////////////| 100.0% Complete
             # full stress-strain with SG and user-defined dimensions
-            >>> df_userdf_SG = data.complete_UCS_stress_strain(None, True, 10, 10)
+            >>> df_userdf_SG = data.complete_UCS_stress_strain(None, True, gauge_width=10, gauge_length=10)
             Columns:
                 Name: Platen Stress, dtype=float64, nullable: False
                 Name: Platen Strain, dtype=float64, nullable: False
                 Name: Gauge Displacement X, dtype=float64, nullable: False
                 Name: Gauge Displacement Y, dtype=float64, nullable: False
+            Script Identifying Platen
+                Platen Material ID found as [1]
+                Predefined loading Axis [1] is Y-direction
+            Values used in calculations are
+                Area	52.00
+                Length	108.00
+                Dimensions of SG are 10 x 10
+                Vertical Gauges
+                    extends between [[5.0, -5.0, 0.0], [-5.0, -5.0, 0.0], [5.0, 5.0, 0.0], [-5.0, 5.0, 0.0]]
+                    cover cells ID [1186, 1397, 1669, 1148]
+                Horizontal Gauges
+                    extends between [[5.0, 5.0, 0.0], [5.0, -5.0, 0.0], [-5.0, 5.0, 0.0], [-5.0, -5.0, 0.0]]
+                    cover cells ID [1669, 1186, 1148, 1397]
+            Progress: |//////////////////////////////////////////////////| 100.0% Complete
         """
 
         try:
@@ -880,7 +945,7 @@ class Model:
 
     def complete_BD_stress_strain(self, st_status=False, gauge_width=0, gauge_length=0, c_center=None, progress_bar=True):
         """
-        Calculate the full stress-strain curve
+        Calculate the full stress-strain curve for an indirect tensile simulation.
 
         :param st_status: Enable/Disable SG
         :type st_status: bool
@@ -898,12 +963,15 @@ class Model:
 
         :Example:
             >>> import openfdem as fdem
-            >>> data = fdem.Model("../example_outputs/OpenFDEM_BD")
+            >>> data = fdem.Model("/external/Speed_Cal_Using_Flowstone/BD/BD_c_17_5_ts_2_55_GII_90000_v_0_6")
             # full stress-strain without SG
             >>> df_wo_SG = data.complete_BD_stress_strain(False)
             Columns:
                 Name: Platen Stress, dtype=float64, nullable: False
                 Name: Platen Strain, dtype=float64, nullable: False
+            Script Identifying Platen
+                Platen Material ID found as [1]
+            Progress: |//////////////////////////////////////////////////| 100.0% Complete
             # full stress-strain with SG and default dimensions
             >>> df_Def_SG = data.complete_BD_stress_strain(True)
             Columns:
@@ -911,6 +979,16 @@ class Model:
                 Name: Platen Strain, dtype=float64, nullable: False
                 Name: Gauge Displacement X, dtype=float64, nullable: False
                 Name: Gauge Displacement Y, dtype=float64, nullable: False
+                Script Identifying Platen
+            Platen Material ID found as [1]
+            Dimensions of SG are 12.0 x 12.0
+            Vertical Gauges
+                extends between [[6.0, -6.0, 0.0], [-6.0, -6.0, 0.0], [6.0, 6.0, 0.0], [-6.0, 6.0, 0.0]]
+                cover cells ID [3644, 7481, 4635, 2872]
+            Horizontal Gauges
+                extends between [[6.0, 6.0, 0.0], [6.0, -6.0, 0.0], [-6.0, 6.0, 0.0], [-6.0, -6.0, 0.0]]
+                cover cells ID [4635, 3644, 2872, 7481]
+            Progress: |//////////////////////////////////////////////////| 100.0% Complete
             # full stress-strain with SG and user-defined dimensions
             >>> df_userdf_SG = data.complete_BD_stress_strain(True, 10, 10)
             Columns:
@@ -918,6 +996,16 @@ class Model:
                 Name: Platen Strain, dtype=float64, nullable: False
                 Name: Gauge Displacement X, dtype=float64, nullable: False
                 Name: Gauge Displacement Y, dtype=float64, nullable: False
+            Script Identifying Platen
+                Platen Material ID found as [1]
+                Dimensions of SG are 10 x 10
+                Vertical Gauges
+                    extends between [[5.0, -5.0, 0.0], [-5.0, -5.0, 0.0], [5.0, 5.0, 0.0], [-5.0, 5.0, 0.0]]
+                    cover cells ID [1898, 5999, 5249, 6806]
+                Horizontal Gauges
+                    extends between [[5.0, 5.0, 0.0], [5.0, -5.0, 0.0], [-5.0, 5.0, 0.0], [-5.0, -5.0, 0.0]]
+                    cover cells ID [5249, 1898, 6806, 5999]
+            Progress: |//////////////////////////////////////////////////| 100.0% Complete
         """
 
         try:
@@ -929,7 +1017,8 @@ class Model:
 
     def complete_PLT_stress_strain(self, load_config, platen_id=None, axis_of_loading=None, De_squared=None, progress_bar=True):
         """
-        Calculate the full stress-strain curve
+        Calculate the full stress-strain curve for a point load simulation.
+
         :param load_config: type of PLT Test. "A" "D" "B"
         :type load_config: str
         :param platen_id: Manual override of Platen ID
@@ -946,31 +1035,11 @@ class Model:
 
         :Example:
             >>> import openfdem as fdem
-            >>> data = fdem.Model("../example_outputs/Irazu_UCS")
+            >>> data = fdem.Model("/external/Yusuf_PLT/Axial")
             # Minimal Arguments
-            >>> df_wo_SG = data.complete_UCS_stress_strain()
+            >>> df = data.complete_PLT_stress_strain(load_config="A", platen_id=1)
             Columns:
                 Name: Platen Stress, dtype=float64, nullable: False
-                Name: Platen Strain, dtype=float64, nullable: False
-            # full stress-strain without SG
-            >>> df_wo_SG = data.complete_UCS_stress_strain(None, False)
-            Columns:
-                Name: Platen Stress, dtype=float64, nullable: False
-                Name: Platen Strain, dtype=float64, nullable: False
-            # full stress-strain with SG and default dimensions
-            >>> df_Def_SG = data.complete_UCS_stress_strain(None, True)
-            Columns:
-                Name: Platen Stress, dtype=float64, nullable: False
-                Name: Platen Strain, dtype=float64, nullable: False
-                Name: Gauge Displacement X, dtype=float64, nullable: False
-                Name: Gauge Displacement Y, dtype=float64, nullable: False
-            # full stress-strain with SG and user-defined dimensions
-            >>> df_userdf_SG = data.complete_UCS_stress_strain(None, True, 10, 10)
-            Columns:
-                Name: Platen Stress, dtype=float64, nullable: False
-                Name: Platen Strain, dtype=float64, nullable: False
-                Name: Gauge Displacement X, dtype=float64, nullable: False
-                Name: Gauge Displacement Y, dtype=float64, nullable: False
         """
 
         try:
@@ -988,7 +1057,7 @@ class Model:
 
     def plot_stress_strain(self, strain, stress, ax=None, **plt_kwargs):
         """
-        Simple plot of the stress-strain curve
+        Simple plot of the stress-strain curve of a given dataframe
 
         :param strain: X-axis data [Strain]
         :type strain: pandas.DataFrame
@@ -1004,12 +1073,20 @@ class Model:
 
         :Example:
             >>> import openfdem as fdem
-            >>> data = fdem.Model("../example_outputs/OpenFDEM_BD")
+            >>> data = fdem.Model("../example_outputs/Irazu_UCS")
             # Minimal Arguments
             >>> df_wo_SG = data.complete_UCS_stress_strain()
             Columns:
                 Name: Platen Stress, dtype=float64, nullable: False
-                Name: Platen Strain, dtype=float64, nullable: False
+                Name: Platen Strain, dtype=float64, nullable: False.
+                Script Identifying Platen
+            Platen Material ID found as [1]
+                UCS Simulation
+                    Predefined loading Axis [1] is Y-direction
+                Values used in calculations are
+                    Area	52.00
+                    Length	108.00
+            Progress: |//////////////////////////////////////////////////| 100.0% Complete
             >>> data.plot_stress_strain(df_wo_SG['Platen Strain'], df_wo_SG['Platen Stress'], label='stress-strain', color='green')
             <AxesSubplot:xlabel='Strain (-)', ylabel='Axial Stress (MPa)'>
         """
@@ -1041,7 +1118,8 @@ class Model:
         :rtype: list[float]
 
         :Example:
-            >>> data = pv.read("../example_outputs/Irazu_UCS")
+            >>> import openfdem as fdem
+            >>> data = fdem.Model("../example_outputs/Irazu_UCS")
             >>> df_1 = data.complete_UCS_stress_strain()
             >>> data.Etan50_mod(df_1)[0]
             51683.94337878284
@@ -1094,12 +1172,13 @@ class Model:
         :rtype: float
 
         :Example:
-            >>> data = pv.read("../example_outputs/Irazu_UCS")
+            >>> import openfdem as fdem
+            >>> data = fdem.Model("../example_outputs/Irazu_UCS")
             >>> df_1 = data.complete_UCS_stress_strain(st_status=True)
             >>> data.Esec_mod(df_1, 0.5)
-            51751.010161057035
+            51817.43019752671
             >>> data.Esec_mod(df_1, 0.5, loc_strain='Gauge Displacement Y')
-            51279.95421163901
+            51355.860814069754
         """
 
         # Convert percentage to decimal
@@ -1146,12 +1225,13 @@ class Model:
         :raise ZeroDivisionError: The range over which to calculate the Eavg is too small. Consider a larger range.
 
         :Example:
-            >>> data = pv.read("../example_outputs/Irazu_UCS")
+            >>> import openfdem as fdem
+            >>> data = fdem.Model("../example_outputs/Irazu_UCS")
             >>> df_1 = data.complete_UCS_stress_strain(st_status=True)
             >>> data.Eavg_mod(df_1, 0.5, 0.6)[0]
-            51485.33001517835
-            >>> data.Eavg_mod(df_1, 0.5, 0.6, 'Gauge Displacement Y')[0]
-            50976.62587224803
+            51594.490217007056
+            >>> data.Eavg_mod(df_1, 0.5, 0.6, loc_strain='Gauge Displacement Y')[0]
+            51110.06292512191
         """
 
         # Convert percentage to decimal
@@ -1209,6 +1289,15 @@ class Model:
 
         :return: Pointset of the data being filtered
         :rtype: pyvista.core.pointset.UnstructuredGrid
+
+        :Example:
+            >>> import openfdem as fdem
+            >>> data = fdem.Model("/external/2D_shear_4mm_profile_normal_load_test")
+            >>> data.rock_sample_dimensions()
+            Script Identifying Platen
+                Platen Material ID found as [1]
+            (31.713071, 30.111493, 0.0, [-0.2, 31.513071, -14.92642, 15.185073, 0.0, 0.0])
+            >>> extracted_left = data.extract_based_coord(data.rock_model, 0, data.rock_model.bounds[0])
         """
 
         extracted_cells = thres_model.extract_points(thres_model.points[:, coord_xyz] == location, include_cells=False, adjacent_cells=False)
@@ -1217,6 +1306,7 @@ class Model:
 
     def direct_shear_calculation(self, platen_id, array, progress_bar=True):
         """
+        Analyse direcr shear simulation built with a rigid platen on the outside.
 
         :param platen_id: Material id of the platen
         :type platen_id: int
@@ -1381,7 +1471,6 @@ class Model:
 
         :Example:
         >>> import openfdem as fdem
-
         >>> data = fdem.Model("../example_outputs/Irazu_UCS")
         >>> data.draw_rose_diagram(t_step=0)
         <module 'matplotlib.pyplot' from '/usr/local/lib/python3.8/dist-packages/matplotlib/pyplot.py'>
@@ -1389,7 +1478,6 @@ class Model:
         <module 'matplotlib.pyplot' from '/usr/local/lib/python3.8/dist-packages/matplotlib/pyplot.py'>
         >>> # If you want to save the figure to a pyplot format.
         >>> figure_name = data.draw_rose_diagram(t_step=0, rose_range='Length', thres_id=0, thres_array='boundary')
-        >>> figure_name.savefig('../example_outputs/example.pdf')
         """
 
         if rose_data is not None:
@@ -1562,7 +1650,7 @@ class Model:
     def crack_failure_mode(self, remove_boundary=True, progress_bar=True):
         """
         Get all failure modes in every timestep. Boundaries Optional.
-        This will create a dataframe that has te failure mode for every crack. The time the crack first appears would be the time it inititated.
+        This will create a dataframe that has the failure mode for every crack. The time the crack first appears would be the time it inititated.
 
         :param remove_boundary: Optional. Keep or remove boundaries in DataFrame
         :type remove_boundary: bool
@@ -1621,6 +1709,7 @@ class Model:
                                       crack_LUT_name=None, remove_boundary=True,
                                       progress_bar=True):
         """
+        Cluster the crack modes based on their failure moed values. By default, it uses the Irazu convention which is 1=pure tensile; 1-1.5= tensile dominant; 1.5-2= shear dominant, 2= pure shear; 3= mixed mode. The crack LUT can also be user defined to get a specific range within the dataset.
 
         :param crack_LUT: LUT range for the crack failure (float)
         :type crack_LUT: list[float]

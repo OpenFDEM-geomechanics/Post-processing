@@ -10,6 +10,7 @@ Welcome to Open FDEM Post-Processing's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   postprocessing_intro
    modules
 
 

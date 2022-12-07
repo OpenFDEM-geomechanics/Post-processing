@@ -26,24 +26,27 @@ plt.rcParams["figure.figsize"] = [5, 5]
 matplotlib.rcParams['font.family'] = ['arial']
 matplotlib.rcParams['font.size'] = 8
 
+import os
+os.chdir('..')
+
 '''
 DEMO!!!
 '''
-ds = False
-rose = False
-additional = False
-modulus = False
-plot_SS = False
-Model_attributes = False
-extract_along_line = False
-dim3_model = False
+ds = True
+rose = True
+additional = True
+modulus = True
+plot_SS = True
+Model_attributes = True
+extract_along_line = True
+dim3_model = True
 
-plt = True
+point_load_test = True
 
 '''
 3D Models
 '''
-if plt:
+if point_load_test:
     # print("LOAD 3D Models")
     # for i in ['Run2', 'Run1']:
     #     path = '/external/OUTPUTS/v6_real_dims_0mm_shift'
@@ -180,14 +183,15 @@ if modulus:
     print(df_1)
     print(df_1.keys())
 
-    print(model.Etan50_mod(df_1)[0])
-    print(model.Etan50_mod(df_1, linear_bestfit=False)[0])
-    print(model.Etan50_mod(df_1, loc_strain='Gauge Displacement Y', plusminus_range=1))
-    print(model.Esec_mod(df_1, 70))
-    print(model.Esec_mod(df_1, 0.5))
+
+    print('Etan at 50%%: %.2fMPa' % model.Etan50_mod(df_1)[0])
+    print('Etan at 50%% with linear best fit disabled: %.2fMPa' % model.Etan50_mod(df_1, linear_bestfit=False)[0])
+    print('Etan at 50%% using strain gauge data: %.2fMPa' % model.Etan50_mod(df_1, loc_strain='Gauge Displacement Y', plusminus_range=1)[0])
+    print('Esec at 70%%: %.2fMPa' % model.Esec_mod(df_1, 70))
+    print('Esec at 50%%: %.2fMPa' % model.Esec_mod(df_1, 0.5))
     # print(model.Eavg_mod(df_1, 20, 30))
-    print(model.Eavg_mod(df_1, 0.5, 0.6))
-    print(model.Eavg_mod(df_1, 0.5, 0.6, linear_bestfit=False))
+    print('Eavg between 50-60%%: %.2fMPa' % model.Eavg_mod(df_1, 0.5, 0.6)[0])
+    print('Eavg between 20-70%% with linear best fit disabled: %.2fMPa' % model.Eavg_mod(df_1, 0.2, 0.7, linear_bestfit=False)[0])
     # exit('Modulus')
 
 '''
@@ -325,7 +329,7 @@ if Model_attributes:
     print("Number of Elements in model:\t", model.n_elements)
     print("Engine Type:\t", model._fdem_engine)
 
-    print("Model is 2D/3D?:\t", model.model_domain() / 2)
+    print("Model is 2D/3D?:\t", model.model_domain() // 2)
 
     print("Get model dimensions as a tuple3 >>> model.model_dimensions()", model.model_dimensions())
     print("Get the width from the dimensions after running dimensions by >>> model.model_width", model.model_width)
@@ -357,7 +361,7 @@ if Model_attributes:
     # print("You can also get E over a range using >>> model.E_mod[ax_force, disp, 1, 6]")
     # print(model.E_mod(ax_force, disp, 0, 1))
     print('-----')
-    df_1 = model.complete_UCS_stress_strain(False, 12, 7)
+    df_1 = model.complete_UCS_stress_strain()
 
     import pandas as pd
     # print(df_1)
@@ -369,4 +373,8 @@ if Model_attributes:
     # df_1.plot('Gauge Displacement X', 'Platen Stress', ax=ax, label="Strain Gauge X")
     plt.xlabel("Strain")
     plt.ylabel("Axial Stress (MPa)")
+    plt.savefig('/home/aly/Desktop/stress_strain')
     plt.show()
+
+    print(model._node_skip)
+    print(model._model_type)

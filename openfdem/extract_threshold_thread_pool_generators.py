@@ -40,7 +40,7 @@ def history_modelthreshold_func(f_name, model, thres_id, thres_array, array_need
     yield dict_array
 
 
-def main(model, thresid, thresarray, arrayname, progress_bar=False):
+def main(model, thresid, thresarray, arrayname, dataset_to_load='basic', progress_bar=False):
     """
     Main concurrent Thread Pool to get value of the property from the cell being extracted
 
@@ -72,7 +72,13 @@ def main(model, thresid, thresarray, arrayname, progress_bar=False):
         arrayname = [arrayname]
 
     # File names of the basic files
+    #TODO:
+    # load the correct dataset!
     f_names = model._basic_files
+    if dataset_to_load=='basic':
+        f_names = model._basic_files
+    elif dataset_to_load=='broken_joints':
+        f_names = model._broken_files
 
     # Global declarations
     start = time.time()
@@ -80,11 +86,11 @@ def main(model, thresid, thresarray, arrayname, progress_bar=False):
     # Load basic files in the concurrent Thread Pool
     for fname in f_names:
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            results = list(executor.map(history_modelthreshold_func, fname, repeat(model), [thresid], thresarray, arrayname))  # is self the list we are iterating over
+            results = list(executor.map(history_modelthreshold_func, fname, repeat(model), [thresid], thresarray, arrayname, dataset_to_load))  # is self the list we are iterating over
 
     # Iterate through the files in the defined function
     for idx, fname_iter in enumerate(f_names):
-        hist = history_modelthreshold_func(fname_iter, model, thresid, thresarray, arrayname)
+        hist = history_modelthreshold_func(fname_iter, model, thresid, thresarray, arrayname, dataset_to_load)
         if progress_bar:
             formatting_codes.print_progress(idx + 1, len(f_names), prefix='Progress:', suffix='Complete')
         hist.__next__()
