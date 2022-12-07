@@ -4,6 +4,11 @@
 \ifdefined\pdfpxdimen
    \let\sphinxpxdimen\pdfpxdimen\else\newdimen\sphinxpxdimen
 \fi \sphinxpxdimen=.75bp\relax
+\ifdefined\pdfimageresolution
+    \pdfimageresolution= \numexpr \dimexpr1in\relax/\sphinxpxdimen\relax
+\fi
+%% let collapsible pdf bookmarks panel have high depth per default
+\PassOptionsToPackage{bookmarksdepth=5}{hyperref}
 
 \PassOptionsToPackage{warn}{textcomp}
 \usepackage[utf8]{inputenc}
@@ -28,34 +33,16 @@
 
 
 
-\usepackage{times}
-\expandafter\ifx\csname T@LGR\endcsname\relax
-\else
-% LGR was declared as font encoding
-  \substitutefont{LGR}{\rmdefault}{cmr}
-  \substitutefont{LGR}{\sfdefault}{cmss}
-  \substitutefont{LGR}{\ttdefault}{cmtt}
-\fi
-\expandafter\ifx\csname T@X2\endcsname\relax
-  \expandafter\ifx\csname T@T2A\endcsname\relax
-  \else
-  % T2A was declared as font encoding
-    \substitutefont{T2A}{\rmdefault}{cmr}
-    \substitutefont{T2A}{\sfdefault}{cmss}
-    \substitutefont{T2A}{\ttdefault}{cmtt}
-  \fi
-\else
-% X2 was declared as font encoding
-  \substitutefont{X2}{\rmdefault}{cmr}
-  \substitutefont{X2}{\sfdefault}{cmss}
-  \substitutefont{X2}{\ttdefault}{cmtt}
-\fi
+\usepackage{tgtermes}
+\usepackage{tgheros}
+\renewcommand{\ttdefault}{txtt}
+
 
 
 \usepackage[Bjarne]{fncychap}
 \usepackage{sphinx}
 
-\fvset{fontsize=\small}
+\fvset{fontsize=auto}
 \usepackage{geometry}
 
 
@@ -74,13 +61,18 @@
 
 
 \title{Open FDEM Post\sphinxhyphen{}Processing}
-\date{Oct 12, 2022}
+\date{Dec 06, 2022}
 \release{1.0}
-\author{open\sphinxhyphen{}fdem 2022}
+\author{OpenFDEM 2022}
 \newcommand{\sphinxlogo}{\vbox{}}
 \renewcommand{\releasename}{Release}
 \makeindex
 \begin{document}
+
+\ifdefined\shorthandoff
+  \ifnum\catcode`\=\string=\active\shorthandoff{=}\fi
+  \ifnum\catcode`\"=\active\shorthandoff{"}\fi
+\fi
 
 \pagestyle{empty}
 \sphinxmaketitle
@@ -90,9 +82,125 @@
 \phantomsection\label{\detokenize{index::doc}}
 
 
+\sphinxstepscope
+
+
+\chapter{Introduction}
+\label{\detokenize{postprocessing_intro:introduction}}\label{\detokenize{postprocessing_intro::doc}}
+\sphinxAtStartPar
+This Python package performs transformations on hybrid finite\sphinxhyphen{}discrete element method (FDEM) models with an unstructured grid in vtk/vtu/vtp format. It currently supports arrays of simulation files from the FDEM solvers:
+\begin{itemize}
+\item {} 
+\sphinxAtStartPar
+\sphinxhref{https://www.geomechanica.com/software/}{Irazu},
+
+\item {} 
+\sphinxAtStartPar
+\sphinxhref{https://geogroup.utoronto.ca/software/}{Y\sphinxhyphen{}Geo} (and its common derivatives), as well as
+
+\item {} 
+\sphinxAtStartPar
+\sphinxhref{https://openfdem.com/html/index.html}{OpenFDEM}.
+
+\end{itemize}
+
+\sphinxAtStartPar
+The package is heavily dependent on \sphinxcode{\sphinxupquote{pyvista}} and is limited to \sphinxcode{\sphinxupquote{Python \textgreater{}=3.5, \textless{}=3.9}}. The package is maintained by the \sphinxhref{https://geogroup.utoronto.ca/}{Grasselli’s Geomechanics Group} at the University of Toronto, Canada, and is part of a collaborative effort by the open\sphinxhyphen{}source pacakge \sphinxhref{https://openfdem.com/html/index.html}{OpenFDEM}.
+
+
+\section{Functionality}
+\label{\detokenize{postprocessing_intro:functionality}}
+\sphinxAtStartPar
+The functionality of this script was developed with the objective of extracting common information needed when running simulations. Highlights of the script are:
+\begin{itemize}
+\item {} 
+\sphinxAtStartPar
+Extract information within the FDEM Model based on the name of the array (e.g., Stress, Strain, Temperature, etc…) Works in 2D and 3D.
+
+\item {} 
+\sphinxAtStartPar
+Extract stress\sphinxhyphen{}strain information for UCS and BD Simulations (Works in 2D and 3D). Optional addition of virtual strain gauges (Limited to 2D).
+
+\item {} 
+\sphinxAtStartPar
+Plotting stress vs strain curve.
+
+\end{itemize}
+
+\noindent{\hspace*{\fill}\sphinxincludegraphics[width=250\sphinxpxdimen]{{stress_strain}.png}\hspace*{\fill}}
+\begin{itemize}
+\item {} 
+\sphinxAtStartPar
+Calculate the Elastic Modulus of the dataset. Eavg, Esec and Etan can be evaluated. Works in 2D and 3D.
+
+\end{itemize}
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZsh{} }Variants of E tangent
+\PYG{g+go}{Etan at 50\PYGZpc{}: 51683.94MPa}
+\PYG{g+go}{Etan at 50\PYGZpc{} with linear best fit disabled: 51639.22MPa}
+\PYG{g+go}{Etan at 50\PYGZpc{} using strain gauge data: 50275.03MPa}
+\PYG{g+gp}{\PYGZsh{} }Variants of E secant
+\PYG{g+go}{Esec at 70\PYGZpc{}: 51681.01MPa}
+\PYG{g+go}{Esec at 50\PYGZpc{}: 51817.43MPa}
+\PYG{g+gp}{\PYGZsh{} }Variants of E average
+\PYG{g+go}{Eavg between 50\PYGZhy{}60\PYGZpc{}: 51594.49MPa}
+\PYG{g+go}{Eavg between 20\PYGZhy{}70\PYGZpc{} with linear best fit disabled: 51660.62MPa}
+\end{sphinxVerbatim}
+\begin{itemize}
+\item {} 
+\sphinxAtStartPar
+Extract information of a particular cell based on a sequence of array names. This can be extended to extracting information along a line. Works in 2D and 3D.
+
+\end{itemize}
+
+\noindent{\hspace*{\fill}\sphinxincludegraphics[width=250\sphinxpxdimen]{{plot_point_over_time}.png}\hspace*{\fill}}
+\begin{itemize}
+\item {} 
+\sphinxAtStartPar
+Extract information of a threshold dataset criteria based on a sequence of array names. Works in 2D and 3D.
+
+\end{itemize}
+
+\noindent{\hspace*{\fill}\sphinxincludegraphics[width=250\sphinxpxdimen]{{temp_evolution}.png}\hspace*{\fill}}
+\begin{itemize}
+\item {} 
+\sphinxAtStartPar
+Extract mesh information and plot rosette/polar plots. Limited to 2D.
+
+\end{itemize}
+
+\noindent{\hspace*{\fill}\sphinxincludegraphics[width=250\sphinxpxdimen]{{mesh_rose_diagram}.png}\hspace*{\fill}}
+\begin{itemize}
+\item {} 
+\sphinxAtStartPar
+Automatic detection/ User\sphinxhyphen{}defined assigment of loading direction when analysing mechanical simulations, namely UCS, BD, and PLT, in both 2D and 3D simulations.
+
+\end{itemize}
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+go}{Script Identifying Platen}
+\PYG{g+go}{	Platen Material ID found as [1]}
+\PYG{g+go}{	3D Loading direction detected as [1] is Y\PYGZhy{}direction}
+\PYG{g+go}{Values used in calculations are}
+\PYG{g+go}{	Area	3721.00}
+\PYG{g+go}{	Length	122.00}
+\PYG{g+go}{Progress: |//////////////////////////////////////////////////| 100.0\PYGZpc{} Complete}
+\end{sphinxVerbatim}
+
+
+\section{Additional Support}
+\label{\detokenize{postprocessing_intro:additional-support}}
+\sphinxAtStartPar
+Please refer to the user manual for detailed information pertaining to the various functions and their usage/arguments. For specific script requests and bug, please report them on our \sphinxhref{https://github.com/OpenFDEM}{github page}.
+
+\sphinxstepscope
+
 
 \chapter{openfdem}
 \label{\detokenize{modules:openfdem}}\label{\detokenize{modules::doc}}
+\sphinxstepscope
+
 
 \section{openfdem package}
 \label{\detokenize{openfdem:openfdem-package}}\label{\detokenize{openfdem::doc}}
@@ -104,16 +212,17 @@
 \label{\detokenize{openfdem:module-openfdem.openfdem}}\label{\detokenize{openfdem:openfdem-openfdem-module}}\index{module@\spxentry{module}!openfdem.openfdem@\spxentry{openfdem.openfdem}}\index{openfdem.openfdem@\spxentry{openfdem.openfdem}!module@\spxentry{module}}\index{Model (class in openfdem.openfdem)@\spxentry{Model}\spxextra{class in openfdem.openfdem}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class }}\sphinxcode{\sphinxupquote{openfdem.openfdem.}}\sphinxbfcode{\sphinxupquote{Model}}}{\emph{\DUrole{n}{folder}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{runfile}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{fdem\_engine}\DUrole{o}{=}\DUrole{default_value}{None}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class\DUrole{w}{  }}}\sphinxcode{\sphinxupquote{openfdem.openfdem.}}\sphinxbfcode{\sphinxupquote{Model}}}{\emph{\DUrole{n}{dir\_path}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{runfile}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{fdem\_engine}\DUrole{o}{=}\DUrole{default_value}{None}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Bases: \sphinxcode{\sphinxupquote{object}}
 
-Model class collects datafiles into one interface.
-
-Each data array returns as a list ordered by timestep
-Collection of timesteps?
-handles temporal manipulations
+\sphinxAtStartPar
+Collects datafiles into one Class. Returns the data array ordered by simulation timestep.
 \begin{quote}\begin{description}
-\item[{Example}] \leavevmode
+\sphinxlineitem{Example}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{openfdem} \PYG{k}{as} \PYG{n+nn}{fdem}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{model} \PYG{o}{=} \PYG{n}{fdem}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{../example\PYGZus{}outputs/Irazu\PYGZus{}UCS}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
@@ -123,47 +232,61 @@ handles temporal manipulations
 \index{Eavg\_mod() (openfdem.openfdem.Model method)@\spxentry{Eavg\_mod()}\spxextra{openfdem.openfdem.Model method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.Eavg_mod}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{Eavg\_mod}}}{\emph{\DUrole{n}{ucs\_data}}, \emph{\DUrole{n}{upperrange}}, \emph{\DUrole{n}{lowerrange}}, \emph{\DUrole{n}{linear\_bestfit}\DUrole{o}{=}\DUrole{default_value}{True}}, \emph{\DUrole{n}{loc\_stress}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}Platen Stress\textquotesingle{}}}, \emph{\DUrole{n}{loc\_strain}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}Platen Strain\textquotesingle{}}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.Eavg_mod}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{Eavg\_mod}}}{\emph{\DUrole{n}{ucs\_data}}, \emph{\DUrole{n}{upperrange}}, \emph{\DUrole{n}{lowerrange}}, \emph{\DUrole{n}{linear\_bestfit}\DUrole{o}{=}\DUrole{default_value}{True}}, \emph{\DUrole{n}{loc\_stress}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}Platen Stress\textquotesingle{}}}, \emph{\DUrole{n}{loc\_strain}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}Platen Strain\textquotesingle{}}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Average Elastic modulus between two ranges
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
+\sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{ucs\_data}} (\sphinxstyleliteralemphasis{\sphinxupquote{pandas.DataFrame}}) \textendash{} DataFrame containing the stress\sphinxhyphen{}strain data
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{upperrange}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} Upper range to calculate the average
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{lowerrange}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} Lower range to calculate the average
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{linear\_bestfit}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} Calculate data based on range extents or linear best fit line.
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{loc\_stress}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} Column to obtain stress from. Defaults to Platen Stress
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{loc\_strain}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} Column to obtain strain from. Defaults to Platen Strain
 
 \end{itemize}
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 Average Elastic modulus
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 list{[}float{]}
 
-\item[{Raises}] \leavevmode
+\sphinxlineitem{Raises}
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{ZeroDivisionError}} \textendash{} The range over which to calculate the Eavg is too small. Consider a larger range.
 
-\item[{Example}] \leavevmode
+\sphinxlineitem{Example}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data} \PYG{o}{=} \PYG{n}{pv}\PYG{o}{.}\PYG{n}{read}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{../example\PYGZus{}outputs/Irazu\PYGZus{}UCS}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{openfdem} \PYG{k}{as} \PYG{n+nn}{fdem}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data} \PYG{o}{=} \PYG{n}{fdem}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{../example\PYGZus{}outputs/Irazu\PYGZus{}UCS}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{df\PYGZus{}1} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{complete\PYGZus{}UCS\PYGZus{}stress\PYGZus{}strain}\PYG{p}{(}\PYG{n}{st\PYGZus{}status}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data}\PYG{o}{.}\PYG{n}{Eavg\PYGZus{}mod}\PYG{p}{(}\PYG{n}{df\PYGZus{}1}\PYG{p}{,} \PYG{l+m+mf}{0.5}\PYG{p}{,} \PYG{l+m+mf}{0.6}\PYG{p}{)}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
-\PYG{g+go}{51485.33001517835}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data}\PYG{o}{.}\PYG{n}{Eavg\PYGZus{}mod}\PYG{p}{(}\PYG{n}{df\PYGZus{}1}\PYG{p}{,} \PYG{l+m+mf}{0.5}\PYG{p}{,} \PYG{l+m+mf}{0.6}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{Gauge Displacement Y}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
-\PYG{g+go}{50976.62587224803}
+\PYG{g+go}{51594.490217007056}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data}\PYG{o}{.}\PYG{n}{Eavg\PYGZus{}mod}\PYG{p}{(}\PYG{n}{df\PYGZus{}1}\PYG{p}{,} \PYG{l+m+mf}{0.5}\PYG{p}{,} \PYG{l+m+mf}{0.6}\PYG{p}{,} \PYG{n}{loc\PYGZus{}strain}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{Gauge Displacement Y}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+\PYG{g+go}{51110.06292512191}
 \end{sphinxVerbatim}
 
 \end{description}\end{quote}
@@ -173,38 +296,49 @@ list{[}float{]}
 \index{Esec\_mod() (openfdem.openfdem.Model method)@\spxentry{Esec\_mod()}\spxextra{openfdem.openfdem.Model method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.Esec_mod}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{Esec\_mod}}}{\emph{\DUrole{n}{ucs\_data}}, \emph{\DUrole{n}{upperrange}}, \emph{\DUrole{n}{loc\_stress}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}Platen Stress\textquotesingle{}}}, \emph{\DUrole{n}{loc\_strain}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}Platen Strain\textquotesingle{}}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.Esec_mod}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{Esec\_mod}}}{\emph{\DUrole{n}{ucs\_data}}, \emph{\DUrole{n}{upperrange}}, \emph{\DUrole{n}{loc\_stress}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}Platen Stress\textquotesingle{}}}, \emph{\DUrole{n}{loc\_strain}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}Platen Strain\textquotesingle{}}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Secant Modulus between 0 and upperrange. The upperrange can be a \% or a fraction.
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
+\sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{ucs\_data}} (\sphinxstyleliteralemphasis{\sphinxupquote{pandas.DataFrame}}) \textendash{} DataFrame containing the stress\sphinxhyphen{}strain data
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{upperrange}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} Range over which to calculate the Secant Modulus
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{loc\_stress}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} Column to obtain stress from. Defaults to Platen Stress
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{loc\_strain}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} Column to obtain strain from. Defaults to Platen Strain
 
 \end{itemize}
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 Secant Elastic modulus between 0 and upperrange
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 float
 
-\item[{Example}] \leavevmode
+\sphinxlineitem{Example}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data} \PYG{o}{=} \PYG{n}{pv}\PYG{o}{.}\PYG{n}{read}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{../example\PYGZus{}outputs/Irazu\PYGZus{}UCS}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{openfdem} \PYG{k}{as} \PYG{n+nn}{fdem}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data} \PYG{o}{=} \PYG{n}{fdem}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{../example\PYGZus{}outputs/Irazu\PYGZus{}UCS}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{df\PYGZus{}1} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{complete\PYGZus{}UCS\PYGZus{}stress\PYGZus{}strain}\PYG{p}{(}\PYG{n}{st\PYGZus{}status}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data}\PYG{o}{.}\PYG{n}{Esec\PYGZus{}mod}\PYG{p}{(}\PYG{n}{df\PYGZus{}1}\PYG{p}{,} \PYG{l+m+mf}{0.5}\PYG{p}{)}
-\PYG{g+go}{51751.010161057035}
+\PYG{g+go}{51817.43019752671}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data}\PYG{o}{.}\PYG{n}{Esec\PYGZus{}mod}\PYG{p}{(}\PYG{n}{df\PYGZus{}1}\PYG{p}{,} \PYG{l+m+mf}{0.5}\PYG{p}{,} \PYG{n}{loc\PYGZus{}strain}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{Gauge Displacement Y}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
-\PYG{g+go}{51279.95421163901}
+\PYG{g+go}{51355.860814069754}
 \end{sphinxVerbatim}
 
 \end{description}\end{quote}
@@ -214,36 +348,48 @@ float
 \index{Etan50\_mod() (openfdem.openfdem.Model method)@\spxentry{Etan50\_mod()}\spxextra{openfdem.openfdem.Model method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.Etan50_mod}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{Etan50\_mod}}}{\emph{\DUrole{n}{ucs\_data}}, \emph{\DUrole{n}{linear\_bestfit}\DUrole{o}{=}\DUrole{default_value}{True}}, \emph{\DUrole{n}{loc\_stress}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}Platen Stress\textquotesingle{}}}, \emph{\DUrole{n}{loc\_strain}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}Platen Strain\textquotesingle{}}}, \emph{\DUrole{n}{plusminus\_range}\DUrole{o}{=}\DUrole{default_value}{1}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.Etan50_mod}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{Etan50\_mod}}}{\emph{\DUrole{n}{ucs\_data}}, \emph{\DUrole{n}{linear\_bestfit}\DUrole{o}{=}\DUrole{default_value}{True}}, \emph{\DUrole{n}{loc\_stress}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}Platen Stress\textquotesingle{}}}, \emph{\DUrole{n}{loc\_strain}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}Platen Strain\textquotesingle{}}}, \emph{\DUrole{n}{plusminus\_range}\DUrole{o}{=}\DUrole{default_value}{1}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Tangent Elastic modulus at 50\%. Calculates +/\sphinxhyphen{} number of datapoint from the 50\% Stress. Defaults to +/\sphinxhyphen{} 1 datapoint.
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
+\sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{ucs\_data}} (\sphinxstyleliteralemphasis{\sphinxupquote{pandas.DataFrame}}) \textendash{} DataFrame containing the stress\sphinxhyphen{}strain data
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{linear\_bestfit}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} Calculate data based on range extents or linear best fit line.
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{loc\_stress}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} Column to obtain stress from. Defaults to Platen Stress
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{loc\_strain}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} Column to obtain strain from. Defaults to Platen Strain
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{plusminus\_range}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} Range over which to calculate the Elastic modulus
 
 \end{itemize}
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 Tangent Elastic modulus at 50\% as a slope and Y\sphinxhyphen{}Intercept. Y\sphinxhyphen{}Intercept = 0 if linear\_bestfit is False
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 list{[}float{]}
 
-\item[{Example}] \leavevmode
+\sphinxlineitem{Example}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data} \PYG{o}{=} \PYG{n}{pv}\PYG{o}{.}\PYG{n}{read}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{../example\PYGZus{}outputs/Irazu\PYGZus{}UCS}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{openfdem} \PYG{k}{as} \PYG{n+nn}{fdem}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data} \PYG{o}{=} \PYG{n}{fdem}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{../example\PYGZus{}outputs/Irazu\PYGZus{}UCS}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{df\PYGZus{}1} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{complete\PYGZus{}UCS\PYGZus{}stress\PYGZus{}strain}\PYG{p}{(}\PYG{p}{)}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data}\PYG{o}{.}\PYG{n}{Etan50\PYGZus{}mod}\PYG{p}{(}\PYG{n}{df\PYGZus{}1}\PYG{p}{)}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
 \PYG{g+go}{51683.94337878284}
@@ -261,42 +407,56 @@ list{[}float{]}
 \index{complete\_BD\_stress\_strain() (openfdem.openfdem.Model method)@\spxentry{complete\_BD\_stress\_strain()}\spxextra{openfdem.openfdem.Model method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.complete_BD_stress_strain}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{complete\_BD\_stress\_strain}}}{\emph{\DUrole{n}{st\_status}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{gauge\_width}\DUrole{o}{=}\DUrole{default_value}{0}}, \emph{\DUrole{n}{gauge\_length}\DUrole{o}{=}\DUrole{default_value}{0}}, \emph{\DUrole{n}{c\_center}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{progress\_bar}\DUrole{o}{=}\DUrole{default_value}{True}}}{}
-Calculate the full stress\sphinxhyphen{}strain curve
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.complete_BD_stress_strain}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{complete\_BD\_stress\_strain}}}{\emph{\DUrole{n}{st\_status}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{gauge\_width}\DUrole{o}{=}\DUrole{default_value}{0}}, \emph{\DUrole{n}{gauge\_length}\DUrole{o}{=}\DUrole{default_value}{0}}, \emph{\DUrole{n}{c\_center}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{progress\_bar}\DUrole{o}{=}\DUrole{default_value}{True}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+Calculate the full stress\sphinxhyphen{}strain curve for an indirect tensile simulation.
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
+\sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{st\_status}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} Enable/Disable SG
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{gauge\_width}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} width of the virtual strain gauge
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{gauge\_length}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} length of the virtual strain gauge
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{c\_center}} (\sphinxstyleliteralemphasis{\sphinxupquote{None}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{list}}\sphinxstyleliteralemphasis{\sphinxupquote{{[}}}\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}) \textendash{} User\sphinxhyphen{}defined center of the SG
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{progress\_bar}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} Show/Hide progress bar
 
 \end{itemize}
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 full stress\sphinxhyphen{}strain information
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 pandas.DataFrame
 
-\item[{Example}] \leavevmode
+\sphinxlineitem{Example}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{openfdem} \PYG{k}{as} \PYG{n+nn}{fdem}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data} \PYG{o}{=} \PYG{n}{fdem}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{../example\PYGZus{}outputs/OpenFDEM\PYGZus{}BD}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data} \PYG{o}{=} \PYG{n}{fdem}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{/external/Speed\PYGZus{}Cal\PYGZus{}Using\PYGZus{}Flowstone/BD/BD\PYGZus{}c\PYGZus{}17\PYGZus{}5\PYGZus{}ts\PYGZus{}2\PYGZus{}55\PYGZus{}GII\PYGZus{}90000\PYGZus{}v\PYGZus{}0\PYGZus{}6}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
 \PYG{g+go}{\PYGZsh{} full stress\PYGZhy{}strain without SG}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{df\PYGZus{}wo\PYGZus{}SG} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{complete\PYGZus{}BD\PYGZus{}stress\PYGZus{}strain}\PYG{p}{(}\PYG{k+kc}{False}\PYG{p}{)}
 \PYG{g+go}{Columns:}
 \PYG{g+go}{    Name: Platen Stress, dtype=float64, nullable: False}
 \PYG{g+go}{    Name: Platen Strain, dtype=float64, nullable: False}
+\PYG{g+go}{Script Identifying Platen}
+\PYG{g+go}{    Platen Material ID found as [1]}
+\PYG{g+go}{Progress: |//////////////////////////////////////////////////| 100.0\PYGZpc{} Complete}
 \PYG{g+go}{\PYGZsh{} full stress\PYGZhy{}strain with SG and default dimensions}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{df\PYGZus{}Def\PYGZus{}SG} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{complete\PYGZus{}BD\PYGZus{}stress\PYGZus{}strain}\PYG{p}{(}\PYG{k+kc}{True}\PYG{p}{)}
 \PYG{g+go}{Columns:}
@@ -304,6 +464,16 @@ pandas.DataFrame
 \PYG{g+go}{    Name: Platen Strain, dtype=float64, nullable: False}
 \PYG{g+go}{    Name: Gauge Displacement X, dtype=float64, nullable: False}
 \PYG{g+go}{    Name: Gauge Displacement Y, dtype=float64, nullable: False}
+\PYG{g+go}{    Script Identifying Platen}
+\PYG{g+go}{Platen Material ID found as [1]}
+\PYG{g+go}{Dimensions of SG are 12.0 x 12.0}
+\PYG{g+go}{Vertical Gauges}
+\PYG{g+go}{    extends between [[6.0, \PYGZhy{}6.0, 0.0], [\PYGZhy{}6.0, \PYGZhy{}6.0, 0.0], [6.0, 6.0, 0.0], [\PYGZhy{}6.0, 6.0, 0.0]]}
+\PYG{g+go}{    cover cells ID [3644, 7481, 4635, 2872]}
+\PYG{g+go}{Horizontal Gauges}
+\PYG{g+go}{    extends between [[6.0, 6.0, 0.0], [6.0, \PYGZhy{}6.0, 0.0], [\PYGZhy{}6.0, 6.0, 0.0], [\PYGZhy{}6.0, \PYGZhy{}6.0, 0.0]]}
+\PYG{g+go}{    cover cells ID [4635, 3644, 2872, 7481]}
+\PYG{g+go}{Progress: |//////////////////////////////////////////////////| 100.0\PYGZpc{} Complete}
 \PYG{g+go}{\PYGZsh{} full stress\PYGZhy{}strain with SG and user\PYGZhy{}defined dimensions}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{df\PYGZus{}userdf\PYGZus{}SG} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{complete\PYGZus{}BD\PYGZus{}stress\PYGZus{}strain}\PYG{p}{(}\PYG{k+kc}{True}\PYG{p}{,} \PYG{l+m+mi}{10}\PYG{p}{,} \PYG{l+m+mi}{10}\PYG{p}{)}
 \PYG{g+go}{Columns:}
@@ -311,6 +481,16 @@ pandas.DataFrame
 \PYG{g+go}{    Name: Platen Strain, dtype=float64, nullable: False}
 \PYG{g+go}{    Name: Gauge Displacement X, dtype=float64, nullable: False}
 \PYG{g+go}{    Name: Gauge Displacement Y, dtype=float64, nullable: False}
+\PYG{g+go}{Script Identifying Platen}
+\PYG{g+go}{    Platen Material ID found as [1]}
+\PYG{g+go}{    Dimensions of SG are 10 x 10}
+\PYG{g+go}{    Vertical Gauges}
+\PYG{g+go}{        extends between [[5.0, \PYGZhy{}5.0, 0.0], [\PYGZhy{}5.0, \PYGZhy{}5.0, 0.0], [5.0, 5.0, 0.0], [\PYGZhy{}5.0, 5.0, 0.0]]}
+\PYG{g+go}{        cover cells ID [1898, 5999, 5249, 6806]}
+\PYG{g+go}{    Horizontal Gauges}
+\PYG{g+go}{        extends between [[5.0, 5.0, 0.0], [5.0, \PYGZhy{}5.0, 0.0], [\PYGZhy{}5.0, 5.0, 0.0], [\PYGZhy{}5.0, \PYGZhy{}5.0, 0.0]]}
+\PYG{g+go}{        cover cells ID [5249, 1898, 6806, 5999]}
+\PYG{g+go}{Progress: |//////////////////////////////////////////////////| 100.0\PYGZpc{} Complete}
 \end{sphinxVerbatim}
 
 \end{description}\end{quote}
@@ -320,53 +500,52 @@ pandas.DataFrame
 \index{complete\_PLT\_stress\_strain() (openfdem.openfdem.Model method)@\spxentry{complete\_PLT\_stress\_strain()}\spxextra{openfdem.openfdem.Model method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.complete_PLT_stress_strain}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{complete\_PLT\_stress\_strain}}}{\emph{\DUrole{n}{load\_config}}, \emph{\DUrole{n}{platen\_id}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{axis\_of\_loading}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{De\_squared}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{progress\_bar}\DUrole{o}{=}\DUrole{default_value}{True}}}{}
-Calculate the full stress\sphinxhyphen{}strain curve
-:param load\_config: type of PLT Test. “A” “D” “B”
-:type load\_config: str
-:param platen\_id: Manual override of Platen ID
-:type platen\_id: None or int
-:param axis\_of\_loading: Loading Direction
-:type axis\_of\_loading: None or int
-:param De\_squared: equivalent core diameter (i.e., the value of De\_squared)
-:type De\_squared: None or float
-:param progress\_bar: Show/Hide progress bar
-:type progress\_bar: bool
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.complete_PLT_stress_strain}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{complete\_PLT\_stress\_strain}}}{\emph{\DUrole{n}{load\_config}}, \emph{\DUrole{n}{platen\_id}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{axis\_of\_loading}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{De\_squared}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{progress\_bar}\DUrole{o}{=}\DUrole{default_value}{True}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+Calculate the full stress\sphinxhyphen{}strain curve for a point load simulation.
 \begin{quote}\begin{description}
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Parameters}\begin{itemize}
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{load\_config}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} type of PLT Test. “A” “D” “B”
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{platen\_id}} (\sphinxstyleliteralemphasis{\sphinxupquote{None}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} Manual override of Platen ID
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{axis\_of\_loading}} (\sphinxstyleliteralemphasis{\sphinxupquote{None}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} Loading Direction
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{De\_squared}} (\sphinxstyleliteralemphasis{\sphinxupquote{None}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} equivalent core diameter (i.e., the value of De\_squared)
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{progress\_bar}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} Show/Hide progress bar
+
+\end{itemize}
+
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 full stress\sphinxhyphen{}strain information
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 pandas.DataFrame
 
-\item[{Example}] \leavevmode
+\sphinxlineitem{Example}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{openfdem} \PYG{k}{as} \PYG{n+nn}{fdem}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data} \PYG{o}{=} \PYG{n}{fdem}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{../example\PYGZus{}outputs/Irazu\PYGZus{}UCS}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data} \PYG{o}{=} \PYG{n}{fdem}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{/external/Yusuf\PYGZus{}PLT/Axial}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
 \PYG{g+go}{\PYGZsh{} Minimal Arguments}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{df\PYGZus{}wo\PYGZus{}SG} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{complete\PYGZus{}UCS\PYGZus{}stress\PYGZus{}strain}\PYG{p}{(}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{df} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{complete\PYGZus{}PLT\PYGZus{}stress\PYGZus{}strain}\PYG{p}{(}\PYG{n}{load\PYGZus{}config}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{A}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{platen\PYGZus{}id}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{)}
 \PYG{g+go}{Columns:}
 \PYG{g+go}{    Name: Platen Stress, dtype=float64, nullable: False}
-\PYG{g+go}{    Name: Platen Strain, dtype=float64, nullable: False}
-\PYG{g+go}{\PYGZsh{} full stress\PYGZhy{}strain without SG}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{df\PYGZus{}wo\PYGZus{}SG} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{complete\PYGZus{}UCS\PYGZus{}stress\PYGZus{}strain}\PYG{p}{(}\PYG{k+kc}{None}\PYG{p}{,} \PYG{k+kc}{False}\PYG{p}{)}
-\PYG{g+go}{Columns:}
-\PYG{g+go}{    Name: Platen Stress, dtype=float64, nullable: False}
-\PYG{g+go}{    Name: Platen Strain, dtype=float64, nullable: False}
-\PYG{g+go}{\PYGZsh{} full stress\PYGZhy{}strain with SG and default dimensions}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{df\PYGZus{}Def\PYGZus{}SG} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{complete\PYGZus{}UCS\PYGZus{}stress\PYGZus{}strain}\PYG{p}{(}\PYG{k+kc}{None}\PYG{p}{,} \PYG{k+kc}{True}\PYG{p}{)}
-\PYG{g+go}{Columns:}
-\PYG{g+go}{    Name: Platen Stress, dtype=float64, nullable: False}
-\PYG{g+go}{    Name: Platen Strain, dtype=float64, nullable: False}
-\PYG{g+go}{    Name: Gauge Displacement X, dtype=float64, nullable: False}
-\PYG{g+go}{    Name: Gauge Displacement Y, dtype=float64, nullable: False}
-\PYG{g+go}{\PYGZsh{} full stress\PYGZhy{}strain with SG and user\PYGZhy{}defined dimensions}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{df\PYGZus{}userdf\PYGZus{}SG} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{complete\PYGZus{}UCS\PYGZus{}stress\PYGZus{}strain}\PYG{p}{(}\PYG{k+kc}{None}\PYG{p}{,} \PYG{k+kc}{True}\PYG{p}{,} \PYG{l+m+mi}{10}\PYG{p}{,} \PYG{l+m+mi}{10}\PYG{p}{)}
-\PYG{g+go}{Columns:}
-\PYG{g+go}{    Name: Platen Stress, dtype=float64, nullable: False}
-\PYG{g+go}{    Name: Platen Strain, dtype=float64, nullable: False}
-\PYG{g+go}{    Name: Gauge Displacement X, dtype=float64, nullable: False}
-\PYG{g+go}{    Name: Gauge Displacement Y, dtype=float64, nullable: False}
 \end{sphinxVerbatim}
 
 \end{description}\end{quote}
@@ -376,46 +555,61 @@ pandas.DataFrame
 \index{complete\_UCS\_stress\_strain() (openfdem.openfdem.Model method)@\spxentry{complete\_UCS\_stress\_strain()}\spxextra{openfdem.openfdem.Model method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.complete_UCS_stress_strain}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{complete\_UCS\_stress\_strain}}}{\emph{\DUrole{n}{platen\_id}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{st\_status}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{axis\_of\_loading}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{gauge\_width}\DUrole{o}{=}\DUrole{default_value}{0}}, \emph{\DUrole{n}{gauge\_length}\DUrole{o}{=}\DUrole{default_value}{0}}, \emph{\DUrole{n}{c\_center}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{samp\_A}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{samp\_L}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{progress\_bar}\DUrole{o}{=}\DUrole{default_value}{True}}}{}
-Calculate the full stress\sphinxhyphen{}strain curve
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.complete_UCS_stress_strain}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{complete\_UCS\_stress\_strain}}}{\emph{\DUrole{n}{platen\_id}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{st\_status}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{axis\_of\_loading}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{gauge\_width}\DUrole{o}{=}\DUrole{default_value}{0}}, \emph{\DUrole{n}{gauge\_length}\DUrole{o}{=}\DUrole{default_value}{0}}, \emph{\DUrole{n}{c\_center}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{samp\_A}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{samp\_L}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{progress\_bar}\DUrole{o}{=}\DUrole{default_value}{True}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+Calculate the full stress\sphinxhyphen{}strain curve for a uniaxial compressive strength simulation
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
+\sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{platen\_id}} (\sphinxstyleliteralemphasis{\sphinxupquote{None}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} Manual override of Platen ID
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{st\_status}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} Enable/Disable SG
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{axis\_of\_loading}} (\sphinxstyleliteralemphasis{\sphinxupquote{None}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} Loading Direction
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{gauge\_width}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} width of the virtual strain gauge
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{gauge\_length}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} length of the virtual strain gauge
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{c\_center}} (\sphinxstyleliteralemphasis{\sphinxupquote{None}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{list}}\sphinxstyleliteralemphasis{\sphinxupquote{{[}}}\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}) \textendash{} User\sphinxhyphen{}defined center of the SG
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{samp\_A}} (\sphinxstyleliteralemphasis{\sphinxupquote{None}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} Sample Area
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{samp\_L}} (\sphinxstyleliteralemphasis{\sphinxupquote{None}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} Sample Length
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{progress\_bar}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} Show/Hide progress bar
 
 \end{itemize}
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 full stress\sphinxhyphen{}strain information
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 pandas.DataFrame
 
-\item[{Example}] \leavevmode
+\sphinxlineitem{Example}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{openfdem} \PYG{k}{as} \PYG{n+nn}{fdem}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data} \PYG{o}{=} \PYG{n}{fdem}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{../example\PYGZus{}outputs/Irazu\PYGZus{}UCS}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
@@ -424,25 +618,55 @@ pandas.DataFrame
 \PYG{g+go}{Columns:}
 \PYG{g+go}{    Name: Platen Stress, dtype=float64, nullable: False}
 \PYG{g+go}{    Name: Platen Strain, dtype=float64, nullable: False}
+\PYG{g+go}{Script Identifying Platen}
+\PYG{g+go}{    Platen Material ID found as [1]}
+\PYG{g+go}{    Predefined loading Axis [1] is Y\PYGZhy{}direction}
+\PYG{g+go}{Values used in calculations are}
+\PYG{g+go}{    Area    52.00}
+\PYG{g+go}{    Length  108.00}
+\PYG{g+go}{Progress: |//////////////////////////////////////////////////| 100.0\PYGZpc{} Complete}
 \PYG{g+go}{\PYGZsh{} full stress\PYGZhy{}strain without SG}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{df\PYGZus{}wo\PYGZus{}SG} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{complete\PYGZus{}UCS\PYGZus{}stress\PYGZus{}strain}\PYG{p}{(}\PYG{k+kc}{None}\PYG{p}{,} \PYG{k+kc}{False}\PYG{p}{)}
-\PYG{g+go}{Columns:}
-\PYG{g+go}{    Name: Platen Stress, dtype=float64, nullable: False}
-\PYG{g+go}{    Name: Platen Strain, dtype=float64, nullable: False}
-\PYG{g+go}{\PYGZsh{} full stress\PYGZhy{}strain with SG and default dimensions}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{df\PYGZus{}Def\PYGZus{}SG} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{complete\PYGZus{}UCS\PYGZus{}stress\PYGZus{}strain}\PYG{p}{(}\PYG{k+kc}{None}\PYG{p}{,} \PYG{k+kc}{True}\PYG{p}{)}
 \PYG{g+go}{Columns:}
 \PYG{g+go}{    Name: Platen Stress, dtype=float64, nullable: False}
 \PYG{g+go}{    Name: Platen Strain, dtype=float64, nullable: False}
 \PYG{g+go}{    Name: Gauge Displacement X, dtype=float64, nullable: False}
 \PYG{g+go}{    Name: Gauge Displacement Y, dtype=float64, nullable: False}
+\PYG{g+go}{Script Identifying Platen}
+\PYG{g+go}{    Platen Material ID found as [1]}
+\PYG{g+go}{        Predefined loading Axis [1] is Y\PYGZhy{}direction}
+\PYG{g+go}{    Values used in calculations are}
+\PYG{g+go}{        Area        52.00}
+\PYG{g+go}{        Length      108.00}
+\PYG{g+go}{        Dimensions of SG are 27.0 x 13.0}
+\PYG{g+go}{        Vertical Gauges}
+\PYG{g+go}{            extends between [[6.5, \PYGZhy{}13.5, 0.0], [\PYGZhy{}6.5, \PYGZhy{}13.5, 0.0], [6.5, 13.5, 0.0], [\PYGZhy{}6.5, 13.5, 0.0]]}
+\PYG{g+go}{            cover cells ID [2744, 1377, 3466, 3789]}
+\PYG{g+go}{        Horizontal Gauges}
+\PYG{g+go}{            extends between [[13.5, 6.5, 0.0], [13.5, \PYGZhy{}6.5, 0.0], [\PYGZhy{}13.5, 6.5, 0.0], [\PYGZhy{}13.5, \PYGZhy{}6.5, 0.0]]}
+\PYG{g+go}{            cover cells ID [2089, 1582, 2210, 1504]}
+\PYG{g+go}{    Progress: |//////////////////////////////////////////////////| 100.0\PYGZpc{} Complete}
 \PYG{g+go}{\PYGZsh{} full stress\PYGZhy{}strain with SG and user\PYGZhy{}defined dimensions}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{df\PYGZus{}userdf\PYGZus{}SG} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{complete\PYGZus{}UCS\PYGZus{}stress\PYGZus{}strain}\PYG{p}{(}\PYG{k+kc}{None}\PYG{p}{,} \PYG{k+kc}{True}\PYG{p}{,} \PYG{l+m+mi}{10}\PYG{p}{,} \PYG{l+m+mi}{10}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{df\PYGZus{}userdf\PYGZus{}SG} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{complete\PYGZus{}UCS\PYGZus{}stress\PYGZus{}strain}\PYG{p}{(}\PYG{k+kc}{None}\PYG{p}{,} \PYG{k+kc}{True}\PYG{p}{,} \PYG{n}{gauge\PYGZus{}width}\PYG{o}{=}\PYG{l+m+mi}{10}\PYG{p}{,} \PYG{n}{gauge\PYGZus{}length}\PYG{o}{=}\PYG{l+m+mi}{10}\PYG{p}{)}
 \PYG{g+go}{Columns:}
 \PYG{g+go}{    Name: Platen Stress, dtype=float64, nullable: False}
 \PYG{g+go}{    Name: Platen Strain, dtype=float64, nullable: False}
 \PYG{g+go}{    Name: Gauge Displacement X, dtype=float64, nullable: False}
 \PYG{g+go}{    Name: Gauge Displacement Y, dtype=float64, nullable: False}
+\PYG{g+go}{Script Identifying Platen}
+\PYG{g+go}{    Platen Material ID found as [1]}
+\PYG{g+go}{    Predefined loading Axis [1] is Y\PYGZhy{}direction}
+\PYG{g+go}{Values used in calculations are}
+\PYG{g+go}{    Area    52.00}
+\PYG{g+go}{    Length  108.00}
+\PYG{g+go}{    Dimensions of SG are 10 x 10}
+\PYG{g+go}{    Vertical Gauges}
+\PYG{g+go}{        extends between [[5.0, \PYGZhy{}5.0, 0.0], [\PYGZhy{}5.0, \PYGZhy{}5.0, 0.0], [5.0, 5.0, 0.0], [\PYGZhy{}5.0, 5.0, 0.0]]}
+\PYG{g+go}{        cover cells ID [1186, 1397, 1669, 1148]}
+\PYG{g+go}{    Horizontal Gauges}
+\PYG{g+go}{        extends between [[5.0, 5.0, 0.0], [5.0, \PYGZhy{}5.0, 0.0], [\PYGZhy{}5.0, 5.0, 0.0], [\PYGZhy{}5.0, \PYGZhy{}5.0, 0.0]]}
+\PYG{g+go}{        cover cells ID [1669, 1186, 1148, 1397]}
+\PYG{g+go}{Progress: |//////////////////////////////////////////////////| 100.0\PYGZpc{} Complete}
 \end{sphinxVerbatim}
 
 \end{description}\end{quote}
@@ -452,19 +676,26 @@ pandas.DataFrame
 \index{convert\_to\_xyz\_array() (openfdem.openfdem.Model method)@\spxentry{convert\_to\_xyz\_array()}\spxextra{openfdem.openfdem.Model method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.convert_to_xyz_array}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{convert\_to\_xyz\_array}}}{\emph{\DUrole{n}{node\_df}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.convert_to_xyz_array}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{convert\_to\_xyz\_array}}}{\emph{\DUrole{n}{node\_df}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Convert extracted node information into summation based on X, Y and Z
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode
+\sphinxlineitem{Parameters}
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{node\_df}} (\sphinxstyleliteralemphasis{\sphinxupquote{pandas.DataFrame}}) \textendash{} Extracted node information
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 A DataFrame with summations along X, Y, Z axis. Column names are {[}“sum\_X”, “sum\_Y”, “sum\_Z”{]}
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 pandas.DataFrame
 
-\item[{Example}] \leavevmode
+\sphinxlineitem{Example}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{openfdem} \PYG{k}{as} \PYG{n+nn}{fdem}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data} \PYG{o}{=} \PYG{n}{fdem}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{../example\PYGZus{}outputs/Irazu\PYGZus{}3D\PYGZus{}UCS}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
@@ -488,29 +719,198 @@ pandas.DataFrame
 
 \end{fulllineitems}
 
-\index{direct\_shear\_calculation() (openfdem.openfdem.Model method)@\spxentry{direct\_shear\_calculation()}\spxextra{openfdem.openfdem.Model method}}
+\index{crack\_failure\_mode() (openfdem.openfdem.Model method)@\spxentry{crack\_failure\_mode()}\spxextra{openfdem.openfdem.Model method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.direct_shear_calculation}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{direct\_shear\_calculation}}}{\emph{\DUrole{n}{platen\_id}}, \emph{\DUrole{n}{array}}, \emph{\DUrole{n}{progress\_bar}\DUrole{o}{=}\DUrole{default_value}{True}}}{}~\begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.crack_failure_mode}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{crack\_failure\_mode}}}{\emph{\DUrole{n}{remove\_boundary}\DUrole{o}{=}\DUrole{default_value}{True}}, \emph{\DUrole{n}{progress\_bar}\DUrole{o}{=}\DUrole{default_value}{True}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+Get all failure modes in every timestep. Boundaries Optional.
+This will create a dataframe that has the failure mode for every crack. The time the crack first appears would be the time it inititated.
+\begin{quote}\begin{description}
+\sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{platen\_id}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} Material id of the platen
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{remove\_boundary}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} Optional. Keep or remove boundaries in DataFrame
 
 \item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{array}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} the name of the array to be extracted
-
-\item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{progress\_bar}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} Show/Hide progress bar
 
 \end{itemize}
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
+A DataFrame containing the failure mode for each crack at every time step.
+
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
+pd.DataFrame
+
+\sphinxlineitem{Example}
+\end{description}\end{quote}
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{openfdem} \PYG{k}{as} \PYG{n+nn}{fdem}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data} \PYG{o}{=} \PYG{n}{fdem}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{../example\PYGZus{}outputs/Irazu\PYGZus{}UCS}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{df\PYGZus{}cracks} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{crack\PYGZus{}failure\PYGZus{}mode}\PYG{p}{(}\PYG{p}{)}
+\end{sphinxVerbatim}
+
+\end{fulllineitems}
+
+\index{crack\_failure\_mode\_clustering() (openfdem.openfdem.Model method)@\spxentry{crack\_failure\_mode\_clustering()}\spxextra{openfdem.openfdem.Model method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.crack_failure_mode_clustering}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{crack\_failure\_mode\_clustering}}}{\emph{\DUrole{n}{crack\_LUT}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{crack\_LUT\_name}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{remove\_boundary}\DUrole{o}{=}\DUrole{default_value}{True}}, \emph{\DUrole{n}{progress\_bar}\DUrole{o}{=}\DUrole{default_value}{True}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+Cluster the crack modes based on their failure moed values. By default, it uses the Irazu convention which is 1=pure tensile; 1\sphinxhyphen{}1.5= tensile dominant; 1.5\sphinxhyphen{}2= shear dominant, 2= pure shear; 3= mixed mode. The crack LUT can also be user defined to get a specific range within the dataset.
+\begin{quote}\begin{description}
+\sphinxlineitem{Parameters}\begin{itemize}
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{crack\_LUT}} (\sphinxstyleliteralemphasis{\sphinxupquote{list}}\sphinxstyleliteralemphasis{\sphinxupquote{{[}}}\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}) \textendash{} LUT range for the crack failure (float)
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{crack\_LUT\_name}} (\sphinxstyleliteralemphasis{\sphinxupquote{list}}\sphinxstyleliteralemphasis{\sphinxupquote{{[}}}\sphinxstyleliteralemphasis{\sphinxupquote{str}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}) \textendash{} LUT range for the crack failure (name)
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{remove\_boundary}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} Optional. Keep or remove boundaries in DataFrame
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{progress\_bar}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} Show/Hide progress bar
+
+\end{itemize}
+
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
+A DataFrame containing the total number of cracks in every time step.
+
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
+pd.DataFrame
+
+\sphinxlineitem{Example}
+\end{description}\end{quote}
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{openfdem} \PYG{k}{as} \PYG{n+nn}{fdem}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data} \PYG{o}{=} \PYG{n}{fdem}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{../example\PYGZus{}outputs/Irazu\PYGZus{}UCS}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{df\PYGZus{}crack\PYGZus{}default\PYGZus{}clustering} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{crack\PYGZus{}failure\PYGZus{}mode\PYGZus{}clustering}\PYG{p}{(}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{df\PYGZus{}crack\PYGZus{}userdefined\PYGZus{}clustering} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{crack\PYGZus{}failure\PYGZus{}mode\PYGZus{}clustering}\PYG{p}{(}\PYG{n}{crack\PYGZus{}LUT}\PYG{o}{=}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{,} \PYG{n}{crack\PYGZus{}LUT\PYGZus{}name}\PYG{o}{=}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{tensile\PYGZus{}and\PYGZus{}shear}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{)}
+\end{sphinxVerbatim}
+
+\end{fulllineitems}
+
+\index{crack\_number() (openfdem.openfdem.Model method)@\spxentry{crack\_number()}\spxextra{openfdem.openfdem.Model method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.crack_number}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{crack\_number}}}{\emph{\DUrole{n}{progress\_bar}\DUrole{o}{=}\DUrole{default_value}{True}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+Get the total number of cracks at every timestep. Excluding boundaries.
+\begin{quote}\begin{description}
+\sphinxlineitem{Parameters}
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{progress\_bar}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} Show/Hide progress bar
+
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
+A DataFrame containing the total number of cracks at every time step.
+
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
+pd.DataFrame
+
+\sphinxlineitem{Example}
+\end{description}\end{quote}
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{openfdem} \PYG{k}{as} \PYG{n+nn}{fdem}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data} \PYG{o}{=} \PYG{n}{fdem}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{../example\PYGZus{}outputs/Irazu\PYGZus{}UCS}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{crack\PYGZus{}number\PYGZus{}total} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{crack\PYGZus{}number}\PYG{p}{(}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n+nb}{max}\PYG{p}{(}\PYG{n}{crack\PYGZus{}number\PYGZus{}total}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{crack number}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{)}
+\PYG{g+go}{222.0}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{crack\PYGZus{}number\PYGZus{}total}
+\PYG{g+go}{            crack number}
+\PYG{g+go}{0            0.0}
+\PYG{g+go}{1            0.0}
+\PYG{g+go}{2            0.0}
+\PYG{g+go}{3            0.0}
+\PYG{g+go}{4            0.0}
+\PYG{g+go}{5            0.0}
+\PYG{g+go}{6            0.0}
+\PYG{g+go}{7            0.0}
+\PYG{g+go}{8            0.0}
+\PYG{g+go}{9          117.0}
+\PYG{g+go}{10         212.0}
+\PYG{g+go}{11         219.0}
+\PYG{g+go}{12         221.0}
+\PYG{g+go}{13         221.0}
+\PYG{g+go}{14         221.0}
+\PYG{g+go}{15         221.0}
+\PYG{g+go}{16         221.0}
+\PYG{g+go}{17         221.0}
+\PYG{g+go}{18         222.0}
+\PYG{g+go}{19         222.0}
+\PYG{g+go}{20         222.0}
+\PYG{g+go}{21         222.0}
+\PYG{g+go}{22         222.0}
+\PYG{g+go}{23         222.0}
+\PYG{g+go}{24         222.0}
+\PYG{g+go}{25         222.0}
+\PYG{g+go}{26         222.0}
+\PYG{g+go}{27         222.0}
+\PYG{g+go}{28         222.0}
+\PYG{g+go}{29         222.0}
+\PYG{g+go}{30         222.0}
+\end{sphinxVerbatim}
+
+\end{fulllineitems}
+
+\index{direct\_shear\_calculation() (openfdem.openfdem.Model method)@\spxentry{direct\_shear\_calculation()}\spxextra{openfdem.openfdem.Model method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.direct_shear_calculation}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{direct\_shear\_calculation}}}{\emph{\DUrole{n}{platen\_id}}, \emph{\DUrole{n}{array}}, \emph{\DUrole{n}{progress\_bar}\DUrole{o}{=}\DUrole{default_value}{True}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+Analyse direcr shear simulation built with a rigid platen on the outside.
+\begin{quote}\begin{description}
+\sphinxlineitem{Parameters}\begin{itemize}
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{platen\_id}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} Material id of the platen
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{array}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} the name of the array to be extracted
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{progress\_bar}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} Show/Hide progress bar
+
+\end{itemize}
+
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 DataFrame containing the absolute value of the array for each identified corner. Absolute sum of the extracted array split in Top/Bottom ane Left/Rigth sub\sphinxhyphen{}set into Top/Bottom.
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 pandas.DataFrame
 
-\item[{Example}] \leavevmode
+\sphinxlineitem{Example}
 \end{description}\end{quote}
 
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
@@ -545,41 +945,49 @@ pandas.DataFrame
 \index{draw\_rose\_diagram() (openfdem.openfdem.Model method)@\spxentry{draw\_rose\_diagram()}\spxextra{openfdem.openfdem.Model method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.draw_rose_diagram}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{draw\_rose\_diagram}}}{\emph{\DUrole{n}{t\_step}}, \emph{\DUrole{n}{rose\_data}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{thres\_id}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{thres\_array}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}mineral\_type\textquotesingle{}}}, \emph{\DUrole{n}{rose\_range}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}Length\textquotesingle{}}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.draw_rose_diagram}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{draw\_rose\_diagram}}}{\emph{\DUrole{n}{t\_step}}, \emph{\DUrole{n}{rose\_data}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{thres\_id}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{thres\_array}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}mineral\_type\textquotesingle{}}}, \emph{\DUrole{n}{rose\_range}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}Length\textquotesingle{}}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Draw a wind rose diagram based on the information passed.
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
+\sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{t\_step}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} Time step in model. Default 0
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{rose\_data}} (\sphinxstyleliteralemphasis{\sphinxupquote{DataFrame}}) \textendash{} User can bypass requirement and pass a DataFrame with the data. Should be 2 columns with the Angle being the 2nd. Default None
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{thres\_id}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} ID of item to threshold. Default None.
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{thres\_array}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} Array name of item to threshold. Default “mineral\_type”.
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{rose\_range}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} Range to calculate the windrose bins. Default “length”
 
 \end{itemize}
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 windrose figure
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 matplotlib.pyplot
 
-\item[{Example}] \leavevmode
+\sphinxlineitem{Example}
 \end{description}\end{quote}
 
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{openfdem} \PYG{k}{as} \PYG{n+nn}{fdem}
-\end{sphinxVerbatim}
-
-\begin{sphinxVerbatim}[commandchars=\\\{\}]
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data} \PYG{o}{=} \PYG{n}{fdem}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{../example\PYGZus{}outputs/Irazu\PYGZus{}UCS}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data}\PYG{o}{.}\PYG{n}{draw\PYGZus{}rose\PYGZus{}diagram}\PYG{p}{(}\PYG{n}{t\PYGZus{}step}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}
 \PYG{g+go}{\PYGZlt{}module \PYGZsq{}matplotlib.pyplot\PYGZsq{} from \PYGZsq{}/usr/local/lib/python3.8/dist\PYGZhy{}packages/matplotlib/pyplot.py\PYGZsq{}\PYGZgt{}}
@@ -587,7 +995,6 @@ matplotlib.pyplot
 \PYG{g+go}{\PYGZlt{}module \PYGZsq{}matplotlib.pyplot\PYGZsq{} from \PYGZsq{}/usr/local/lib/python3.8/dist\PYGZhy{}packages/matplotlib/pyplot.py\PYGZsq{}\PYGZgt{}}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{c+c1}{\PYGZsh{} If you want to save the figure to a pyplot format.}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{figure\PYGZus{}name} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{draw\PYGZus{}rose\PYGZus{}diagram}\PYG{p}{(}\PYG{n}{t\PYGZus{}step}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{rose\PYGZus{}range}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{Length}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{thres\PYGZus{}id}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{thres\PYGZus{}array}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{boundary}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{figure\PYGZus{}name}\PYG{o}{.}\PYG{n}{savefig}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{/hdd/home/aly/Desktop/Dropbox/Python\PYGZus{}Codes/OpenFDEM\PYGZhy{}Post\PYGZhy{}Processing/example\PYGZus{}outputs/example.pdf}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
 \end{sphinxVerbatim}
 
 \end{fulllineitems}
@@ -595,32 +1002,54 @@ matplotlib.pyplot
 \index{extract\_based\_coord() (openfdem.openfdem.Model method)@\spxentry{extract\_based\_coord()}\spxextra{openfdem.openfdem.Model method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.extract_based_coord}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{extract\_based\_coord}}}{\emph{\DUrole{n}{thres\_model}}, \emph{\DUrole{n}{coord\_xyz}}, \emph{\DUrole{n}{location}}, \emph{\DUrole{n}{include\_cells}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{adjacent\_cells}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.extract_based_coord}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{extract\_based\_coord}}}{\emph{\DUrole{n}{thres\_model}}, \emph{\DUrole{n}{coord\_xyz}}, \emph{\DUrole{n}{location}}, \emph{\DUrole{n}{include\_cells}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{adjacent\_cells}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Extract the vtkdata set based on the defined coord location in the x=0 y=1 z=2 location.
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
+\sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{thres\_model}} (\sphinxstyleliteralemphasis{\sphinxupquote{pyvista.core.pointset.UnstructuredGrid}}) \textendash{} threshold dataset of the material id of the rock
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{coord\_xyz}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} x=0 y=1 z=2
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{location}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} Xmin/Xmax/Ymin/Ymax/Zmin/Zmax
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{include\_cells}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} If True, extract the cells that contain at least one of the extracted points. If False, extract the cells that contain exclusively points from the extracted points list.
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{adjacent\_cells}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} Specifies if the cells shall be returned or not
 
 \end{itemize}
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 Pointset of the data being filtered
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 pyvista.core.pointset.UnstructuredGrid
+
+\sphinxlineitem{Example}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{openfdem} \PYG{k}{as} \PYG{n+nn}{fdem}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data} \PYG{o}{=} \PYG{n}{fdem}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{/external/2D\PYGZus{}shear\PYGZus{}4mm\PYGZus{}profile\PYGZus{}normal\PYGZus{}load\PYGZus{}test}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data}\PYG{o}{.}\PYG{n}{rock\PYGZus{}sample\PYGZus{}dimensions}\PYG{p}{(}\PYG{p}{)}
+\PYG{g+go}{Script Identifying Platen}
+\PYG{g+go}{    Platen Material ID found as [1]}
+\PYG{g+go}{(31.713071, 30.111493, 0.0, [\PYGZhy{}0.2, 31.513071, \PYGZhy{}14.92642, 15.185073, 0.0, 0.0])}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{extracted\PYGZus{}left} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{extract\PYGZus{}based\PYGZus{}coord}\PYG{p}{(}\PYG{n}{data}\PYG{o}{.}\PYG{n}{rock\PYGZus{}model}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{data}\PYG{o}{.}\PYG{n}{rock\PYGZus{}model}\PYG{o}{.}\PYG{n}{bounds}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{)}
+\end{sphinxVerbatim}
 
 \end{description}\end{quote}
 
@@ -629,30 +1058,39 @@ pyvista.core.pointset.UnstructuredGrid
 \index{extract\_cell\_info() (openfdem.openfdem.Model method)@\spxentry{extract\_cell\_info()}\spxextra{openfdem.openfdem.Model method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.extract_cell_info}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{extract\_cell\_info}}}{\emph{\DUrole{n}{cell\_id}}, \emph{\DUrole{n}{arrays\_needed}}, \emph{\DUrole{n}{progress\_bar}\DUrole{o}{=}\DUrole{default_value}{True}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.extract_cell_info}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{extract\_cell\_info}}}{\emph{\DUrole{n}{cell\_id}}, \emph{\DUrole{n}{arrays\_needed}}, \emph{\DUrole{n}{progress\_bar}\DUrole{o}{=}\DUrole{default_value}{True}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Returns the information of the cell based on the array requested.
 If the array is a point data, the array is suffixed with \_Nx where x is the node on that cell.
 Also shows a quick example on how to plot the information extracted.
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
+\sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cell\_id}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} Cell ID to extract
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{arrays\_needed}} (\sphinxstyleliteralemphasis{\sphinxupquote{list}}\sphinxstyleliteralemphasis{\sphinxupquote{{[}}}\sphinxstyleliteralemphasis{\sphinxupquote{str}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}) \textendash{} list of array names to extract
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{progress\_bar}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} Show/Hide progress bar
 
 \end{itemize}
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 unpacked DataFrame
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 pandas.DataFrame
 
-\item[{Example}] \leavevmode
+\sphinxlineitem{Example}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{openfdem} \PYG{k}{as} \PYG{n+nn}{fdem}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{matplotlib}\PYG{n+nn}{.}\PYG{n+nn}{pyplot} \PYG{k}{as} \PYG{n+nn}{plt}
@@ -698,36 +1136,87 @@ pandas.DataFrame
 
 \end{fulllineitems}
 
-\index{extract\_threshold\_info() (openfdem.openfdem.Model method)@\spxentry{extract\_threshold\_info()}\spxextra{openfdem.openfdem.Model method}}
+\index{extract\_crack\_info() (openfdem.openfdem.Model method)@\spxentry{extract\_crack\_info()}\spxextra{openfdem.openfdem.Model method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.extract_threshold_info}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{extract\_threshold\_info}}}{\emph{\DUrole{n}{thres\_id}}, \emph{\DUrole{n}{thres\_array}}, \emph{\DUrole{n}{arrays\_needed}}, \emph{\DUrole{n}{progress\_bar}\DUrole{o}{=}\DUrole{default_value}{True}}}{}
-Returns the information of the cell based on the array requested.
-If the array is a point data, the array is suffixed with \_Nx where x is cell ID.
-Also shows a quick example on how to plot the information extracted.
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.extract_crack_info}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{extract\_crack\_info}}}{\emph{\DUrole{n}{arrays\_needed}}, \emph{\DUrole{n}{progress\_bar}\DUrole{o}{=}\DUrole{default_value}{True}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+Returns the information based on the array requested.
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
+\sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{thres\_id}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} Threshold ID to extract
-
-\item {} 
-\sphinxstyleliteralstrong{\sphinxupquote{thres\_array}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} Array name of item to threshold.
-
-\item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{arrays\_needed}} (\sphinxstyleliteralemphasis{\sphinxupquote{list}}\sphinxstyleliteralemphasis{\sphinxupquote{{[}}}\sphinxstyleliteralemphasis{\sphinxupquote{str}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}) \textendash{} list of array names to extract
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{progress\_bar}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} Show/Hide progress bar
 
 \end{itemize}
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
+unpacked DataFrame
+
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
+pandas.DataFrame
+
+\sphinxlineitem{Example}
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{openfdem} \PYG{k}{as} \PYG{n+nn}{fdem}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data} \PYG{o}{=} \PYG{n}{fdem}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{../example\PYGZus{}outputs/Irazu\PYGZus{}UCS}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{extraction\PYGZus{}of\PYGZus{}cracks} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{extract\PYGZus{}crack\PYGZus{}info}\PYG{p}{(}\PYG{n}{arrays\PYGZus{}needed}\PYG{o}{=}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{area}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{length}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{)}
+\PYG{g+go}{Progress: |//////////////////////////////////////////////////| 100.0\PYGZpc{} Complete}
+\end{sphinxVerbatim}
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+\index{extract\_threshold\_info() (openfdem.openfdem.Model method)@\spxentry{extract\_threshold\_info()}\spxextra{openfdem.openfdem.Model method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.extract_threshold_info}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{extract\_threshold\_info}}}{\emph{\DUrole{n}{thres\_id}}, \emph{\DUrole{n}{thres\_array}}, \emph{\DUrole{n}{arrays\_needed}}, \emph{\DUrole{n}{dataset\_to\_load}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}basic\textquotesingle{}}}, \emph{\DUrole{n}{progress\_bar}\DUrole{o}{=}\DUrole{default_value}{True}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+Returns the information of the cell based on the array requested.
+If the array is a point data, the array is suffixed with \_Nx where x is cell ID.
+Also shows a quick example on how to plot the information extracted.
+\begin{quote}\begin{description}
+\sphinxlineitem{Parameters}\begin{itemize}
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{thres\_id}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} Threshold ID to extract
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{thres\_array}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} Array name of item to threshold.
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{arrays\_needed}} (\sphinxstyleliteralemphasis{\sphinxupquote{list}}\sphinxstyleliteralemphasis{\sphinxupquote{{[}}}\sphinxstyleliteralemphasis{\sphinxupquote{str}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}) \textendash{} list of array names to extract
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{progress\_bar}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} Show/Hide progress bar
+
+\end{itemize}
+
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 A DataFrame or a series of DataFrames nested in a dictionary with the key being the name of the array needed
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 pandas.DataFrame or dict{[}pandas.DataFrame{]}
 
-\item[{Example}] \leavevmode
+\sphinxlineitem{Example}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{openfdem} \PYG{k}{as} \PYG{n+nn}{fdem}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{matplotlib}\PYG{n+nn}{.}\PYG{n+nn}{pyplot} \PYG{k}{as} \PYG{n+nn}{plt}
@@ -748,28 +1237,36 @@ pandas.DataFrame or dict{[}pandas.DataFrame{]}
 \index{find\_cell() (openfdem.openfdem.Model method)@\spxentry{find\_cell()}\spxextra{openfdem.openfdem.Model method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.find_cell}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{find\_cell}}}{\emph{\DUrole{n}{model\_point}}}{}
-Identify the nearest cell in the model to the defined point
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.find_cell}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{find\_cell}}}{\emph{\DUrole{n}{model\_point}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+Identify the containing cell in the model to the defined point. Will return an error if the point is not within a cell.
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode
+\sphinxlineitem{Parameters}
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{model\_point}} (\sphinxstyleliteralemphasis{\sphinxupquote{list}}\sphinxstyleliteralemphasis{\sphinxupquote{{[}}}\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}) \textendash{} x,y,z of a point in the model which
 
-\item[{Returns}] \leavevmode
-the cell nearest to the point
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
+The cell that contains the point.
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 int
 
-\item[{Raises}] \leavevmode
+\sphinxlineitem{Raises}
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{IndexError}} \textendash{} Point outside model domain.
 
-\item[{Example}] \leavevmode
+\sphinxlineitem{Example}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{openfdem} \PYG{k}{as} \PYG{n+nn}{fdem}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data} \PYG{o}{=} \PYG{n}{fdem}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{../example\PYGZus{}outputs/Irazu\PYGZus{}UCS}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data}\PYG{o}{.}\PYG{n}{find\PYGZus{}cell}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{)}
 \PYG{g+go}{2167}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data}\PYG{o}{.}\PYG{n}{find\PYGZus{}cell}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{100}\PYG{p}{,} \PYG{l+m+mi}{100}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data}\PYG{o}{.}\PYG{n}{find\PYGZus{}cell}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{2000}\PYG{p}{,} \PYG{l+m+mi}{2000}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{)}
 \PYG{g+go}{IndexError: Point outside model domain.}
 \PYG{g+go}{X=56.0, Y=116.0, Z=0.0}
 \end{sphinxVerbatim}
@@ -781,19 +1278,26 @@ int
 \index{mesh\_geometry() (openfdem.openfdem.Model method)@\spxentry{mesh\_geometry()}\spxextra{openfdem.openfdem.Model method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.mesh_geometry}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{mesh\_geometry}}}{\emph{\DUrole{n}{vertices}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.mesh_geometry}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{mesh\_geometry}}}{\emph{\DUrole{n}{vertices}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Returns a unique set of vertices and calculates their length and orientation.
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode
+\sphinxlineitem{Parameters}
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{vertices}} (\sphinxstyleliteralemphasis{\sphinxupquote{list}}\sphinxstyleliteralemphasis{\sphinxupquote{{[}}}\sphinxstyleliteralemphasis{\sphinxupquote{tuples}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}) \textendash{} list of vertices in the model at a given time step
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 DataFrame of the vertices length and orientation
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 pandas.DataFrame
 
-\item[{Example}] \leavevmode
+\sphinxlineitem{Example}
 \end{description}\end{quote}
 
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
@@ -822,19 +1326,26 @@ pandas.DataFrame
 \index{model\_dimensions() (openfdem.openfdem.Model method)@\spxentry{model\_dimensions()}\spxextra{openfdem.openfdem.Model method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.model_dimensions}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{model\_dimensions}}}{\emph{\DUrole{n}{mat\_id}\DUrole{o}{=}\DUrole{default_value}{None}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.model_dimensions}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{model\_dimensions}}}{\emph{\DUrole{n}{mat\_id}\DUrole{o}{=}\DUrole{default_value}{None}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Function to get the “INITIAL” model bounds and returns the width, height, thickness
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode
+\sphinxlineitem{Parameters}
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{mat\_id}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} Optional, if a threshold is specific to a material type
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 model width, model height, model thickness
 
-\item[{Type}] \leavevmode
+\sphinxlineitem{Type}
+\sphinxAtStartPar
 tuple{[}float, float, float{]}
 
-\item[{Example}] \leavevmode
+\sphinxlineitem{Example}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{openfdem} \PYG{k}{as} \PYG{n+nn}{fdem}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{model} \PYG{o}{=} \PYG{n}{fdem}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{../example\PYGZus{}outputs/Irazu\PYGZus{}UCS}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
@@ -857,23 +1368,30 @@ tuple{[}float, float, float{]}
 \index{model\_domain() (openfdem.openfdem.Model method)@\spxentry{model\_domain()}\spxextra{openfdem.openfdem.Model method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.model_domain}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{model\_domain}}}{}{}~\begin{description}
-\item[{Identifies the model domain by confirming the simulation cell vertex.}] \leavevmode
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.model_domain}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{model\_domain}}}{}{}
+\pysigstopsignatures\begin{description}
+\sphinxlineitem{Identifies the model domain by confirming the simulation cell vertex.}
+\sphinxAtStartPar
 2D (3 Points \sphinxhyphen{} Triangle)
 3D (4 Points \sphinxhyphen{} Tetrahedral)
 
 \end{description}
 \begin{quote}\begin{description}
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 number of nodes to skip in analysis
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 int
 
-\item[{Raises}] \leavevmode
+\sphinxlineitem{Raises}
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{Warning}} \textendash{} Simulation partially supported.
 
-\item[{Example}] \leavevmode
+\sphinxlineitem{Example}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{openfdem} \PYG{k}{as} \PYG{n+nn}{fdem}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{model} \PYG{o}{=} \PYG{n}{fdem}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{../example\PYGZus{}outputs/Irazu\PYGZus{}UCS}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
@@ -889,28 +1407,37 @@ int
 \index{model\_vertices() (openfdem.openfdem.Model method)@\spxentry{model\_vertices()}\spxextra{openfdem.openfdem.Model method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.model_vertices}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{model\_vertices}}}{\emph{\DUrole{n}{t\_step}\DUrole{o}{=}\DUrole{default_value}{0}}, \emph{\DUrole{n}{thres\_id}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{thres\_array}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}mineral\_type\textquotesingle{}}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.model_vertices}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{model\_vertices}}}{\emph{\DUrole{n}{t\_step}\DUrole{o}{=}\DUrole{default_value}{0}}, \emph{\DUrole{n}{thres\_id}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{thres\_array}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}mineral\_type\textquotesingle{}}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Returns a list of the vertices in the form of Point1, Point 2
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
+\sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{t\_step}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} Time step in model. Default 0
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{thres\_id}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} ID of item to threshold. Default None.
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{thres\_array}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} Array name of item to threshold. Default “mineral\_type”.
 
 \end{itemize}
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 list of the verticies in the model and/or the threshold of it.
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 list{[}tuples{]}
 
-\item[{Example}] \leavevmode
+\sphinxlineitem{Example}
 \end{description}\end{quote}
 
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
@@ -927,25 +1454,34 @@ list{[}tuples{]}
 \index{openfdem\_att\_check() (openfdem.openfdem.Model method)@\spxentry{openfdem\_att\_check()}\spxextra{openfdem.openfdem.Model method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.openfdem_att_check}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{openfdem\_att\_check}}}{\emph{\DUrole{n}{att}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.openfdem_att_check}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{openfdem\_att\_check}}}{\emph{\DUrole{n}{att}}, \emph{\DUrole{n}{dict\_to\_check}\DUrole{o}{=}\DUrole{default_value}{None}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Checks that the attribute is a valid choice.
 \begin{quote}\begin{description}
-\item[{Param}] \leavevmode
+\sphinxlineitem{Param}
+\sphinxAtStartPar
 Attribute
 
-\item[{Type}] \leavevmode
+\sphinxlineitem{Type}
+\sphinxAtStartPar
 str
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 Attribute
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 str
 
-\item[{Raises}] \leavevmode
+\sphinxlineitem{Raises}
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{KeyError}} \textendash{} Attribute does not exist.
 
-\item[{Example}] \leavevmode
+\sphinxlineitem{Example}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{openfdem} \PYG{k}{as} \PYG{n+nn}{fdem}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{model} \PYG{o}{=} \PYG{n}{fdem}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{../example\PYGZus{}outputs/Irazu\PYGZus{}UCS}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
@@ -963,25 +1499,34 @@ str
 \index{platen\_info() (openfdem.openfdem.Model method)@\spxentry{platen\_info()}\spxextra{openfdem.openfdem.Model method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.platen_info}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{platen\_info}}}{\emph{\DUrole{n}{pv\_cells}}, \emph{\DUrole{n}{platen\_boundary\_id}}, \emph{\DUrole{n}{var\_property}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.platen_info}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{platen\_info}}}{\emph{\DUrole{n}{pv\_cells}}, \emph{\DUrole{n}{platen\_boundary\_id}}, \emph{\DUrole{n}{var\_property}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 This function thresholds cells based on boundary condition and sums them based on the defined parameter var\_property
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
+\sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{pv\_cells}} (\sphinxstyleliteralemphasis{\sphinxupquote{pyvista.core.pointset.UnstructuredGrid}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{DataSet}}) \textendash{} 
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{platen\_boundary\_id}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} boundary id that the threshold should be based on
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{var\_property}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} name of the property (array to b returned)
 
 \end{itemize}
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 array of the property based on the threshold
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 ndarray
 
 \end{description}\end{quote}
@@ -991,39 +1536,57 @@ ndarray
 \index{plot\_stress\_strain() (openfdem.openfdem.Model method)@\spxentry{plot\_stress\_strain()}\spxextra{openfdem.openfdem.Model method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.plot_stress_strain}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{plot\_stress\_strain}}}{\emph{\DUrole{n}{strain}}, \emph{\DUrole{n}{stress}}, \emph{\DUrole{n}{ax}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{o}{**}\DUrole{n}{plt\_kwargs}}}{}
-Simple plot of the stress\sphinxhyphen{}strain curve
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.plot_stress_strain}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{plot\_stress\_strain}}}{\emph{\DUrole{n}{strain}}, \emph{\DUrole{n}{stress}}, \emph{\DUrole{n}{ax}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{o}{**}\DUrole{n}{plt\_kwargs}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
+Simple plot of the stress\sphinxhyphen{}strain curve of a given dataframe
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
+\sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{strain}} (\sphinxstyleliteralemphasis{\sphinxupquote{pandas.DataFrame}}) \textendash{} X\sphinxhyphen{}axis data {[}Strain{]}
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{stress}} (\sphinxstyleliteralemphasis{\sphinxupquote{pandas.DataFrame}}) \textendash{} Y\sphinxhyphen{}axis data {[}Stress{]}
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{ax}} (\sphinxstyleliteralemphasis{\sphinxupquote{matplotlib}}) \textendash{} Matplotlib Axis
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{plt\_kwargs}} \textendash{} \sphinxtitleref{\textasciitilde{}matplotlib.Modules} submodules
 
 \end{itemize}
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 Matplotlib AxesSubplots
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 Matplotlib Axis
 
-\item[{Example}] \leavevmode
+\sphinxlineitem{Example}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{openfdem} \PYG{k}{as} \PYG{n+nn}{fdem}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data} \PYG{o}{=} \PYG{n}{fdem}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{../example\PYGZus{}outputs/OpenFDEM\PYGZus{}BD}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data} \PYG{o}{=} \PYG{n}{fdem}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{../example\PYGZus{}outputs/Irazu\PYGZus{}UCS}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
 \PYG{g+go}{\PYGZsh{} Minimal Arguments}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{df\PYGZus{}wo\PYGZus{}SG} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{complete\PYGZus{}UCS\PYGZus{}stress\PYGZus{}strain}\PYG{p}{(}\PYG{p}{)}
 \PYG{g+go}{Columns:}
 \PYG{g+go}{    Name: Platen Stress, dtype=float64, nullable: False}
-\PYG{g+go}{    Name: Platen Strain, dtype=float64, nullable: False}
+\PYG{g+go}{    Name: Platen Strain, dtype=float64, nullable: False.}
+\PYG{g+go}{    Script Identifying Platen}
+\PYG{g+go}{Platen Material ID found as [1]}
+\PYG{g+go}{    UCS Simulation}
+\PYG{g+go}{        Predefined loading Axis [1] is Y\PYGZhy{}direction}
+\PYG{g+go}{    Values used in calculations are}
+\PYG{g+go}{        Area        52.00}
+\PYG{g+go}{        Length      108.00}
+\PYG{g+go}{Progress: |//////////////////////////////////////////////////| 100.0\PYGZpc{} Complete}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data}\PYG{o}{.}\PYG{n}{plot\PYGZus{}stress\PYGZus{}strain}\PYG{p}{(}\PYG{n}{df\PYGZus{}wo\PYGZus{}SG}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{Platen Strain}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{,} \PYG{n}{df\PYGZus{}wo\PYGZus{}SG}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{Platen Stress}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{]}\PYG{p}{,} \PYG{n}{label}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{stress\PYGZhy{}strain}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{green}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
 \PYG{g+go}{\PYGZlt{}AxesSubplot:xlabel=\PYGZsq{}Strain (\PYGZhy{})\PYGZsq{}, ylabel=\PYGZsq{}Axial Stress (MPa)\PYGZsq{}\PYGZgt{}}
 \end{sphinxVerbatim}
@@ -1035,20 +1598,27 @@ Matplotlib Axis
 \index{rock\_sample\_dimensions() (openfdem.openfdem.Model method)@\spxentry{rock\_sample\_dimensions()}\spxextra{openfdem.openfdem.Model method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.rock_sample_dimensions}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{rock\_sample\_dimensions}}}{\emph{\DUrole{n}{platen\_id}\DUrole{o}{=}\DUrole{default_value}{None}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.rock_sample_dimensions}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{rock\_sample\_dimensions}}}{\emph{\DUrole{n}{platen\_id}\DUrole{o}{=}\DUrole{default_value}{None}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Lookup cell element ID on the top center and then trace points Using this information, we obtain the platen prop ID.
-Alternatively the user can define the material ID to exclude
+Alternatively the user can define the ID of thresholding
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode
+\sphinxlineitem{Parameters}
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{platen\_id}} (\sphinxstyleliteralemphasis{\sphinxupquote{None}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} Manual override of Platen ID
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 sample width, sample height, sample thickness
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 tuple{[}float, float, float{]}
 
-\item[{Example}] \leavevmode
+\sphinxlineitem{Example}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{openfdem} \PYG{k}{as} \PYG{n+nn}{fdem}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data} \PYG{o}{=} \PYG{n}{fdem}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{../example\PYGZus{}outputs/Irazu\PYGZus{}UCS}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
@@ -1056,16 +1626,16 @@ tuple{[}float, float, float{]}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data}\PYG{o}{.}\PYG{n}{rock\PYGZus{}sample\PYGZus{}dimensions}\PYG{p}{(}\PYG{p}{)}
 \PYG{g+go}{Script Identifying Platen}
 \PYG{g+go}{    Platen Material ID found as [1]}
-\PYG{g+go}{(52.0, 108.0, 0.0)}
+\PYG{g+go}{(52.0, 108.0, 0.0, [\PYGZhy{}26.0, 26.0, \PYGZhy{}54.0, 54.0, 0.0, 0.0])}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{c+c1}{\PYGZsh{} Explicitly defined the platen material ID}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data}\PYG{o}{.}\PYG{n}{rock\PYGZus{}sample\PYGZus{}dimensions}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{)}
 \PYG{g+go}{User Defined Platen ID}
-\PYG{g+go}{    Platen Material ID found as [0]}
-\PYG{g+go}{(56.0, 116.0, 0.0)}
+\PYG{g+go}{    Platen Material ID found as 0}
+\PYG{g+go}{(56.0, 116.0, 0.0, [\PYGZhy{}28.0, 28.0, \PYGZhy{}58.0, 58.0, 0.0, 0.0])}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{c+c1}{\PYGZsh{} Explicitly defined the platen material ID is out of range}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data}\PYG{o}{.}\PYG{n}{rock\PYGZus{}sample\PYGZus{}dimensions}\PYG{p}{(}\PYG{l+m+mi}{3}\PYG{p}{)}
-\PYG{g+go}{IndexError: Material ID for platen out of range.}
-\PYG{g+go}{Material Range 0\PYGZhy{}1}
+\PYG{g+go}{IndexError: Threshold ID out of range.}
+\PYG{g+go}{boundary Range \PYGZhy{}1\PYGZhy{}1}
 \end{sphinxVerbatim}
 
 \end{description}\end{quote}
@@ -1075,26 +1645,39 @@ tuple{[}float, float, float{]}
 \index{simulation\_type() (openfdem.openfdem.Model method)@\spxentry{simulation\_type()}\spxextra{openfdem.openfdem.Model method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.simulation_type}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{simulation\_type}}}{}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.simulation_type}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{simulation\_type}}}{}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Identifies the type of simulation running. BD or UCS.
 Checks the top left corner of the model. If it contains material it is assumed as a rectangle.
 \begin{quote}\begin{description}
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 Type of simulation. BD/UCS
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 str
 
-\item[{Example}] \leavevmode
+\sphinxlineitem{Example}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{openfdem} \PYG{k}{as} \PYG{n+nn}{fdem}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data} \PYG{o}{=} \PYG{n}{fdem}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{../example\PYGZus{}outputs/Irazu\PYGZus{}UCS}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data}\PYG{o}{.}\PYG{n}{rock\PYGZus{}sample\PYGZus{}dimensions}\PYG{p}{(}\PYG{p}{)}
 \PYG{g+go}{Script Identifying Platen}
 \PYG{g+go}{    Platen Material ID found as [1]}
-\PYG{g+go}{(52.0, 108.0, 0.0)}
+\PYG{g+go}{(52.0, 108.0, 0.0, [\PYGZhy{}26.0, 26.0, \PYGZhy{}54.0, 54.0, 0.0, 0.0])}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data}\PYG{o}{.}\PYG{n}{simulation\PYGZus{}type}\PYG{p}{(}\PYG{p}{)}
 \PYG{g+go}{\PYGZsq{}UCS Simulation\PYGZsq{}}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data\PYGZus{}bd} \PYG{o}{=} \PYG{n}{fdem}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{../example\PYGZus{}outputs/openfdem\PYGZus{}BD}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{runfile}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{.y}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data\PYGZus{}bd}\PYG{o}{.}\PYG{n}{rock\PYGZus{}sample\PYGZus{}dimensions}\PYG{p}{(}\PYG{p}{)}
+\PYG{g+go}{Script Identifying Platen}
+\PYG{g+go}{    Platen Material ID found as [1]}
+\PYG{g+go}{(100.0, 99.94999694824219, 0.0, [\PYGZhy{}50.0, 50.0, \PYGZhy{}49.974998474121094, 49.974998474121094, 0.0, 0.0])}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data\PYGZus{}bd}\PYG{o}{.}\PYG{n}{simulation\PYGZus{}type}\PYG{p}{(}\PYG{p}{)}
+\PYG{g+go}{\PYGZsq{}BD Simulation\PYGZsq{}}
 \end{sphinxVerbatim}
 
 \end{description}\end{quote}
@@ -1104,28 +1687,37 @@ str
 \index{threshold\_bound\_check() (openfdem.openfdem.Model method)@\spxentry{threshold\_bound\_check()}\spxextra{openfdem.openfdem.Model method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.threshold_bound_check}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{threshold\_bound\_check}}}{\emph{\DUrole{n}{thres\_id}}, \emph{\DUrole{n}{thres\_array}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}boundary\textquotesingle{}}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.threshold_bound_check}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{threshold\_bound\_check}}}{\emph{\DUrole{n}{thres\_id}}, \emph{\DUrole{n}{thres\_array}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}boundary\textquotesingle{}}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Checks the material ID is a valid choice.
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
+\sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{thres\_id}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} ID of the item ot be threshold
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{thres\_array}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} Array name of the item ot be threshold
 
 \end{itemize}
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 ID of the material
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 int
 
-\item[{Raises}] \leavevmode
+\sphinxlineitem{Raises}
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{IndexError}} \textendash{} ID out of range.
 
-\item[{Example}] \leavevmode
+\sphinxlineitem{Example}
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{openfdem} \PYG{k}{as} \PYG{n+nn}{fdem}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{model} \PYG{o}{=} \PYG{n}{fdem}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{../example\PYGZus{}outputs/Irazu\PYGZus{}UCS}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
@@ -1143,17 +1735,24 @@ int
 \index{unpack\_DataFrame() (openfdem.openfdem.Model method)@\spxentry{unpack\_DataFrame()}\spxextra{openfdem.openfdem.Model method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.unpack_DataFrame}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{unpack\_DataFrame}}}{\emph{\DUrole{n}{packed\_cell\_info}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Model.unpack_DataFrame}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{unpack\_DataFrame}}}{\emph{\DUrole{n}{packed\_cell\_info}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Unpacking of the original array produced by pyvista
 If the array is a point data, the array is suffixed with \_Nx where x is the node on that cell.
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode
+\sphinxlineitem{Parameters}
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{packed\_cell\_info}} (\sphinxstyleliteralemphasis{\sphinxupquote{pandas.DataFrame}}) \textendash{} 
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 Unpacked DataFrame
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 pandas.DataFrame
 
 \end{description}\end{quote}
@@ -1166,11 +1765,17 @@ pandas.DataFrame
 \index{Timestep (class in openfdem.openfdem)@\spxentry{Timestep}\spxextra{class in openfdem.openfdem}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Timestep}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class }}\sphinxcode{\sphinxupquote{openfdem.openfdem.}}\sphinxbfcode{\sphinxupquote{Timestep}}}{\emph{\DUrole{n}{file}}, \emph{\DUrole{n}{runfile}\DUrole{o}{=}\DUrole{default_value}{None}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.openfdem.Timestep}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class\DUrole{w}{  }}}\sphinxcode{\sphinxupquote{openfdem.openfdem.}}\sphinxbfcode{\sphinxupquote{Timestep}}}{\emph{\DUrole{n}{file}}, \emph{\DUrole{n}{runfile}\DUrole{o}{=}\DUrole{default_value}{None}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Bases: \sphinxcode{\sphinxupquote{object}}
 
+\sphinxAtStartPar
 A class handling the data of each timestep.
 
+\sphinxAtStartPar
 Each data array returns for only the timestep
 handles spatial manipulations
 
@@ -1182,23 +1787,35 @@ handles spatial manipulations
 \label{\detokenize{openfdem:module-openfdem.aggregate_storage}}\label{\detokenize{openfdem:openfdem-aggregate-storage-module}}\index{module@\spxentry{module}!openfdem.aggregate\_storage@\spxentry{openfdem.aggregate\_storage}}\index{openfdem.aggregate\_storage@\spxentry{openfdem.aggregate\_storage}!module@\spxentry{module}}\index{aggregate\_storage (class in openfdem.aggregate\_storage)@\spxentry{aggregate\_storage}\spxextra{class in openfdem.aggregate\_storage}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.aggregate_storage.aggregate_storage}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class }}\sphinxcode{\sphinxupquote{openfdem.aggregate\_storage.}}\sphinxbfcode{\sphinxupquote{aggregate\_storage}}}{\emph{\DUrole{n}{file\_directory}}, \emph{\DUrole{n}{h5filename}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{overwrite}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{compression}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{verbose}\DUrole{o}{=}\DUrole{default_value}{True}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.aggregate_storage.aggregate_storage}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{class\DUrole{w}{  }}}\sphinxcode{\sphinxupquote{openfdem.aggregate\_storage.}}\sphinxbfcode{\sphinxupquote{aggregate\_storage}}}{\emph{\DUrole{n}{file\_directory}}, \emph{\DUrole{n}{h5filename}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{overwrite}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{compression}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{verbose}\DUrole{o}{=}\DUrole{default_value}{True}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Bases: \sphinxcode{\sphinxupquote{object}}
 
+\sphinxAtStartPar
 Aggregator class to store VTK files in a single h5 file for faster access to data.
 \index{file\_group\_key() (openfdem.aggregate\_storage.aggregate\_storage method)@\spxentry{file\_group\_key()}\spxextra{openfdem.aggregate\_storage.aggregate\_storage method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.aggregate_storage.aggregate_storage.file_group_key}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{file\_group\_key}}}{\emph{\DUrole{n}{vtkfilename}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.aggregate_storage.aggregate_storage.file_group_key}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{file\_group\_key}}}{\emph{\DUrole{n}{vtkfilename}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Produces a standard group/key based on VTK file name
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode
+\sphinxlineitem{Parameters}
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{vtkfilename}} (\sphinxstyleliteralemphasis{\sphinxupquote{str path}}) \textendash{} VTK file name to be stored/read
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 Key described using timestep and filename
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 str
 
 \end{description}\end{quote}
@@ -1208,24 +1825,33 @@ str
 \index{read\_file() (openfdem.aggregate\_storage.aggregate\_storage method)@\spxentry{read\_file()}\spxextra{openfdem.aggregate\_storage.aggregate\_storage method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.aggregate_storage.aggregate_storage.read_file}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{read\_file}}}{\emph{\DUrole{n}{filename}}, \emph{\DUrole{n}{verbose}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.aggregate_storage.aggregate_storage.read_file}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{read\_file}}}{\emph{\DUrole{n}{filename}}, \emph{\DUrole{n}{verbose}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Extract VTK file from HDF5 file given original filename
 
+\sphinxAtStartPar
 The VTK file is reconstructed from the data arrays stored in the HDF5 file. It will be similar but different from the original.
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
+\sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{filename}} (\sphinxstyleliteralemphasis{\sphinxupquote{str path}}) \textendash{} File name to be extracted (unaltered since HDF5 file creation)
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{verbose}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{optional}}) \textendash{} Print progress statements, defaults to False
 
 \end{itemize}
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 VTK Unstructured Grid as if read from a {\color{red}\bfseries{}*}.vtp or {\color{red}\bfseries{}*}.vtu file
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 VTK Unstructured Grid
 
 \end{description}\end{quote}
@@ -1235,10 +1861,15 @@ VTK Unstructured Grid
 \index{store\_file() (openfdem.aggregate\_storage.aggregate\_storage method)@\spxentry{store\_file()}\spxextra{openfdem.aggregate\_storage.aggregate\_storage method}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.aggregate_storage.aggregate_storage.store_file}}\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{store\_file}}}{\emph{\DUrole{n}{vtkfilename}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.aggregate_storage.aggregate_storage.store_file}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{store\_file}}}{\emph{\DUrole{n}{vtkfilename}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Stores VTK file into HDF5 file
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode
+\sphinxlineitem{Parameters}
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{vtkfilename}} (\sphinxstyleliteralemphasis{\sphinxupquote{str path}}) \textendash{} VTK file name
 
 \end{description}\end{quote}
@@ -1254,28 +1885,38 @@ Stores VTK file into HDF5 file
 \label{\detokenize{openfdem:module-openfdem.complete_BD_thread_pool_generators}}\label{\detokenize{openfdem:openfdem-complete-bd-thread-pool-generators-module}}\index{module@\spxentry{module}!openfdem.complete\_BD\_thread\_pool\_generators@\spxentry{openfdem.complete\_BD\_thread\_pool\_generators}}\index{openfdem.complete\_BD\_thread\_pool\_generators@\spxentry{openfdem.complete\_BD\_thread\_pool\_generators}!module@\spxentry{module}}\index{history\_strain\_func() (in module openfdem.complete\_BD\_thread\_pool\_generators)@\spxentry{history\_strain\_func()}\spxextra{in module openfdem.complete\_BD\_thread\_pool\_generators}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.complete_BD_thread_pool_generators.history_strain_func}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.complete\_BD\_thread\_pool\_generators.}}\sphinxbfcode{\sphinxupquote{history\_strain\_func}}}{\emph{\DUrole{n}{f\_name}}, \emph{\DUrole{n}{model}}, \emph{\DUrole{n}{cv}}, \emph{\DUrole{n}{ch}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.complete_BD_thread_pool_generators.history_strain_func}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.complete\_BD\_thread\_pool\_generators.}}\sphinxbfcode{\sphinxupquote{history\_strain\_func}}}{\emph{\DUrole{n}{f\_name}}, \emph{\DUrole{n}{model}}, \emph{\DUrole{n}{cv}}, \emph{\DUrole{n}{ch}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Calculate the axial stress from platens, axial strain from platens and SG as well as lateral strain from SG
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
+\sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{f\_name}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} name of vtu file being processed
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{model}} ({\hyperref[\detokenize{openfdem:openfdem.openfdem.Model}]{\sphinxcrossref{\sphinxstyleliteralemphasis{\sphinxupquote{openfdem.openfdem.Model}}}}}) \textendash{} FDEM Model Class
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cv}} (\sphinxstyleliteralemphasis{\sphinxupquote{list}}) \textendash{} list of cells at the corner of the vertical strain gauge
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{ch}} (\sphinxstyleliteralemphasis{\sphinxupquote{list}}) \textendash{} list of cells at the corner of the horizontal strain gauge
 
 \end{itemize}
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 Stress, Platen Strain, SG Strain, SG Lateral Strain
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 Generator{[}Tuple{[}list, list, list, list{]}, Any, None{]}
 
 \end{description}\end{quote}
@@ -1285,34 +1926,46 @@ Generator{[}Tuple{[}list, list, list, list{]}, Any, None{]}
 \index{main() (in module openfdem.complete\_BD\_thread\_pool\_generators)@\spxentry{main()}\spxextra{in module openfdem.complete\_BD\_thread\_pool\_generators}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.complete_BD_thread_pool_generators.main}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.complete\_BD\_thread\_pool\_generators.}}\sphinxbfcode{\sphinxupquote{main}}}{\emph{\DUrole{n}{model}}, \emph{\DUrole{n}{st\_status}}, \emph{\DUrole{n}{gauge\_width}}, \emph{\DUrole{n}{gauge\_length}}, \emph{\DUrole{n}{c\_center}}, \emph{\DUrole{n}{progress\_bar}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.complete_BD_thread_pool_generators.main}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.complete\_BD\_thread\_pool\_generators.}}\sphinxbfcode{\sphinxupquote{main}}}{\emph{\DUrole{n}{model}}, \emph{\DUrole{n}{st\_status}}, \emph{\DUrole{n}{gauge\_width}}, \emph{\DUrole{n}{gauge\_length}}, \emph{\DUrole{n}{c\_center}}, \emph{\DUrole{n}{progress\_bar}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Main concurrent Thread Pool to calculate the full stress\sphinxhyphen{}strain
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
+\sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{model}} ({\hyperref[\detokenize{openfdem:openfdem.openfdem.Model}]{\sphinxcrossref{\sphinxstyleliteralemphasis{\sphinxupquote{openfdem.openfdem.Model}}}}}) \textendash{} FDEM Model Class
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{st\_status}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} Enable/Disable SG Calculations
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{gauge\_width}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} SG width
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{gauge\_length}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} SG length
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{c\_center}} (\sphinxstyleliteralemphasis{\sphinxupquote{None}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{list}}\sphinxstyleliteralemphasis{\sphinxupquote{{[}}}\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}) \textendash{} User\sphinxhyphen{}defined center of the SG
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{progress\_bar}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} Show/Hide progress bar
 
 \end{itemize}
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 full stress\sphinxhyphen{}strain information
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 pd.DataFrame
 
 \end{description}\end{quote}
@@ -1322,29 +1975,39 @@ pd.DataFrame
 \index{set\_strain\_gauge() (in module openfdem.complete\_BD\_thread\_pool\_generators)@\spxentry{set\_strain\_gauge()}\spxextra{in module openfdem.complete\_BD\_thread\_pool\_generators}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.complete_BD_thread_pool_generators.set_strain_gauge}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.complete\_BD\_thread\_pool\_generators.}}\sphinxbfcode{\sphinxupquote{set\_strain\_gauge}}}{\emph{\DUrole{n}{model}}, \emph{\DUrole{n}{gauge\_length}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{gauge\_width}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{c\_center}\DUrole{o}{=}\DUrole{default_value}{None}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.complete_BD_thread_pool_generators.set_strain_gauge}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.complete\_BD\_thread\_pool\_generators.}}\sphinxbfcode{\sphinxupquote{set\_strain\_gauge}}}{\emph{\DUrole{n}{model}}, \emph{\DUrole{n}{gauge\_length}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{gauge\_width}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{c\_center}\DUrole{o}{=}\DUrole{default_value}{None}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Calculate local strain based on the dimensions of a virtual strain gauge placed at the center of teh model with
 x/y dimensions. By default set to 0.25 of the length/width.
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
+\sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{model}} ({\hyperref[\detokenize{openfdem:openfdem.openfdem.Model}]{\sphinxcrossref{\sphinxstyleliteralemphasis{\sphinxupquote{openfdem.openfdem.Model}}}}}) \textendash{} FDEM Model Class
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{gauge\_length}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} length of the virtual strain gauge
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{gauge\_width}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} width of the virtual strain gauge
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{c\_center}} (\sphinxstyleliteralemphasis{\sphinxupquote{None}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{list}}\sphinxstyleliteralemphasis{\sphinxupquote{{[}}}\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}) \textendash{} User\sphinxhyphen{}defined center of the SG
 
 \end{itemize}
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 Cells that cover the horizontal and vertical gauges as well as the gauge width and length
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 {[}list, list, float, float{]}
 
 \end{description}\end{quote}
@@ -1357,34 +2020,47 @@ Cells that cover the horizontal and vertical gauges as well as the gauge width a
 \label{\detokenize{openfdem:module-openfdem.complete_UCS_thread_pool_generators}}\label{\detokenize{openfdem:openfdem-complete-ucs-thread-pool-generators-module}}\index{module@\spxentry{module}!openfdem.complete\_UCS\_thread\_pool\_generators@\spxentry{openfdem.complete\_UCS\_thread\_pool\_generators}}\index{openfdem.complete\_UCS\_thread\_pool\_generators@\spxentry{openfdem.complete\_UCS\_thread\_pool\_generators}!module@\spxentry{module}}\index{check\_loading\_direction() (in module openfdem.complete\_UCS\_thread\_pool\_generators)@\spxentry{check\_loading\_direction()}\spxextra{in module openfdem.complete\_UCS\_thread\_pool\_generators}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.complete_UCS_thread_pool_generators.check_loading_direction}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.complete\_UCS\_thread\_pool\_generators.}}\sphinxbfcode{\sphinxupquote{check\_loading\_direction}}}{\emph{\DUrole{n}{model}}, \emph{\DUrole{n}{f1}}, \emph{\DUrole{n}{f2}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.complete_UCS_thread_pool_generators.check_loading_direction}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.complete\_UCS\_thread\_pool\_generators.}}\sphinxbfcode{\sphinxupquote{check\_loading\_direction}}}{\emph{\DUrole{n}{model}}, \emph{\DUrole{n}{f1}}, \emph{\DUrole{n}{f2}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
 \index{history\_strain\_func() (in module openfdem.complete\_UCS\_thread\_pool\_generators)@\spxentry{history\_strain\_func()}\spxextra{in module openfdem.complete\_UCS\_thread\_pool\_generators}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.complete_UCS_thread_pool_generators.history_strain_func}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.complete\_UCS\_thread\_pool\_generators.}}\sphinxbfcode{\sphinxupquote{history\_strain\_func}}}{\emph{\DUrole{n}{f\_name}}, \emph{\DUrole{n}{model}}, \emph{\DUrole{n}{cv}}, \emph{\DUrole{n}{ch}}, \emph{\DUrole{n}{axis}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.complete_UCS_thread_pool_generators.history_strain_func}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.complete\_UCS\_thread\_pool\_generators.}}\sphinxbfcode{\sphinxupquote{history\_strain\_func}}}{\emph{\DUrole{n}{f\_name}}, \emph{\DUrole{n}{model}}, \emph{\DUrole{n}{cv}}, \emph{\DUrole{n}{ch}}, \emph{\DUrole{n}{axis}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Calculate the axial stress from platens, axial strain from platens and SG as well as lateral strain from SG
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
+\sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{f\_name}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} name of vtu file being processed
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{model}} ({\hyperref[\detokenize{openfdem:openfdem.openfdem.Model}]{\sphinxcrossref{\sphinxstyleliteralemphasis{\sphinxupquote{openfdem.openfdem.Model}}}}}) \textendash{} FDEM Model Class
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cv}} (\sphinxstyleliteralemphasis{\sphinxupquote{list}}\sphinxstyleliteralemphasis{\sphinxupquote{{[}}}\sphinxstyleliteralemphasis{\sphinxupquote{int}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}) \textendash{} list of cells at the corner of the vertical strain gauge
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{ch}} (\sphinxstyleliteralemphasis{\sphinxupquote{list}}\sphinxstyleliteralemphasis{\sphinxupquote{{[}}}\sphinxstyleliteralemphasis{\sphinxupquote{int}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}) \textendash{} list of cells at the corner of the horizontal strain gauge
 
 \end{itemize}
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 Stress, Platen Strain, SG Strain, SG Lateral Strain
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 Generator{[}Tuple{[}list, list, list, list{]}, Any, None{]}
 
 \end{description}\end{quote}
@@ -1394,46 +2070,62 @@ Generator{[}Tuple{[}list, list, list, list{]}, Any, None{]}
 \index{main() (in module openfdem.complete\_UCS\_thread\_pool\_generators)@\spxentry{main()}\spxextra{in module openfdem.complete\_UCS\_thread\_pool\_generators}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.complete_UCS_thread_pool_generators.main}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.complete\_UCS\_thread\_pool\_generators.}}\sphinxbfcode{\sphinxupquote{main}}}{\emph{\DUrole{n}{model}}, \emph{\DUrole{n}{platen\_id}}, \emph{\DUrole{n}{st\_status}}, \emph{\DUrole{n}{axis\_of\_loading}}, \emph{\DUrole{n}{gauge\_width}}, \emph{\DUrole{n}{gauge\_length}}, \emph{\DUrole{n}{c\_center}}, \emph{\DUrole{n}{user\_samp\_A}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{user\_samp\_L}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{progress\_bar}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.complete_UCS_thread_pool_generators.main}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.complete\_UCS\_thread\_pool\_generators.}}\sphinxbfcode{\sphinxupquote{main}}}{\emph{\DUrole{n}{model}}, \emph{\DUrole{n}{platen\_id}}, \emph{\DUrole{n}{st\_status}}, \emph{\DUrole{n}{axis\_of\_loading}}, \emph{\DUrole{n}{gauge\_width}}, \emph{\DUrole{n}{gauge\_length}}, \emph{\DUrole{n}{c\_center}}, \emph{\DUrole{n}{user\_samp\_A}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{user\_samp\_L}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{progress\_bar}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Main concurrent Thread Pool to calculate the full stress\sphinxhyphen{}strain
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
+\sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{model}} ({\hyperref[\detokenize{openfdem:openfdem.openfdem.Model}]{\sphinxcrossref{\sphinxstyleliteralemphasis{\sphinxupquote{openfdem.openfdem.Model}}}}}) \textendash{} FDEM Model Class
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{platen\_id}} (\sphinxstyleliteralemphasis{\sphinxupquote{None}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} Manual override of Platen ID
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{st\_status}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} Enable/Disable SG Calculations
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{axis\_of\_loading}} (\sphinxstyleliteralemphasis{\sphinxupquote{None}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} Enable/Disable SG
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{gauge\_width}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} SG width
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{gauge\_length}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} SG length
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{c\_center}} (\sphinxstyleliteralemphasis{\sphinxupquote{None}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{list}}\sphinxstyleliteralemphasis{\sphinxupquote{{[}}}\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}) \textendash{} User\sphinxhyphen{}defined center of the SG
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{user\_samp\_A}} (\sphinxstyleliteralemphasis{\sphinxupquote{None}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} Sample Area
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{user\_samp\_L}} (\sphinxstyleliteralemphasis{\sphinxupquote{None}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} Sample Length
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{progress\_bar}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} Show/Hide progress bar
 
 \end{itemize}
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 full stress\sphinxhyphen{}strain information
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 pd.DataFrame
 
 \end{description}\end{quote}
@@ -1443,29 +2135,39 @@ pd.DataFrame
 \index{set\_strain\_gauge() (in module openfdem.complete\_UCS\_thread\_pool\_generators)@\spxentry{set\_strain\_gauge()}\spxextra{in module openfdem.complete\_UCS\_thread\_pool\_generators}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.complete_UCS_thread_pool_generators.set_strain_gauge}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.complete\_UCS\_thread\_pool\_generators.}}\sphinxbfcode{\sphinxupquote{set\_strain\_gauge}}}{\emph{\DUrole{n}{model}}, \emph{\DUrole{n}{gauge\_length}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{gauge\_width}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{c\_center}\DUrole{o}{=}\DUrole{default_value}{None}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.complete_UCS_thread_pool_generators.set_strain_gauge}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.complete\_UCS\_thread\_pool\_generators.}}\sphinxbfcode{\sphinxupquote{set\_strain\_gauge}}}{\emph{\DUrole{n}{model}}, \emph{\DUrole{n}{gauge\_length}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{gauge\_width}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{c\_center}\DUrole{o}{=}\DUrole{default_value}{None}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Calculate local strain based on the dimensions of a virtual strain gauge placed at the center of teh model with
 x/y dimensions. By default, set to 0.25 of the length/width.
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
+\sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{model}} ({\hyperref[\detokenize{openfdem:openfdem.openfdem.Model}]{\sphinxcrossref{\sphinxstyleliteralemphasis{\sphinxupquote{openfdem.openfdem.Model}}}}}) \textendash{} FDEM Model Class
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{gauge\_length}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} length of the virtual strain gauge
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{gauge\_width}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} width of the virtual strain gauge
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{c\_center}} (\sphinxstyleliteralemphasis{\sphinxupquote{None}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{list}}\sphinxstyleliteralemphasis{\sphinxupquote{{[}}}\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}) \textendash{} User\sphinxhyphen{}defined center of the SG
 
 \end{itemize}
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 Cells that cover the horizontal and vertical gauges as well as the gauge width and length
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 {[}list, list, float, float{]}
 
 \end{description}\end{quote}
@@ -1478,28 +2180,38 @@ Cells that cover the horizontal and vertical gauges as well as the gauge width a
 \label{\detokenize{openfdem:module-openfdem.extract_cell_thread_pool_generators}}\label{\detokenize{openfdem:openfdem-extract-cell-thread-pool-generators-module}}\index{module@\spxentry{module}!openfdem.extract\_cell\_thread\_pool\_generators@\spxentry{openfdem.extract\_cell\_thread\_pool\_generators}}\index{openfdem.extract\_cell\_thread\_pool\_generators@\spxentry{openfdem.extract\_cell\_thread\_pool\_generators}!module@\spxentry{module}}\index{history\_cellinfo\_func() (in module openfdem.extract\_cell\_thread\_pool\_generators)@\spxentry{history\_cellinfo\_func()}\spxextra{in module openfdem.extract\_cell\_thread\_pool\_generators}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.extract_cell_thread_pool_generators.history_cellinfo_func}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.extract\_cell\_thread\_pool\_generators.}}\sphinxbfcode{\sphinxupquote{history\_cellinfo\_func}}}{\emph{\DUrole{n}{f\_name}}, \emph{\DUrole{n}{model}}, \emph{\DUrole{n}{cell\_id}}, \emph{\DUrole{n}{array\_needed}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.extract_cell_thread_pool_generators.history_cellinfo_func}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.extract\_cell\_thread\_pool\_generators.}}\sphinxbfcode{\sphinxupquote{history\_cellinfo\_func}}}{\emph{\DUrole{n}{f\_name}}, \emph{\DUrole{n}{model}}, \emph{\DUrole{n}{cell\_id}}, \emph{\DUrole{n}{array\_needed}}, \emph{\DUrole{n}{thres\_array}\DUrole{o}{=}\DUrole{default_value}{None}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Generate a dictionary of the various array being interrogated for the said cell ID
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
+\sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{f\_name}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} name of vtu file being processed
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{model}} ({\hyperref[\detokenize{openfdem:openfdem.openfdem.Model}]{\sphinxcrossref{\sphinxstyleliteralemphasis{\sphinxupquote{openfdem.openfdem.Model}}}}}) \textendash{} FDEM Model Class
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cell\_id}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} ID of the cell from which the data needs to be extracted
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{array\_needed}} (\sphinxstyleliteralemphasis{\sphinxupquote{list}}\sphinxstyleliteralemphasis{\sphinxupquote{{[}}}\sphinxstyleliteralemphasis{\sphinxupquote{str}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}) \textendash{} Name of the property to extract
 
 \end{itemize}
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 The value of the property from the cell being extracted
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 Generator{[}Tuple(){]}
 
 \end{description}\end{quote}
@@ -1509,28 +2221,38 @@ Generator{[}Tuple(){]}
 \index{main() (in module openfdem.extract\_cell\_thread\_pool\_generators)@\spxentry{main()}\spxextra{in module openfdem.extract\_cell\_thread\_pool\_generators}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.extract_cell_thread_pool_generators.main}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.extract\_cell\_thread\_pool\_generators.}}\sphinxbfcode{\sphinxupquote{main}}}{\emph{\DUrole{n}{model}}, \emph{\DUrole{n}{cellid}}, \emph{\DUrole{n}{arrayname}}, \emph{\DUrole{n}{progress\_bar}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.extract_cell_thread_pool_generators.main}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.extract\_cell\_thread\_pool\_generators.}}\sphinxbfcode{\sphinxupquote{main}}}{\emph{\DUrole{n}{model}}, \emph{\DUrole{n}{cellid}}, \emph{\DUrole{n}{arrayname}}, \emph{\DUrole{n}{progress\_bar}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Main concurrent Thread Pool to get value of the property from the cell being extracted
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
+\sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{model}} ({\hyperref[\detokenize{openfdem:openfdem.openfdem.Model}]{\sphinxcrossref{\sphinxstyleliteralemphasis{\sphinxupquote{openfdem.openfdem.Model}}}}}) \textendash{} FDEM Model Class
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{cellid}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} ID of the cell from which the data needs to be extracted
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{arrayname}} (\sphinxstyleliteralemphasis{\sphinxupquote{list}}\sphinxstyleliteralemphasis{\sphinxupquote{{[}}}\sphinxstyleliteralemphasis{\sphinxupquote{str}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}) \textendash{} Name of the property to extract
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{progress\_bar}} \textendash{} Show/Hide progress bar
 
 \end{itemize}
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 DataFrame of the values of the property from the cell being extracted
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 pandas.DataFrame
 
 \end{description}\end{quote}
@@ -1543,16 +2265,23 @@ pandas.DataFrame
 \label{\detokenize{openfdem:module-openfdem.formatting_codes}}\label{\detokenize{openfdem:openfdem-formatting-codes-module}}\index{module@\spxentry{module}!openfdem.formatting\_codes@\spxentry{openfdem.formatting\_codes}}\index{openfdem.formatting\_codes@\spxentry{openfdem.formatting\_codes}!module@\spxentry{module}}\index{bold\_text() (in module openfdem.formatting\_codes)@\spxentry{bold\_text()}\spxextra{in module openfdem.formatting\_codes}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.formatting_codes.bold_text}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.formatting\_codes.}}\sphinxbfcode{\sphinxupquote{bold\_text}}}{\emph{\DUrole{n}{val}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.formatting_codes.bold_text}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.formatting\_codes.}}\sphinxbfcode{\sphinxupquote{bold\_text}}}{\emph{\DUrole{n}{val}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Returns text as bold
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode
+\sphinxlineitem{Parameters}
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{val}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} Text
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 Text as bold
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 str
 
 \end{description}\end{quote}
@@ -1562,16 +2291,23 @@ str
 \index{calc\_timer\_values() (in module openfdem.formatting\_codes)@\spxentry{calc\_timer\_values()}\spxextra{in module openfdem.formatting\_codes}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.formatting_codes.calc_timer_values}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.formatting\_codes.}}\sphinxbfcode{\sphinxupquote{calc\_timer\_values}}}{\emph{\DUrole{n}{end\_time}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.formatting_codes.calc_timer_values}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.formatting\_codes.}}\sphinxbfcode{\sphinxupquote{calc\_timer\_values}}}{\emph{\DUrole{n}{end\_time}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Function to calculate the time
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode
+\sphinxlineitem{Parameters}
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{end\_time}} (\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} Time (Difference in time in seconds)
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 Time in minutes and seconds
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 float
 
 \end{description}\end{quote}
@@ -1581,16 +2317,23 @@ float
 \index{docstring\_creator() (in module openfdem.formatting\_codes)@\spxentry{docstring\_creator()}\spxextra{in module openfdem.formatting\_codes}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.formatting_codes.docstring_creator}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.formatting\_codes.}}\sphinxbfcode{\sphinxupquote{docstring\_creator}}}{\emph{\DUrole{n}{df}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.formatting_codes.docstring_creator}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.formatting\_codes.}}\sphinxbfcode{\sphinxupquote{docstring\_creator}}}{\emph{\DUrole{n}{df}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Write the example output for a docstring DataFrame
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode
+\sphinxlineitem{Parameters}
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{df}} (\sphinxstyleliteralemphasis{\sphinxupquote{pandas.DataFrame}}) \textendash{} DataFrame to be read
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 prints the docstring and type for each element in the DataFrame
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 str
 
 \end{description}\end{quote}
@@ -1600,16 +2343,23 @@ str
 \index{green\_text() (in module openfdem.formatting\_codes)@\spxentry{green\_text()}\spxextra{in module openfdem.formatting\_codes}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.formatting_codes.green_text}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.formatting\_codes.}}\sphinxbfcode{\sphinxupquote{green\_text}}}{\emph{\DUrole{n}{val}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.formatting_codes.green_text}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.formatting\_codes.}}\sphinxbfcode{\sphinxupquote{green\_text}}}{\emph{\DUrole{n}{val}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Returns text as bold in green font color
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode
+\sphinxlineitem{Parameters}
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{val}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} Text
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 Text as bold in green font color
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 str
 
 \end{description}\end{quote}
@@ -1619,35 +2369,47 @@ str
 \index{print\_progress() (in module openfdem.formatting\_codes)@\spxentry{print\_progress()}\spxextra{in module openfdem.formatting\_codes}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.formatting_codes.print_progress}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.formatting\_codes.}}\sphinxbfcode{\sphinxupquote{print\_progress}}}{\emph{\DUrole{n}{iteration}}, \emph{\DUrole{n}{total}}, \emph{\DUrole{n}{prefix}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}\textquotesingle{}}}, \emph{\DUrole{n}{suffix}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}\textquotesingle{}}}, \emph{\DUrole{n}{decimals}\DUrole{o}{=}\DUrole{default_value}{1}}, \emph{\DUrole{n}{bar\_length}\DUrole{o}{=}\DUrole{default_value}{50}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.formatting_codes.print_progress}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.formatting\_codes.}}\sphinxbfcode{\sphinxupquote{print\_progress}}}{\emph{\DUrole{n}{iteration}}, \emph{\DUrole{n}{total}}, \emph{\DUrole{n}{prefix}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}\textquotesingle{}}}, \emph{\DUrole{n}{suffix}\DUrole{o}{=}\DUrole{default_value}{\textquotesingle{}\textquotesingle{}}}, \emph{\DUrole{n}{decimals}\DUrole{o}{=}\DUrole{default_value}{1}}, \emph{\DUrole{n}{bar\_length}\DUrole{o}{=}\DUrole{default_value}{50}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Call in a loop to create terminal progress bar
 Adjusted bar length to 50, to display on small screen
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode\begin{itemize}
+\sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{iteration}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} current iteration
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{total}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} total iteration
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{prefix}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} prefix string
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{suffix}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} suffix string
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{decimals}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} positive number of decimals in percent complete
 
 \item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{bar\_length}} (\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} character length of bar
 
 \end{itemize}
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 system output showing progress
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 
 
 \end{description}\end{quote}
@@ -1657,16 +2419,23 @@ system output showing progress
 \index{red\_text() (in module openfdem.formatting\_codes)@\spxentry{red\_text()}\spxextra{in module openfdem.formatting\_codes}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.formatting_codes.red_text}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.formatting\_codes.}}\sphinxbfcode{\sphinxupquote{red\_text}}}{\emph{\DUrole{n}{val}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.formatting_codes.red_text}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.formatting\_codes.}}\sphinxbfcode{\sphinxupquote{red\_text}}}{\emph{\DUrole{n}{val}}}{}
+\pysigstopsignatures
+\sphinxAtStartPar
 Returns text as bold in red font color
 \begin{quote}\begin{description}
-\item[{Parameters}] \leavevmode
+\sphinxlineitem{Parameters}
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{val}} (\sphinxstyleliteralemphasis{\sphinxupquote{str}}) \textendash{} Text
 
-\item[{Returns}] \leavevmode
+\sphinxlineitem{Returns}
+\sphinxAtStartPar
 Text as bold in red font color
 
-\item[{Return type}] \leavevmode
+\sphinxlineitem{Return type}
+\sphinxAtStartPar
 str
 
 \end{description}\end{quote}
@@ -1679,43 +2448,64 @@ str
 \label{\detokenize{openfdem:module-openfdem.model_reader}}\label{\detokenize{openfdem:openfdem-model-reader-module}}\index{module@\spxentry{module}!openfdem.model\_reader@\spxentry{openfdem.model\_reader}}\index{openfdem.model\_reader@\spxentry{openfdem.model\_reader}!module@\spxentry{module}}\index{mp\_read() (in module openfdem.model\_reader)@\spxentry{mp\_read()}\spxextra{in module openfdem.model\_reader}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.model_reader.mp_read}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.model\_reader.}}\sphinxbfcode{\sphinxupquote{mp\_read}}}{\emph{\DUrole{o}{*}\DUrole{n}{args}}, \emph{\DUrole{o}{**}\DUrole{n}{kwargs}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.model_reader.mp_read}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.model\_reader.}}\sphinxbfcode{\sphinxupquote{mp\_read}}}{\emph{\DUrole{o}{*}\DUrole{n}{args}}, \emph{\DUrole{o}{**}\DUrole{n}{kwargs}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
 \index{multiprocess\_async() (in module openfdem.model\_reader)@\spxentry{multiprocess\_async()}\spxextra{in module openfdem.model\_reader}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.model_reader.multiprocess_async}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.model\_reader.}}\sphinxbfcode{\sphinxupquote{multiprocess\_async}}}{\emph{\DUrole{o}{*}\DUrole{n}{args}}, \emph{\DUrole{o}{**}\DUrole{n}{kwargs}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.model_reader.multiprocess_async}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.model\_reader.}}\sphinxbfcode{\sphinxupquote{multiprocess\_async}}}{\emph{\DUrole{o}{*}\DUrole{n}{args}}, \emph{\DUrole{o}{**}\DUrole{n}{kwargs}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
 \index{multiprocess\_lib\_read() (in module openfdem.model\_reader)@\spxentry{multiprocess\_lib\_read()}\spxextra{in module openfdem.model\_reader}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.model_reader.multiprocess_lib_read}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.model\_reader.}}\sphinxbfcode{\sphinxupquote{multiprocess\_lib\_read}}}{\emph{\DUrole{o}{*}\DUrole{n}{args}}, \emph{\DUrole{o}{**}\DUrole{n}{kwargs}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.model_reader.multiprocess_lib_read}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.model\_reader.}}\sphinxbfcode{\sphinxupquote{multiprocess\_lib\_read}}}{\emph{\DUrole{o}{*}\DUrole{n}{args}}, \emph{\DUrole{o}{**}\DUrole{n}{kwargs}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
 \index{normal\_read() (in module openfdem.model\_reader)@\spxentry{normal\_read()}\spxextra{in module openfdem.model\_reader}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.model_reader.normal_read}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.model\_reader.}}\sphinxbfcode{\sphinxupquote{normal\_read}}}{\emph{\DUrole{o}{*}\DUrole{n}{args}}, \emph{\DUrole{o}{**}\DUrole{n}{kwargs}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.model_reader.normal_read}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.model\_reader.}}\sphinxbfcode{\sphinxupquote{normal\_read}}}{\emph{\DUrole{o}{*}\DUrole{n}{args}}, \emph{\DUrole{o}{**}\DUrole{n}{kwargs}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
 \index{pv\_read() (in module openfdem.model\_reader)@\spxentry{pv\_read()}\spxextra{in module openfdem.model\_reader}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.model_reader.pv_read}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.model\_reader.}}\sphinxbfcode{\sphinxupquote{pv\_read}}}{\emph{\DUrole{o}{*}\DUrole{n}{args}}, \emph{\DUrole{o}{**}\DUrole{n}{kwargs}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.model_reader.pv_read}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.model\_reader.}}\sphinxbfcode{\sphinxupquote{pv\_read}}}{\emph{\DUrole{o}{*}\DUrole{n}{args}}, \emph{\DUrole{o}{**}\DUrole{n}{kwargs}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
 \index{pv\_read\_queue() (in module openfdem.model\_reader)@\spxentry{pv\_read\_queue()}\spxextra{in module openfdem.model\_reader}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.model_reader.pv_read_queue}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.model\_reader.}}\sphinxbfcode{\sphinxupquote{pv\_read\_queue}}}{\emph{\DUrole{n}{list\_of\_files}}, \emph{\DUrole{n}{q}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.model_reader.pv_read_queue}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.model\_reader.}}\sphinxbfcode{\sphinxupquote{pv\_read\_queue}}}{\emph{\DUrole{n}{list\_of\_files}}, \emph{\DUrole{n}{q}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
 \index{timed() (in module openfdem.model\_reader)@\spxentry{timed()}\spxextra{in module openfdem.model\_reader}}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{openfdem:openfdem.model_reader.timed}}\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.model\_reader.}}\sphinxbfcode{\sphinxupquote{timed}}}{\emph{\DUrole{n}{func}}}{}
+\phantomsection\label{\detokenize{openfdem:openfdem.model_reader.timed}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{openfdem.model\_reader.}}\sphinxbfcode{\sphinxupquote{timed}}}{\emph{\DUrole{n}{func}}}{}
+\pysigstopsignatures
 \end{fulllineitems}
 
 
@@ -1726,12 +2516,15 @@ str
 \chapter{Indices and tables}
 \label{\detokenize{index:indices-and-tables}}\begin{itemize}
 \item {} 
+\sphinxAtStartPar
 \DUrole{xref,std,std-ref}{genindex}
 
 \item {} 
+\sphinxAtStartPar
 \DUrole{xref,std,std-ref}{modindex}
 
 \item {} 
+\sphinxAtStartPar
 \DUrole{xref,std,std-ref}{search}
 
 \end{itemize}

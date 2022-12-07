@@ -249,9 +249,10 @@ def main(model, platen_id, st_status, axis_of_loading, gauge_width, gauge_length
     dim_list = [x_dim, y_dim, z_dim]
 
     # Check UCS Simulation
+    print(model.simulation_type())
     if model.simulation_type() != "UCS Simulation":
-        print("Simulation appears to be not for compressive strength")
-        exit("Simulation appears to be not for compressive strength")
+        # print("Simulation appears to be not for compressive strength")
+        raise ("Simulation appears to be not for compressive strength")
 
     if axis_of_loading:
         print("\tPredefined user-defined loading axis [%s] is %s-direction" % (axis_of_loading, loading_dir_dict[axis_of_loading]))
@@ -305,16 +306,16 @@ def main(model, platen_id, st_status, axis_of_loading, gauge_width, gauge_length
         print(formatting_codes.red_text('Strain Gauges not supported in 3D\nWill not process the strain gauges'))
         cv, ch, gauge_width, gauge_length = [], [], 0, 0
         st_status = False
-    elif st_status and model.number_of_points_per_cell == 3:  # Enabled SG st_status == True
+    elif st_status and model.number_of_points_per_cell == 3:  # Enabled SG st_status == True and 2D Simulation
         cv, ch, gauge_width, gauge_length = set_strain_gauge(model, gauge_width, gauge_length, c_center)
     else:
         cv, ch, gauge_width, gauge_length = [], [], 0, 0
 
 
-    if st_status:  # Enabled SG st_status == True
-        cv, ch, gauge_width, gauge_length = set_strain_gauge(model, gauge_width, gauge_length, c_center)
-    else:
-        cv, ch, gauge_width, gauge_length = [], [], 0, 0
+    # if st_status:  # Enabled SG st_status == True
+    #     cv, ch, gauge_width, gauge_length = set_strain_gauge(model, gauge_width, gauge_length, c_center)
+    # else:
+    #     cv, ch, gauge_width, gauge_length = [], [], 0, 0
 
     # Load basic files in the concurrent Thread Pool
     for fname in f_names:

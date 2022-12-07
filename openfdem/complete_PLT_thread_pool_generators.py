@@ -131,10 +131,10 @@ def main(model, load_config, platen_id, axis_of_loading, De, progress_bar=False)
     x_dim, y_dim, z_dim, md_extent = model.rock_sample_dimensions(platen_id)
     dim_list = [x_dim, y_dim, z_dim]
 
-    # Check UCS Simulation
-    if model.simulation_type() != "UCS Simulation":
-        print("Simulation appears to be not for compressive strength")
-        exit("Simulation appears to be not for compressive strength")
+    # # Check UCS Simulation
+    # if model.simulation_type() != "UCS Simulation":
+    #     print("Simulation appears to be not for compressive strength")
+    #     exit("Simulation appears to be not for compressive strength")
 
     if axis_of_loading:
         print("\tPredefined user-defined loading axis [%s] is %s-direction" % (axis_of_loading, loading_dir_dict[axis_of_loading]))
