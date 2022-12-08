@@ -8,7 +8,7 @@ VERIFICATION CODE BLOCK
     - Display system information
 '''
 
-__version__ = "0.0.1"
+__version__ = "4.1"
 if platform.architecture()[0] != "64bit":
     exit("Compatible only on x64")
 

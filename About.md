@@ -1,46 +1,24 @@
-Metadata-Version: 2.1
-Name: fdem_visualizer
-Version: 1.0
-Summary: Wheel file of fdem visualizer modules
-Home-page: UNKNOWN
-Author: University of Toronto, 2022
-License: UNKNOWN
-Platform: UNKNOWN
-Requires-Python: >=3.5,<=3.9
-Description-Content-Type: text/markdown
-
-# FDEM Visualizer Post-Processing Package
+# openfdem - An FDEM Visualiser Post-Processing Package
+## V4.1
 ### University of Toronto, 2022
 
 This Python package performs transformations on FDEM models in vtk/vtu format. 
 Functions calculated include:
-- Stress
-- Strain
-- Plotting stress vs strain curves
-- Tan modulus
-- Shear
-
-# Installation
-1. Ensure that you have a Python version 3.5-3.9 installed on your machine.
-2. Execute the following commands (*if running from test pypi only, run one at the time*)
-   ```python
-   pip install pyvista, pandas, tqdm, h5py
-   ```  
-3. Navigate to terminal/cmd and execute the following command:
-   ```python
-   pip install -i https://test.pypi.org/simple/ openfdem
-   ```
-4. Check that installation was successful by running:
-   ```python
-   pip freeze
-   ```
+- Extract information within the FDEM Model based on the name of the array (e.g., Stress, Strain, Temperature, etc...) Works in 2D and 3D.
+- Extract stress-strain information for UCS and BD Simulations (Works in 2D and 3D). Optional addition of virtual strain gauges (Limited to 2D).
+- Plotting stress vs strain curve.
+- Calculate the Elastic Modulus of the dataset. Eavg, Esec and Etan can be evaluated. Works in 2D and 3D.
+- Extract information of a particular cell based on a sequence of array names. This can be extended to extracting information along a line. Works in 2D and 3D.
+- Extract information of a threshold dataset criteria based on a sequence of array names. Works in 2D and 3D.
+- Extract mesh information and plot rosette/polar plots. Limited to 2D.
+- Automatic detection/ User-defined assigment of loading direction when analysing mechanical simulations, namely UCS, BD, and PLT, in both 2D and 3D simulations.
 
 ## How to use it - Termimal
 1. After installation is complete, in a terminal/cmd session where you keep your Python projects, type the following command:
     ```python
     python
     ```
-2. In terminal, import openfdem module like so: 
+2. In terminal, import fdem-visualizer module like so: 
     ```python
     import openfdem as fd
     ```

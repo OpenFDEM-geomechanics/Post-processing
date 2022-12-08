@@ -1,6 +1,0 @@
-setup.py
-fdem_visualizer.egg-info/PKG-INFO
-fdem_visualizer.egg-info/SOURCES.txt
-fdem_visualizer.egg-info/dependency_links.txt
-fdem_visualizer.egg-info/requires.txt
-fdem_visualizer.egg-info/top_level.txt
