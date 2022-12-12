@@ -1,0 +1,160 @@
+\begin{sphinxtheindex}
+\let\bigletter\sphinxstyleindexlettergroup
+\let\spxpagem \sphinxstyleindexpagemain
+\let\spxentry \sphinxstyleindexentry
+\let\spxextra \sphinxstyleindexextra
+
+  \bigletter A
+  \item \spxentry{aggregate\_storage}\spxextra{class in pyfdempp.aggregate\_storage}, 
+		\hyperpage{23}
+
+  \indexspace
+  \bigletter B
+  \item \spxentry{bold\_text()}\spxextra{in module pyfdempp.formatting\_codes}, \hyperpage{27}
+
+  \indexspace
+  \bigletter C
+  \item \spxentry{calc\_timer\_values()}\spxextra{in module pyfdempp.formatting\_codes}, 
+		\hyperpage{27}
+  \item \spxentry{check\_loading\_direction()}\spxextra{in module pyfdempp.complete\_UCS\_thread\_pool\_generators}, 
+		\hyperpage{25}
+  \item \spxentry{complete\_BD\_stress\_strain()}\spxextra{pyfdempp.pyfdempp.Model method}, 
+		\hyperpage{7}
+  \item \spxentry{complete\_PLT\_stress\_strain()}\spxextra{pyfdempp.pyfdempp.Model method}, 
+		\hyperpage{8}
+  \item \spxentry{complete\_UCS\_stress\_strain()}\spxextra{pyfdempp.pyfdempp.Model method}, 
+		\hyperpage{9}
+  \item \spxentry{convert\_to\_xyz\_array()}\spxextra{pyfdempp.pyfdempp.Model method}, 
+		\hyperpage{10}
+  \item \spxentry{crack\_failure\_mode()}\spxextra{pyfdempp.pyfdempp.Model method}, \hyperpage{11}
+  \item \spxentry{crack\_failure\_mode\_clustering()}\spxextra{pyfdempp.pyfdempp.Model method}, 
+		\hyperpage{11}
+  \item \spxentry{crack\_number()}\spxextra{pyfdempp.pyfdempp.Model method}, \hyperpage{12}
+
+  \indexspace
+  \bigletter D
+  \item \spxentry{direct\_shear\_calculation()}\spxextra{pyfdempp.pyfdempp.Model method}, 
+		\hyperpage{13}
+  \item \spxentry{docstring\_creator()}\spxextra{in module pyfdempp.formatting\_codes}, 
+		\hyperpage{27}
+  \item \spxentry{draw\_rose\_diagram()}\spxextra{pyfdempp.pyfdempp.Model method}, \hyperpage{14}
+
+  \indexspace
+  \bigletter E
+  \item \spxentry{Eavg\_mod()}\spxextra{pyfdempp.pyfdempp.Model method}, \hyperpage{5}
+  \item \spxentry{Esec\_mod()}\spxextra{pyfdempp.pyfdempp.Model method}, \hyperpage{6}
+  \item \spxentry{Etan50\_mod()}\spxextra{pyfdempp.pyfdempp.Model method}, \hyperpage{6}
+  \item \spxentry{extract\_based\_coord()}\spxextra{pyfdempp.pyfdempp.Model method}, \hyperpage{14}
+  \item \spxentry{extract\_cell\_info()}\spxextra{pyfdempp.pyfdempp.Model method}, \hyperpage{15}
+  \item \spxentry{extract\_crack\_info()}\spxextra{pyfdempp.pyfdempp.Model method}, \hyperpage{16}
+  \item \spxentry{extract\_threshold\_info()}\spxextra{pyfdempp.pyfdempp.Model method}, 
+		\hyperpage{16}
+
+  \indexspace
+  \bigletter F
+  \item \spxentry{file\_group\_key()}\spxextra{pyfdempp.aggregate\_storage.aggregate\_storage method}, 
+		\hyperpage{23}
+  \item \spxentry{find\_cell()}\spxextra{pyfdempp.pyfdempp.Model method}, \hyperpage{17}
+
+  \indexspace
+  \bigletter G
+  \item \spxentry{green\_text()}\spxextra{in module pyfdempp.formatting\_codes}, \hyperpage{27}
+
+  \indexspace
+  \bigletter H
+  \item \spxentry{history\_cellinfo\_func()}\spxextra{in module pyfdempp.extract\_cell\_thread\_pool\_generators}, 
+		\hyperpage{26}
+  \item \spxentry{history\_strain\_func()}\spxextra{in module pyfdempp.complete\_BD\_thread\_pool\_generators}, 
+		\hyperpage{24}
+  \item \spxentry{history\_strain\_func()}\spxextra{in module pyfdempp.complete\_UCS\_thread\_pool\_generators}, 
+		\hyperpage{25}
+
+  \indexspace
+  \bigletter M
+  \item \spxentry{main()}\spxextra{in module pyfdempp.complete\_BD\_thread\_pool\_generators}, 
+		\hyperpage{24}
+  \item \spxentry{main()}\spxextra{in module pyfdempp.complete\_UCS\_thread\_pool\_generators}, 
+		\hyperpage{25}
+  \item \spxentry{main()}\spxextra{in module pyfdempp.extract\_cell\_thread\_pool\_generators}, 
+		\hyperpage{26}
+  \item \spxentry{mesh\_geometry()}\spxextra{pyfdempp.pyfdempp.Model method}, \hyperpage{17}
+  \item \spxentry{Model}\spxextra{class in pyfdempp.pyfdempp}, \hyperpage{5}
+  \item \spxentry{model\_dimensions()}\spxextra{pyfdempp.pyfdempp.Model method}, \hyperpage{18}
+  \item \spxentry{model\_domain()}\spxextra{pyfdempp.pyfdempp.Model method}, \hyperpage{18}
+  \item \spxentry{model\_vertices()}\spxextra{pyfdempp.pyfdempp.Model method}, \hyperpage{19}
+  \item \spxentry{module}
+    \subitem \spxentry{pyfdempp}, \hyperpage{28}
+    \subitem \spxentry{pyfdempp.aggregate\_storage}, \hyperpage{23}
+    \subitem \spxentry{pyfdempp.complete\_BD\_thread\_pool\_generators}, \hyperpage{24}
+    \subitem \spxentry{pyfdempp.complete\_UCS\_thread\_pool\_generators}, \hyperpage{25}
+    \subitem \spxentry{pyfdempp.extract\_cell\_thread\_pool\_generators}, \hyperpage{26}
+    \subitem \spxentry{pyfdempp.formatting\_codes}, \hyperpage{27}
+    \subitem \spxentry{pyfdempp.model\_reader}, \hyperpage{28}
+    \subitem \spxentry{pyfdempp.pyfdempp}, \hyperpage{5}
+  \item \spxentry{mp\_read()}\spxextra{in module pyfdempp.model\_reader}, \hyperpage{28}
+  \item \spxentry{multiprocess\_async()}\spxextra{in module pyfdempp.model\_reader}, \hyperpage{28}
+  \item \spxentry{multiprocess\_lib\_read()}\spxextra{in module pyfdempp.model\_reader}, 
+		\hyperpage{28}
+
+  \indexspace
+  \bigletter N
+  \item \spxentry{normal\_read()}\spxextra{in module pyfdempp.model\_reader}, \hyperpage{28}
+
+  \indexspace
+  \bigletter O
+  \item \spxentry{openfdem\_att\_check()}\spxextra{pyfdempp.pyfdempp.Model method}, \hyperpage{19}
+
+  \indexspace
+  \bigletter P
+  \item \spxentry{platen\_info()}\spxextra{pyfdempp.pyfdempp.Model method}, \hyperpage{20}
+  \item \spxentry{plot\_stress\_strain()}\spxextra{pyfdempp.pyfdempp.Model method}, \hyperpage{20}
+  \item \spxentry{print\_progress()}\spxextra{in module pyfdempp.formatting\_codes}, \hyperpage{27}
+  \item \spxentry{pv\_read()}\spxextra{in module pyfdempp.model\_reader}, \hyperpage{28}
+  \item \spxentry{pv\_read\_queue()}\spxextra{in module pyfdempp.model\_reader}, \hyperpage{28}
+  \item \spxentry{pyfdempp}
+    \subitem \spxentry{module}, \hyperpage{28}
+  \item \spxentry{pyfdempp.aggregate\_storage}
+    \subitem \spxentry{module}, \hyperpage{23}
+  \item \spxentry{pyfdempp.complete\_BD\_thread\_pool\_generators}
+    \subitem \spxentry{module}, \hyperpage{24}
+  \item \spxentry{pyfdempp.complete\_UCS\_thread\_pool\_generators}
+    \subitem \spxentry{module}, \hyperpage{25}
+  \item \spxentry{pyfdempp.extract\_cell\_thread\_pool\_generators}
+    \subitem \spxentry{module}, \hyperpage{26}
+  \item \spxentry{pyfdempp.formatting\_codes}
+    \subitem \spxentry{module}, \hyperpage{27}
+  \item \spxentry{pyfdempp.model\_reader}
+    \subitem \spxentry{module}, \hyperpage{28}
+  \item \spxentry{pyfdempp.pyfdempp}
+    \subitem \spxentry{module}, \hyperpage{5}
+
+  \indexspace
+  \bigletter R
+  \item \spxentry{read\_file()}\spxextra{pyfdempp.aggregate\_storage.aggregate\_storage method}, 
+		\hyperpage{23}
+  \item \spxentry{red\_text()}\spxextra{in module pyfdempp.formatting\_codes}, \hyperpage{28}
+  \item \spxentry{rock\_sample\_dimensions()}\spxextra{pyfdempp.pyfdempp.Model method}, 
+		\hyperpage{21}
+
+  \indexspace
+  \bigletter S
+  \item \spxentry{set\_strain\_gauge()}\spxextra{in module pyfdempp.complete\_BD\_thread\_pool\_generators}, 
+		\hyperpage{24}
+  \item \spxentry{set\_strain\_gauge()}\spxextra{in module pyfdempp.complete\_UCS\_thread\_pool\_generators}, 
+		\hyperpage{25}
+  \item \spxentry{simulation\_type()}\spxextra{pyfdempp.pyfdempp.Model method}, \hyperpage{21}
+  \item \spxentry{store\_file()}\spxextra{pyfdempp.aggregate\_storage.aggregate\_storage method}, 
+		\hyperpage{23}
+
+  \indexspace
+  \bigletter T
+  \item \spxentry{threshold\_bound\_check()}\spxextra{pyfdempp.pyfdempp.Model method}, 
+		\hyperpage{22}
+  \item \spxentry{timed()}\spxextra{in module pyfdempp.model\_reader}, \hyperpage{28}
+  \item \spxentry{Timestep}\spxextra{class in pyfdempp.pyfdempp}, \hyperpage{23}
+
+  \indexspace
+  \bigletter U
+  \item \spxentry{unpack\_DataFrame()}\spxextra{pyfdempp.pyfdempp.Model method}, \hyperpage{22}
+
+\end{sphinxtheindex}

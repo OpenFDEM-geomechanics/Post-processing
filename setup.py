@@ -2,18 +2,21 @@ import setuptools
 import pathlib
 import os
 
-HERE = pathlib.Path("About.md")
+HERE = pathlib.Path("pyfdempp/README.md")
 README = (HERE).read_text()
 
 setuptools.setup(
-    name="openfdem",
-    author="University of Toronto, 2022",
-    description="Wheel file of openfdem modules 4.1",
+    name="pyfdempp",
+    author="Grasselli's Geomechanics Group - University of Toronto",
+    author_email="",
+    description="Performs transformations on hybrid finite-discrete element method (FDEM) models with an unstructured grid in vtk/vtu/vtp format.",
     long_description=README,
     long_description_content_type="text/markdown",
+    keywords="example documentation tutorial",
+    url="https://openfdem.com/",
     packages=setuptools.find_packages(),
-    python_requires='>=3.5,<=3.9',
-    version=4.1,
+    python_requires='>=3.5',
+    version=0.1,
     install_requires=[
         "pandas>=0.0",
         "numpy>=1.0",
