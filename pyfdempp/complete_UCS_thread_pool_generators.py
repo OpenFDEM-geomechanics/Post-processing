@@ -249,14 +249,17 @@ def main(model, platen_id, st_status, axis_of_loading, gauge_width, gauge_length
     dim_list = [x_dim, y_dim, z_dim]
 
     # Check UCS Simulation
-    print(model.simulation_type())
-    if model.simulation_type() != "UCS Simulation":
-        # print("Simulation appears to be not for compressive strength")
-        raise ("Simulation appears to be not for compressive strength")
+    print("Sim", model.simulation_type())
+    # if model.simulation_type() != "UCS Simulation":
+    #     # print("Simulation appears to be not for compressive strength")
+    #     raise ("Simulation appears to be not for compressive strength")
 
-    if axis_of_loading:
+    if axis_of_loading and model.simulation_type() != "UCS Simulation":
         print("\tPredefined user-defined loading axis [%s] is %s-direction" % (axis_of_loading, loading_dir_dict[axis_of_loading]))
         axis_of_loading = [axis_of_loading]
+        print("Simulation appears to be not for compressive strength\nResults maybe incorrect")
+    elif not axis_of_loading and model.simulation_type() != "UCS Simulation":
+        raise ("Simulation appears to be not for compressive strength")
     elif model.number_of_points_per_cell != 3 and axis_of_loading is None:
         axis_of_loading = [check_loading_direction(model, f_names[0], f_names[-1])]
         print("\t3D Loading direction detected as [%s] is %s-direction" % (axis_of_loading[0], loading_dir_dict[axis_of_loading[0]]))

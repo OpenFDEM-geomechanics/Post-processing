@@ -19,4 +19,22 @@ To rerun the Latex and PDF build (ex. if a docstring is updated), run
  `make latexpdf` 
  in terminal.
 
+If you encounter [Makefile:20: pdflatex] Error 2, run
+`sphinx-build -M latexpdf . _build`
+
+
 To view the PDF file, navigate to  `_build` -> `latex` -> [openfdempost-processing.pdf](_build/latex/openfdempost-processing.pdf). 
+
+## pybadges
+
+To insert badges on the top of the README files using the [pybadges pacakge](https://github.com/google/pybadges).
+
+```console
+python3 -m pybadges\
+     --left-text="python"\
+     --right-text="3.5|3.6|3.7|3.8|3.9|3.10"\
+     --browser \
+     --logo='https://dev.w3.org/SVG/tools/svgweb/samples/svg-files/python.svg'\
+     --embed-logo yes
+```
+

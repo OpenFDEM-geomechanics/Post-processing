@@ -1,19 +1,20 @@
 \babel@toc {english}{}
-\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
-\contentsline {section}{\numberline {1.1}Functionality}{1}{section.1.1}%
-\contentsline {section}{\numberline {1.2}Additional Support}{3}{section.1.2}%
-\contentsline {chapter}{\numberline {2}pyfdempp}{5}{chapter.2}%
-\contentsline {section}{\numberline {2.1}pyfdempp package}{5}{section.2.1}%
-\contentsline {subsection}{\numberline {2.1.1}Submodules}{5}{subsection.2.1.1}%
-\contentsline {subsubsection}{pyfdempp.pyfdempp}{5}{subsubsection*.3}%
-\contentsline {subsection}{\numberline {2.1.2}Supporting Modules}{23}{subsection.2.1.2}%
-\contentsline {subsubsection}{pyfdempp.aggregate\_storage module}{23}{subsubsection*.34}%
-\contentsline {subsubsection}{pyfdempp.complete\_BD\_thread\_pool\_generators module}{24}{subsubsection*.39}%
-\contentsline {subsubsection}{pyfdempp.complete\_UCS\_thread\_pool\_generators module}{25}{subsubsection*.43}%
-\contentsline {subsubsection}{pyfdempp.extract\_cell\_thread\_pool\_generators module}{26}{subsubsection*.48}%
-\contentsline {subsubsection}{pyfdempp.formatting\_codes module}{27}{subsubsection*.51}%
-\contentsline {subsubsection}{pyfdempp.model\_reader module}{28}{subsubsection*.58}%
-\contentsline {subsubsection}{Module contents}{28}{subsubsection*.66}%
-\contentsline {chapter}{\numberline {3}Indices and tables}{29}{chapter.3}%
-\contentsline {chapter}{Python Module Index}{31}{section*.67}%
-\contentsline {chapter}{Index}{33}{section*.68}%
+\contentsline {chapter}{\numberline {1}pyfdempp \sphinxhyphen {} An FDEM Visualiser Post\sphinxhyphen {}Processing Package}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}About}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Functionality}{1}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Additional Support}{6}{section.1.3}%
+\contentsline {chapter}{\numberline {2}pyfdempp}{7}{chapter.2}%
+\contentsline {section}{\numberline {2.1}pyfdempp package}{7}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Submodules}{7}{subsection.2.1.1}%
+\contentsline {subsubsection}{pyfdempp.pyfdempp}{7}{subsubsection*.3}%
+\contentsline {subsection}{\numberline {2.1.2}Supporting Modules}{25}{subsection.2.1.2}%
+\contentsline {subsubsection}{pyfdempp.aggregate\_storage module}{25}{subsubsection*.34}%
+\contentsline {subsubsection}{pyfdempp.complete\_BD\_thread\_pool\_generators module}{26}{subsubsection*.39}%
+\contentsline {subsubsection}{pyfdempp.complete\_UCS\_thread\_pool\_generators module}{27}{subsubsection*.43}%
+\contentsline {subsubsection}{pyfdempp.extract\_cell\_thread\_pool\_generators module}{28}{subsubsection*.48}%
+\contentsline {subsubsection}{pyfdempp.formatting\_codes module}{29}{subsubsection*.51}%
+\contentsline {subsubsection}{pyfdempp.model\_reader module}{30}{subsubsection*.58}%
+\contentsline {subsubsection}{Module contents}{30}{subsubsection*.66}%
+\contentsline {chapter}{\numberline {3}Indices and tables}{31}{chapter.3}%
+\contentsline {chapter}{Python Module Index}{33}{section*.67}%
+\contentsline {chapter}{Index}{35}{section*.68}%

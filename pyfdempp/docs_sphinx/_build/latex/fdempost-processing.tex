@@ -61,7 +61,7 @@
 
 
 \title{FDEM Post\sphinxhyphen{}Processing}
-\date{Dec 12, 2022}
+\date{Dec 28, 2022}
 \release{0.0}
 \author{Grasselli\textquotesingle{}s Geomechanics Group \sphinxhyphen{} University of Toronto}
 \newcommand{\sphinxlogo}{\vbox{}}
@@ -85,8 +85,15 @@
 \sphinxstepscope
 
 
-\chapter{Introduction}
-\label{\detokenize{postprocessing_intro:introduction}}\label{\detokenize{postprocessing_intro::doc}}
+\chapter{pyfdempp \sphinxhyphen{} An FDEM Visualiser Post\sphinxhyphen{}Processing Package}
+\label{\detokenize{postprocessing_intro:pyfdempp-an-fdem-visualiser-post-processing-package}}\label{\detokenize{postprocessing_intro::doc}}
+\sphinxAtStartPar
+\sphinxincludegraphics{{python_version_logo}.png}
+\sphinxincludegraphics{{pypi_install}.png}
+
+
+\section{About}
+\label{\detokenize{postprocessing_intro:about}}
 \sphinxAtStartPar
 This Python package performs transformations on hybrid finite\sphinxhyphen{}discrete element method (FDEM) models with an unstructured grid in vtk/vtu/vtp format. It currently supports arrays of simulation files from the FDEM solvers:
 \begin{itemize}
@@ -105,7 +112,7 @@ This Python package performs transformations on hybrid finite\sphinxhyphen{}disc
 \end{itemize}
 
 \sphinxAtStartPar
-The package is heavily dependent on \sphinxcode{\sphinxupquote{pyvista}} and is limited to \sphinxcode{\sphinxupquote{Python \textgreater{}=3.5, \textless{}=3.9}}. The package is maintained by the \sphinxhref{https://geogroup.utoronto.ca/}{Grasselli’s Geomechanics Group} at the University of Toronto, Canada, and is part of a collaborative effort by the open\sphinxhyphen{}source pacakge \sphinxhref{https://openfdem.com/html/index.html}{OpenFDEM}.
+The package is heavily dependent on \sphinxcode{\sphinxupquote{pyvista}} and is limited to \sphinxcode{\sphinxupquote{Python \textgreater{}=3.5}}. The package is maintained by the \sphinxhref{https://geogroup.utoronto.ca/}{Grasselli’s Geomechanics Group} at the University of Toronto, Canada, and is part of a collaborative effort by the open\sphinxhyphen{}source pacakge \sphinxhref{https://openfdem.com/html/index.html}{OpenFDEM}.
 
 
 \section{Functionality}
@@ -115,20 +122,69 @@ The functionality of this script was developed with the objective of extracting 
 \begin{itemize}
 \item {} 
 \sphinxAtStartPar
+Get model information.
+
+\end{itemize}
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{import} \PYG{n+nn}{pyfdempp} \PYG{k}{as} \PYG{n+nn}{fd}
+\PYG{n}{model} \PYG{o}{=} \PYG{n}{fd}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{abs\PYGZus{}model\PYGZus{}path\PYGZus{}on\PYGZus{}machine}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{c+c1}{\PYGZsh{} Getting number of points in your model.}
+\PYG{n}{model}\PYG{o}{.}\PYG{n}{n\PYGZus{}points}
+\end{sphinxVerbatim}
+
+\sphinxAtStartPar
+Output:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+go}{11904}
+\end{sphinxVerbatim}
+\begin{itemize}
+\item {} 
+\sphinxAtStartPar
 Extract information within the FDEM Model based on the name of the array (e.g., Stress, Strain, Temperature, etc…) Works in 2D and 3D.
 
 \item {} 
 \sphinxAtStartPar
 Extract stress\sphinxhyphen{}strain information for UCS and BD Simulations (Works in 2D and 3D). Optional addition of virtual strain gauges (Limited to 2D).
 
+\end{itemize}
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{import} \PYG{n+nn}{pyfdempp} \PYG{k}{as} \PYG{n+nn}{fd}
+\PYG{n}{model} \PYG{o}{=} \PYG{n}{fd}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{abs\PYGZus{}model\PYGZus{}path\PYGZus{}on\PYGZus{}machine}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{model}\PYG{o}{.}\PYG{n}{complete\PYGZus{}stress\PYGZus{}strain}\PYG{p}{(}\PYG{n}{progress\PYGZus{}bar}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+\end{sphinxVerbatim}
+
+\sphinxAtStartPar
+Output:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+go}{Script Identifying Platen}
+\PYG{g+go}{   Platen Material ID found as [1]}
+\PYG{g+go}{   Progress: |//////////////////////////////////////////////////| 100.0\PYGZpc{} Complete}
+\PYG{g+go}{   1.51 seconds}
+\PYG{g+go}{     Platen Stress  Platen Strain}
+\PYG{g+go}{ 0    0.000000e+00       0.000000}
+\PYG{g+go}{ 1    4.825237e+00       0.009259}
+\PYG{g+go}{ 2    9.628823e+00       0.018519}
+\PYG{g+go}{ 3    1.441437e+01       0.027778}
+\PYG{g+go}{ 4    1.919164e+01       0.037037}
+\PYG{g+go}{ ..            ...            ...}
+\PYG{g+go}{ 57   2.036137e\PYGZhy{}30       0.240741}
+\PYG{g+go}{ 58   2.036137e\PYGZhy{}30       0.250000}
+\PYG{g+go}{ 59   2.036137e\PYGZhy{}30       0.259259}
+\PYG{g+go}{ 60   2.036137e\PYGZhy{}30       0.268519}
+\PYG{g+go}{ 61   2.036137e\PYGZhy{}30       0.277778}
+\PYG{g+go}{ }
+\PYG{g+go}{ [62 rows x 2 columns]}
+\end{sphinxVerbatim}
+\begin{itemize}
 \item {} 
 \sphinxAtStartPar
 Plotting stress vs strain curve.
+\sphinxincludegraphics{{stress_strain}.png}
 
-\end{itemize}
-
-\noindent{\hspace*{\fill}\sphinxincludegraphics[width=250\sphinxpxdimen]{{stress_strain}.png}\hspace*{\fill}}
-\begin{itemize}
 \item {} 
 \sphinxAtStartPar
 Calculate the Elastic Modulus of the dataset. Eavg, Esec and Etan can be evaluated. Works in 2D and 3D.
@@ -136,16 +192,35 @@ Calculate the Elastic Modulus of the dataset. Eavg, Esec and Etan can be evaluat
 \end{itemize}
 
 \begin{sphinxVerbatim}[commandchars=\\\{\}]
-\PYG{g+gp}{\PYGZsh{} }Variants of E tangent
-\PYG{g+go}{Etan at 50\PYGZpc{}: 51683.94MPa}
-\PYG{g+go}{Etan at 50\PYGZpc{} with linear best fit disabled: 51639.22MPa}
-\PYG{g+go}{Etan at 50\PYGZpc{} using strain gauge data: 50275.03MPa}
-\PYG{g+gp}{\PYGZsh{} }Variants of E secant
-\PYG{g+go}{Esec at 70\PYGZpc{}: 51681.01MPa}
-\PYG{g+go}{Esec at 50\PYGZpc{}: 51817.43MPa}
-\PYG{g+gp}{\PYGZsh{} }Variants of E average
-\PYG{g+go}{Eavg between 50\PYGZhy{}60\PYGZpc{}: 51594.49MPa}
-\PYG{g+go}{Eavg between 20\PYGZhy{}70\PYGZpc{} with linear best fit disabled: 51660.62MPa}
+\PYG{k+kn}{import} \PYG{n+nn}{pyfdempp} \PYG{k}{as} \PYG{n+nn}{fd}
+\PYG{n}{model} \PYG{o}{=} \PYG{n}{fd}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{abs\PYGZus{}model\PYGZus{}path\PYGZus{}on\PYGZus{}machine}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{df\PYGZus{}1} \PYG{o}{=} \PYG{n}{model}\PYG{o}{.}\PYG{n}{complete\PYGZus{}UCS\PYGZus{}stress\PYGZus{}strain}\PYG{p}{(}\PYG{n}{st\PYGZus{}status}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} Variants of E tangent}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{Etan at 50}\PYG{l+s+si}{\PYGZpc{}\PYGZpc{}}\PYG{l+s+s1}{: }\PYG{l+s+si}{\PYGZpc{}.2f}\PYG{l+s+s1}{MPa}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{model}\PYG{o}{.}\PYG{n}{Etan50\PYGZus{}mod}\PYG{p}{(}\PYG{n}{df\PYGZus{}1}\PYG{p}{)}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{Etan at 50}\PYG{l+s+si}{\PYGZpc{}\PYGZpc{}}\PYG{l+s+s1}{ with linear best fit disabled: }\PYG{l+s+si}{\PYGZpc{}.2f}\PYG{l+s+s1}{MPa}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{model}\PYG{o}{.}\PYG{n}{Etan50\PYGZus{}mod}\PYG{p}{(}\PYG{n}{df\PYGZus{}1}\PYG{p}{,} \PYG{n}{linear\PYGZus{}bestfit}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{Etan at 50}\PYG{l+s+si}{\PYGZpc{}\PYGZpc{}}\PYG{l+s+s1}{ using strain gauge data: }\PYG{l+s+si}{\PYGZpc{}.2f}\PYG{l+s+s1}{MPa}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{model}\PYG{o}{.}\PYG{n}{Etan50\PYGZus{}mod}\PYG{p}{(}\PYG{n}{df\PYGZus{}1}\PYG{p}{,} \PYG{n}{loc\PYGZus{}strain}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{Gauge Displacement Y}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{,} \PYG{n}{plusminus\PYGZus{}range}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{)}
+\PYG{c+c1}{\PYGZsh{} Variants of E secant}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{Esec at 70}\PYG{l+s+si}{\PYGZpc{}\PYGZpc{}}\PYG{l+s+s1}{: }\PYG{l+s+si}{\PYGZpc{}.2f}\PYG{l+s+s1}{MPa}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{model}\PYG{o}{.}\PYG{n}{Esec\PYGZus{}mod}\PYG{p}{(}\PYG{n}{df\PYGZus{}1}\PYG{p}{,} \PYG{l+m+mi}{70}\PYG{p}{)}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{Esec at 50}\PYG{l+s+si}{\PYGZpc{}\PYGZpc{}}\PYG{l+s+s1}{: }\PYG{l+s+si}{\PYGZpc{}.2f}\PYG{l+s+s1}{MPa}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{model}\PYG{o}{.}\PYG{n}{Esec\PYGZus{}mod}\PYG{p}{(}\PYG{n}{df\PYGZus{}1}\PYG{p}{,} \PYG{l+m+mf}{0.5}\PYG{p}{)}\PYG{p}{)}
+\PYG{c+c1}{\PYGZsh{} Variants of E average}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{Eavg between 50\PYGZhy{}60}\PYG{l+s+si}{\PYGZpc{}\PYGZpc{}}\PYG{l+s+s1}{: }\PYG{l+s+si}{\PYGZpc{}.2f}\PYG{l+s+s1}{MPa}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{model}\PYG{o}{.}\PYG{n}{Eavg\PYGZus{}mod}\PYG{p}{(}\PYG{n}{df\PYGZus{}1}\PYG{p}{,} \PYG{l+m+mf}{0.5}\PYG{p}{,} \PYG{l+m+mf}{0.6}\PYG{p}{)}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{)}
+\PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+s1}{Eavg between 20\PYGZhy{}70}\PYG{l+s+si}{\PYGZpc{}\PYGZpc{}}\PYG{l+s+s1}{ with linear best fit disabled: }\PYG{l+s+si}{\PYGZpc{}.2f}\PYG{l+s+s1}{MPa}\PYG{l+s+s1}{\PYGZsq{}} \PYG{o}{\PYGZpc{}} \PYG{n}{model}\PYG{o}{.}\PYG{n}{Eavg\PYGZus{}mod}\PYG{p}{(}\PYG{n}{df\PYGZus{}1}\PYG{p}{,} \PYG{l+m+mf}{0.2}\PYG{p}{,} \PYG{l+m+mf}{0.7}\PYG{p}{,} \PYG{n}{linear\PYGZus{}bestfit}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{)}
+\end{sphinxVerbatim}
+
+\sphinxAtStartPar
+Output:
+
+\begin{sphinxVerbatim}[commandchars=\\\{\}]
+\PYG{g+go}{   Etan at 50\PYGZpc{}: 51683.94MPa}
+\PYG{g+go}{   Etan at 50\PYGZpc{} with linear best fit disabled: 51639.22MPa}
+\PYG{g+go}{   Etan at 50\PYGZpc{} using strain gauge data: 50275.03MPa}
+\PYG{g+go}{   }
+\PYG{g+go}{   Esec at 70\PYGZpc{}: 51681.01MPa}
+\PYG{g+go}{   Esec at 50\PYGZpc{}: 51817.43MPa}
+\PYG{g+go}{   }
+\PYG{g+go}{   Eavg between 50\PYGZhy{}60\PYGZpc{}: 51594.49MPa}
+\PYG{g+go}{   Eavg between 20\PYGZhy{}70\PYGZpc{} with linear best fit disabled: 51660.62MPa}
 \end{sphinxVerbatim}
 \begin{itemize}
 \item {} 
@@ -154,7 +229,8 @@ Extract information of a particular cell based on a sequence of array names. Thi
 
 \end{itemize}
 
-\noindent{\hspace*{\fill}\sphinxincludegraphics[width=250\sphinxpxdimen]{{plot_point_over_time}.png}\hspace*{\fill}}
+\sphinxAtStartPar
+\sphinxincludegraphics{{plot_point_over_time}.png}
 \begin{itemize}
 \item {} 
 \sphinxAtStartPar
@@ -162,7 +238,8 @@ Extract information of a threshold dataset criteria based on a sequence of array
 
 \end{itemize}
 
-\noindent{\hspace*{\fill}\sphinxincludegraphics[width=250\sphinxpxdimen]{{temp_evolution}.png}\hspace*{\fill}}
+\sphinxAtStartPar
+\sphinxincludegraphics{{temp_evolution}.png}
 \begin{itemize}
 \item {} 
 \sphinxAtStartPar
@@ -170,7 +247,8 @@ Extract mesh information and plot rosette/polar plots. Limited to 2D.
 
 \end{itemize}
 
-\noindent{\hspace*{\fill}\sphinxincludegraphics[width=250\sphinxpxdimen]{{mesh_rose_diagram}.png}\hspace*{\fill}}
+\sphinxAtStartPar
+\sphinxincludegraphics{{mesh_rose_diagram}.png}
 \begin{itemize}
 \item {} 
 \sphinxAtStartPar

@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Welcome to FDEM Post-Processing's (pyfdempp) documentation!
-=====================================================
+===========================================================
 
 .. toctree::
    :maxdepth: 2

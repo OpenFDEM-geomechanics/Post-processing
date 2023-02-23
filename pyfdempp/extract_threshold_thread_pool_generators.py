@@ -34,7 +34,7 @@ def history_modelthreshold_func(f_name, model, thres_id, thres_array, array_need
     # Extract Data and convert to list and get value
 
     for i_array_needed in array_needed:
-        ts_values = openfdem_model_ts.threshold([thres_id, thres_id], model.var_data[thres_array]).get_array(model.var_data[i_array_needed]).tolist()
+        ts_values = openfdem_model_ts.threshold([thres_id, thres_id], model.var_data[_var_data][thres_array]).get_array(model.var_data[_var_data][i_array_needed]).tolist()
         dict_array[i_array_needed].append(ts_values)
 
     yield dict_array
@@ -75,6 +75,8 @@ def main(model, thresid, thresarray, arrayname, dataset_to_load='basic', progres
     #TODO:
     # load the correct dataset!
     f_names = model._basic_files
+    global _var_data
+    _var_data = dataset_to_load
     if dataset_to_load=='basic':
         f_names = model._basic_files
     elif dataset_to_load=='broken_joints':
@@ -86,11 +88,11 @@ def main(model, thresid, thresarray, arrayname, dataset_to_load='basic', progres
     # Load basic files in the concurrent Thread Pool
     for fname in f_names:
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            results = list(executor.map(history_modelthreshold_func, fname, repeat(model), [thresid], thresarray, arrayname, dataset_to_load))  # is self the list we are iterating over
+            results = list(executor.map(history_modelthreshold_func, fname, repeat(model), [thresid], thresarray, arrayname))  # is self the list we are iterating over
 
     # Iterate through the files in the defined function
     for idx, fname_iter in enumerate(f_names):
-        hist = history_modelthreshold_func(fname_iter, model, thresid, thresarray, arrayname, dataset_to_load)
+        hist = history_modelthreshold_func(fname_iter, model, thresid, thresarray, arrayname)
         if progress_bar:
             formatting_codes.print_progress(idx + 1, len(f_names), prefix='Progress:', suffix='Complete')
         hist.__next__()

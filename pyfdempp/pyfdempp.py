@@ -774,7 +774,7 @@ class Model:
                 ...
         """
 
-        if isinstance(node_df, pd.DataFrame):
+        if isinstance(node_df, pd.DataFrame) or isinstance(node_df, pd.Series):
             list_sum = np.array(node_df.to_numpy().tolist()).sum(axis=1).tolist()
             df_xyz = pandas.DataFrame(list_sum, columns=["sum_X", "sum_Y", "sum_Z"])
         elif type(node_df) is dict:
@@ -1807,6 +1807,62 @@ class Model:
         else:
             return packed_df
 
+    def slice_dataset(self, cell_inds, i_array_needed, progress_bar=True):
+        """
+
+        """
+        dict_array = {}
+
+        if type(i_array_needed) == list:
+            for i in i_array_needed:
+                dict_array[i] = []
+        else:
+            dict_array[i_array_needed] = []
+            arrayname = [i_array_needed]
+
+        data_source = self._basic_files
+        for idx, i in enumerate(self._basic_files):
+            open_fdem_ts = pv.read(i)
+            cracks_in_ts = open_fdem_ts.extract_cells(np.array(cell_inds))
+            ts_values = cracks_in_ts.get_array(i_array_needed)
+            dict_array[i_array_needed].append(ts_values)
+
+        return dict_array
+
+    def clip_data(self, progress_bar=True):
+        """
+
+        """
+
+        data_source = self._basic_files
+        aa = [75239,
+         75239,
+         84137,
+         84137,
+         76906,
+         76906,
+         72064,
+         72064,
+         72064,
+         75443,
+         75443,
+         75443,
+         64398,
+         64398,
+         66018,
+         66017,
+         66017,
+         58864,
+         58864,
+         90125,
+         74614,
+         74614,]
+        for idx, i in enumerate(self._basic_files):
+            open_fdem_ts = pv.read(i)
+            cracks_in_ts = open_fdem_ts.clip_surface()
+            print(cracks_in_ts)
+            # ax = cracks_in_ts.get_array('force')
+            # print(ax)
     # def magnitude_histogram(self):
 
     # def magnitude_histogram(self):
