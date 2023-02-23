@@ -16,11 +16,11 @@ setuptools.setup(
     url="https://openfdem.com/",
     packages=setuptools.find_packages(),
     python_requires='>=3.5',
-    version=0.1,
+    version=0.2,
     install_requires=[
         "pandas>=0.0",
         "numpy>=1.0",
-        "pyvista>=0.20",
+        "pyvista>=0.35",
         "joblib",
         "tqdm"
     ]
