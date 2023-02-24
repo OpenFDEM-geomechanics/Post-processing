@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyfdempp - An FDEM Visualiser Post-Processing Package &mdash; FDEM Post-Processing 0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pyfdempp" href="modules.html" />
+    <link rel="prev" title="Welcome to FDEM Post-Processing’s (pyfdempp) documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> FDEM Post-Processing
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pyfdempp - An FDEM Visualiser Post-Processing Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#about">About</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#functionality">Functionality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#additional-support">Additional Support</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">pyfdempp</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">FDEM Post-Processing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">pyfdempp - An FDEM Visualiser Post-Processing Package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/postprocessing_intro.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pyfdempp-an-fdem-visualiser-post-processing-package">
+<h1>pyfdempp - An FDEM Visualiser Post-Processing Package<a class="headerlink" href="#pyfdempp-an-fdem-visualiser-post-processing-package" title="Permalink to this heading"></a></h1>
+<p><img alt="" src="_images/python_version_logo.png" />
+<img alt="" src="_images/pypi_install.png" /></p>
+<section id="about">
+<h2>About<a class="headerlink" href="#about" title="Permalink to this heading"></a></h2>
+<p>This Python package performs transformations on hybrid finite-discrete element method (FDEM) models with an unstructured grid in vtk/vtu/vtp format. It currently supports arrays of simulation files from the FDEM solvers:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.geomechanica.com/software/">Geomechanica’s Irazu software</a>,</p></li>
+<li><p><a class="reference external" href="https://geogroup.utoronto.ca/software/">Y-Geo</a> (and its common derivatives), as well as</p></li>
+<li><p><a class="reference external" href="https://openfdem.com/html/index.html">OpenFDEM</a>.</p></li>
+</ul>
+<p>The package is heavily dependent on <code class="docutils literal notranslate"><span class="pre">pyvista</span></code> and is limited to <code class="docutils literal notranslate"><span class="pre">Python</span> <span class="pre">&gt;=3.5</span></code>. The package is maintained by the <a class="reference external" href="https://geogroup.utoronto.ca/">Grasselli’s Geomechanics Group</a> at the University of Toronto, Canada, and is part of a collaborative effort by the open-source pacakge <a class="reference external" href="https://openfdem.com/html/index.html">OpenFDEM</a>.</p>
+</section>
+<section id="functionality">
+<h2>Functionality<a class="headerlink" href="#functionality" title="Permalink to this heading"></a></h2>
+<p>The functionality of this script was developed with the objective of extracting common information needed when running simulations. Highlights of the script are:</p>
+<ul class="simple">
+<li><p>Get model information.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyfdempp</span> <span class="k">as</span> <span class="nn">fd</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">fd</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="s2">&quot;abs_model_path_on_machine&quot;</span><span class="p">)</span>
+<span class="c1"># Getting number of points in your model.</span>
+<span class="n">model</span><span class="o">.</span><span class="n">n_points</span>
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">11904</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Extract information within the FDEM Model based on the name of the array (e.g., Stress, Strain, Temperature, etc…) Works in 2D and 3D.</p></li>
+<li><p>Extract stress-strain information for UCS and BD Simulations (Works in 2D and 3D). Optional addition of virtual strain gauges (Limited to 2D).</p></li>
+</ul>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyfdempp</span> <span class="k">as</span> <span class="nn">fd</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">fd</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="s2">&quot;abs_model_path_on_machine&quot;</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">complete_stress_strain</span><span class="p">(</span><span class="n">progress_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Script Identifying Platen</span>
+<span class="go">   Platen Material ID found as [1]</span>
+<span class="go">   Progress: |//////////////////////////////////////////////////| 100.0% Complete</span>
+<span class="go">   1.51 seconds</span>
+<span class="go">     Platen Stress  Platen Strain</span>
+<span class="go"> 0    0.000000e+00       0.000000</span>
+<span class="go"> 1    4.825237e+00       0.009259</span>
+<span class="go"> 2    9.628823e+00       0.018519</span>
+<span class="go"> 3    1.441437e+01       0.027778</span>
+<span class="go"> 4    1.919164e+01       0.037037</span>
+<span class="go"> ..            ...            ...</span>
+<span class="go"> 57   2.036137e-30       0.240741</span>
+<span class="go"> 58   2.036137e-30       0.250000</span>
+<span class="go"> 59   2.036137e-30       0.259259</span>
+<span class="go"> 60   2.036137e-30       0.268519</span>
+<span class="go"> 61   2.036137e-30       0.277778</span>
+<span class="go"> </span>
+<span class="go"> [62 rows x 2 columns]</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Plotting stress vs strain curve.
+<img alt="Complete stress-strain curve." src="_images/stress_strain.png" /></p></li>
+<li><p>Calculate the Elastic Modulus of the dataset. Eavg, Esec and Etan can be evaluated. Works in 2D and 3D.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyfdempp</span> <span class="k">as</span> <span class="nn">fd</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">fd</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="s2">&quot;abs_model_path_on_machine&quot;</span><span class="p">)</span>
+<span class="n">df_1</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">complete_UCS_stress_strain</span><span class="p">(</span><span class="n">st_status</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Variants of E tangent</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Etan at 50</span><span class="si">%%</span><span class="s1">: </span><span class="si">%.2f</span><span class="s1">MPa&#39;</span> <span class="o">%</span> <span class="n">model</span><span class="o">.</span><span class="n">Etan50_mod</span><span class="p">(</span><span class="n">df_1</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Etan at 50</span><span class="si">%%</span><span class="s1"> with linear best fit disabled: </span><span class="si">%.2f</span><span class="s1">MPa&#39;</span> <span class="o">%</span> <span class="n">model</span><span class="o">.</span><span class="n">Etan50_mod</span><span class="p">(</span><span class="n">df_1</span><span class="p">,</span> <span class="n">linear_bestfit</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Etan at 50</span><span class="si">%%</span><span class="s1"> using strain gauge data: </span><span class="si">%.2f</span><span class="s1">MPa&#39;</span> <span class="o">%</span> <span class="n">model</span><span class="o">.</span><span class="n">Etan50_mod</span><span class="p">(</span><span class="n">df_1</span><span class="p">,</span> <span class="n">loc_strain</span><span class="o">=</span><span class="s1">&#39;Gauge Displacement Y&#39;</span><span class="p">,</span> <span class="n">plusminus_range</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="c1"># Variants of E secant</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Esec at 70</span><span class="si">%%</span><span class="s1">: </span><span class="si">%.2f</span><span class="s1">MPa&#39;</span> <span class="o">%</span> <span class="n">model</span><span class="o">.</span><span class="n">Esec_mod</span><span class="p">(</span><span class="n">df_1</span><span class="p">,</span> <span class="mi">70</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Esec at 50</span><span class="si">%%</span><span class="s1">: </span><span class="si">%.2f</span><span class="s1">MPa&#39;</span> <span class="o">%</span> <span class="n">model</span><span class="o">.</span><span class="n">Esec_mod</span><span class="p">(</span><span class="n">df_1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+<span class="c1"># Variants of E average</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Eavg between 50-60</span><span class="si">%%</span><span class="s1">: </span><span class="si">%.2f</span><span class="s1">MPa&#39;</span> <span class="o">%</span> <span class="n">model</span><span class="o">.</span><span class="n">Eavg_mod</span><span class="p">(</span><span class="n">df_1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Eavg between 20-70</span><span class="si">%%</span><span class="s1"> with linear best fit disabled: </span><span class="si">%.2f</span><span class="s1">MPa&#39;</span> <span class="o">%</span> <span class="n">model</span><span class="o">.</span><span class="n">Eavg_mod</span><span class="p">(</span><span class="n">df_1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="n">linear_bestfit</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">   Etan at 50%: 51683.94MPa</span>
+<span class="go">   Etan at 50% with linear best fit disabled: 51639.22MPa</span>
+<span class="go">   Etan at 50% using strain gauge data: 50275.03MPa</span>
+<span class="go">   </span>
+<span class="go">   Esec at 70%: 51681.01MPa</span>
+<span class="go">   Esec at 50%: 51817.43MPa</span>
+<span class="go">   </span>
+<span class="go">   Eavg between 50-60%: 51594.49MPa</span>
+<span class="go">   Eavg between 20-70% with linear best fit disabled: 51660.62MPa</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Extract information of a particular cell based on a sequence of array names. This can be extended to extracting information along a line. Works in 2D and 3D.</p></li>
+</ul>
+<p><img alt="Plot point values over time." src="_images/plot_point_over_time.png" /></p>
+<ul class="simple">
+<li><p>Extract information of a threshold dataset criteria based on a sequence of array names. Works in 2D and 3D.</p></li>
+</ul>
+<p><img alt="Temperature evolution over time." src="_images/temp_evolution.png" /></p>
+<ul class="simple">
+<li><p>Extract mesh information and plot rosette/polar plots. Limited to 2D.</p></li>
+</ul>
+<p><img alt="Rose diagram of mesh at TS2." src="_images/mesh_rose_diagram.png" /></p>
+<ul class="simple">
+<li><p>Automatic detection/ User-defined assigment of loading direction when analysing mechanical simulations, namely UCS, BD, and PLT, in both 2D and 3D simulations.</p></li>
+</ul>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Script Identifying Platen</span>
+<span class="go">	Platen Material ID found as [1]</span>
+<span class="go">	3D Loading direction detected as [1] is Y-direction</span>
+<span class="go">Values used in calculations are</span>
+<span class="go">	Area	3721.00</span>
+<span class="go">	Length	122.00</span>
+<span class="go">Progress: |//////////////////////////////////////////////////| 100.0% Complete</span>
+</pre></div>
+</div>
+</section>
+<section id="additional-support">
+<h2>Additional Support<a class="headerlink" href="#additional-support" title="Permalink to this heading"></a></h2>
+<p>Please refer to the user manual for detailed information pertaining to the various functions and their usage/arguments. For specific script requests and bug, please report them on our <a class="reference external" href="https://github.com/OpenFDEM">github page</a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to FDEM Post-Processing’s (pyfdempp) documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="modules.html" class="btn btn-neutral float-right" title="pyfdempp" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright OpenFDEM 2022.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
