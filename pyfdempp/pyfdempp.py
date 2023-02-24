@@ -943,7 +943,7 @@ class Model:
 
         return complete_UCS_thread_pool_generators.main(self, platen_id, st_status, axis_of_loading, gauge_width, gauge_length, c_center, samp_A, samp_L, progress_bar)
 
-    def complete_BD_stress_strain(self, st_status=False, gauge_width=0, gauge_length=0, c_center=None, progress_bar=True):
+    def complete_BD_stress_strain(self, platen_id=None, st_status=False, axis_of_loading=None, gauge_width=0, gauge_length=0, c_center=None, user_samp_A=None, user_samp_L=None, progress_bar=True):
         """
         Calculate the full stress-strain curve for an indirect tensile simulation.
 
@@ -965,7 +965,7 @@ class Model:
             >>> import pyfdempp as fdem
             >>> data = fdem.Model("/external/Speed_Cal_Using_Flowstone/BD/BD_c_17_5_ts_2_55_GII_90000_v_0_6")
             # full stress-strain without SG
-            >>> df_wo_SG = data.complete_BD_stress_strain(False)
+            >>> df_wo_SG = data.complete_BD_stress_strain(st_status=False)
             Columns:
                 Name: Platen Stress, dtype=float64, nullable: False
                 Name: Platen Strain, dtype=float64, nullable: False
@@ -973,7 +973,7 @@ class Model:
                 Platen Material ID found as [1]
             Progress: |//////////////////////////////////////////////////| 100.0% Complete
             # full stress-strain with SG and default dimensions
-            >>> df_Def_SG = data.complete_BD_stress_strain(True)
+            >>> df_Def_SG = data.complete_BD_stress_strain(st_status=True)
             Columns:
                 Name: Platen Stress, dtype=float64, nullable: False
                 Name: Platen Strain, dtype=float64, nullable: False
@@ -990,7 +990,7 @@ class Model:
                 cover cells ID [4635, 3644, 2872, 7481]
             Progress: |//////////////////////////////////////////////////| 100.0% Complete
             # full stress-strain with SG and user-defined dimensions
-            >>> df_userdf_SG = data.complete_BD_stress_strain(True, 10, 10)
+            >>> df_userdf_SG = data.complete_BD_stress_strain(st_status=True, gauge_width=10, gauge_length=10)
             Columns:
                 Name: Platen Stress, dtype=float64, nullable: False
                 Name: Platen Strain, dtype=float64, nullable: False
@@ -1013,7 +1013,7 @@ class Model:
         except ImportError:
             import complete_BD_thread_pool_generators
 
-        return complete_BD_thread_pool_generators.main(self, st_status, gauge_width, gauge_length, c_center, progress_bar)
+        return complete_BD_thread_pool_generators.main(self, platen_id, st_status, axis_of_loading, gauge_width, gauge_length, c_center, user_samp_A, user_samp_L, progress_bar)
 
     def complete_PLT_stress_strain(self, load_config, platen_id=None, axis_of_loading=None, De_squared=None, progress_bar=True):
         """

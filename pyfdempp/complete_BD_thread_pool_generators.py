@@ -1,5 +1,6 @@
 import concurrent.futures
 import time
+import math
 from itertools import repeat
 
 import pandas as pd
@@ -10,8 +11,35 @@ try:
 except ImportError:
     import formatting_codes
 
+loading_dir_dict = {0: "X", 1: "Y", 2: "Z"}
 
-def history_strain_func(f_name, model, cv, ch):
+def check_loading_direction(model, f1, f2):
+
+    openfdem_model_ts_init = pv.read(f1)
+    openfdem_model_ts_final = pv.read(f2)
+
+    '''STRESS-STRAIN PLATENS'''
+
+    platen = (openfdem_model_ts_init.threshold([model.platen_cells_elem_id, model.platen_cells_elem_id],
+                                          model.var_data['basic']["mineral_type"]))
+    top, bottom = (platen.get_data_range(model.var_data['basic']["boundary"]))
+
+    disp_init = model.platen_info(openfdem_model_ts_init, top, model.var_data['basic']["platen_displacement"])
+    disp_final = model.platen_info(openfdem_model_ts_final, top, model.var_data['basic']["platen_displacement"])
+
+    avg_platen_init = [0.0, 0.0, 0.0] # Dummy cell
+    avg_platen_final = [0.0, 0.0, 0.0] # Dummy cell
+
+    for i in range(0, 3):
+        # Convert forces from microN to kN and get the average forces
+        avg_platen_init[i] = abs(disp_init[i])
+        avg_platen_final[i] = abs(disp_final[i])
+
+    diff_loading = [abs(avg_platen_final[i] - avg_platen_init[i]) for i in range(0, 3)]
+
+    return diff_loading.index(max(diff_loading))
+
+def history_strain_func(f_name, model, cv, ch, axis):
     """
     Calculate the axial stress from platens, axial strain from platens and SG as well as lateral strain from SG
 
@@ -44,7 +72,8 @@ def history_strain_func(f_name, model, cv, ch):
 
     avg_platen_disp = [0.0, 0.0, 0.0]  # Dummy cell
     avg_platen_force = [0.0, 0.0, 0.0]  # Dummy cell
-    axis_of_loading = 1  # Axis of loading in Y direction.
+    load_axis = axis[0]
+    #axis_of_loading = 1  # Axis of loading in Y direction.
 
     for i in range(0, model.number_of_points_per_cell):
         # Convert forces from microN to kN and get the average forces
@@ -52,13 +81,12 @@ def history_strain_func(f_name, model, cv, ch):
         avg_platen_disp[i] = abs(avg_top_platen_disp[i]) + abs(avg_bottom_platen_disp[i])
 
     # stress in MPa (force in kN & area in mm^2)
-    # BD Force = 2P/A ; A = pi * d^2 /2 ; d = diameter = sample width in 2D
-    area = 3.142 * model.sample_width * model.sample_width / 4.0
-    stress_from_platen = 2.0 * avg_platen_force[axis_of_loading] / area * 1.0e3
+    area = 3.142 * samp_A * samp_L
+    stress_from_platen = ((2.0 * avg_platen_force[load_axis]) / (area) ) * 1.0e3
     history_stress.append(stress_from_platen)
 
     # Calculate strains in percentage (%)
-    strain_from_platen = avg_platen_disp[axis_of_loading] / model.sample_height * 100.0
+    strain_from_platen = avg_platen_disp[load_axis] / samp_L * 100.0
     history_strain.append(strain_from_platen)
 
     '''STRAIN GAUGE ANALYSIS'''
@@ -128,7 +156,7 @@ def set_strain_gauge(model, gauge_length=None, gauge_width=None, c_center=None):
     else:
         x_cor, y_cor, z_cor = model.rock_model.center
 
-    # Points the constitute the SG
+    # Points that constitute the SG
     pv.append([x_cor + gauge_width / 2.0,
                y_cor - gauge_length / 2.0,
                0.0])
@@ -177,7 +205,9 @@ def set_strain_gauge(model, gauge_length=None, gauge_width=None, c_center=None):
     return ch, cv, gauge_width, gauge_length
 
 
-def main(model, st_status, gauge_width, gauge_length, c_center, progress_bar=False):
+# def main(model, st_status, gauge_width, gauge_length, c_center, progress_bar=False):
+def main(model, platen_id, st_status, axis_of_loading, gauge_width, gauge_length, c_center, user_samp_A=None,
+         user_samp_L=None, progress_bar=False):
     """
     Main concurrent Thread Pool to calculate the full stress-strain
 
@@ -211,16 +241,68 @@ def main(model, st_status, gauge_width, gauge_length, c_center, progress_bar=Fal
     f_names = model._basic_files
 
     # Get rock dimension.
-    model.rock_sample_dimensions()
+    x_dim, y_dim, z_dim, md_extent = model.rock_sample_dimensions(platen_id)
+    dim_list = [x_dim, y_dim, z_dim]
 
     # Check BD Simulation
-    if model.simulation_type() != "BD Simulation":
-        print("Simulation appears to be not for indirect tensile strength")
-        exit("Simulation appears to be not for indirect tensile strength")
+    if axis_of_loading and model.simulation_type() != "BD Simulation":
+        print("\tPredefined user-defined loading axis [%s] is %s-direction" % (axis_of_loading, loading_dir_dict[axis_of_loading]))
+        axis_of_loading = [axis_of_loading]
+        z_dim = 1
+        print("Simulation appears to be not for indirect tensile strength\nResults maybe incorrect")
+    elif not axis_of_loading and model.simulation_type() != "BD Simulation":
+        raise ("Simulation appears to be not for indirect tensile strength")
+    elif model.number_of_points_per_cell != 3 and axis_of_loading is None:
+        axis_of_loading = [check_loading_direction(model, f_names[0], f_names[-1])]
+        print("\t3D Loading direction detected as [%s] is %s-direction" % (axis_of_loading[0], loading_dir_dict[axis_of_loading[0]]))
+    else:
+        print("\tPredefined loading Axis [1] is Y-direction")
+        axis_of_loading = [1]
 
+    # Determine A and L for Stress and Strain.
+    global samp_A, samp_L
+    # Sample length is the dimension in the direction of loading
+    if user_samp_L is None:
+        samp_L = dim_list[axis_of_loading[0]]
+    else:
+        samp_L = user_samp_L
+    # del that dimension and keep the remaining ones.
+    del dim_list[axis_of_loading[0]]
+    temp_dim = dim_list
+
+
+    # If 2D - the reduced list will be 0 and the width. Get width.
+    if user_samp_A is None:
+        if model.number_of_points_per_cell == 3:
+            samp_A = 1
+        # If 3D - locate [x, y, z] at the corner of the model.
+        else:
+            x_extent, y_extent, z_extent = md_extent[0:2], md_extent[2:4], md_extent[4:6]
+            model_extent = [x_extent, y_extent, z_extent]
+            f_cell_coord = []
+            for idx in range(0, len(model_extent)):
+                if idx == axis_of_loading[0]:
+                    f_cell_coord.append(0)
+                else:
+                    f_cell_coord.append(model_extent[idx][0])
+            # Check location. If -1 [IndexError] then circle, else square.
+            try:
+                model.find_cell(f_cell_coord)
+                samp_A = math.prod(temp_dim)
+            except IndexError:
+                if temp_dim[0] == temp_dim[1]:
+                    samp_A = 3.142 * temp_dim[0] * temp_dim[0] / 4
+    else:
+        samp_A = user_samp_A
+
+    print("Values used in calculations are\n\tDiameter\t%0.2f\n\tThickness\t%0.2f" % (samp_L, samp_A))
 
     # Initialise the Strain Gauges
-    if st_status:  # Enabled SG st_status == True
+    if model.number_of_points_per_cell != 3 and st_status:
+        print(formatting_codes.red_text('Strain Gauges not supported in 3D\nWill not process the strain gauges'))
+        cv, ch, gauge_width, gauge_length = [], [], 0, 0
+        st_status = False
+    elif st_status and model.number_of_points_per_cell == 3:  # Enabled SG st_status == True and 2D Simulation
         cv, ch, gauge_width, gauge_length = set_strain_gauge(model, gauge_width, gauge_length, c_center)
     else:
         cv, ch, gauge_width, gauge_length = [], [], 0, 0
@@ -228,11 +310,11 @@ def main(model, st_status, gauge_width, gauge_length, c_center, progress_bar=Fal
     # Load basic files in the concurrent Thread Pool
     for fname in f_names:
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            results = list(executor.map(history_strain_func, f_names, repeat(model), cv, ch))  # is self the list we are iterating over
+            results = list(executor.map(history_strain_func, f_names, repeat(model), cv, ch, axis_of_loading))  # is self the list we are iterating over
 
     # Iterate through the files in the defined function
     for idx, fname_iter in enumerate(f_names):
-        hist = history_strain_func(fname_iter, model, cv, ch)
+        hist = history_strain_func(fname_iter, model, cv, ch, axis_of_loading)
         if progress_bar:
             formatting_codes.print_progress(idx + 1, len(f_names), prefix='Progress:', suffix='Complete')
         hist.__next__()

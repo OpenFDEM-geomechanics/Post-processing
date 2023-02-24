@@ -249,7 +249,7 @@ def main(model, platen_id, st_status, axis_of_loading, gauge_width, gauge_length
     dim_list = [x_dim, y_dim, z_dim]
 
     # Check UCS Simulation
-    print("Sim", model.simulation_type())
+    # print("Sim", model.simulation_type())
     # if model.simulation_type() != "UCS Simulation":
     #     # print("Simulation appears to be not for compressive strength")
     #     raise ("Simulation appears to be not for compressive strength")
