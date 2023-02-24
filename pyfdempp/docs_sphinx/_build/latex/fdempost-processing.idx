@@ -1,0 +1,75 @@
+\indexentry{module@\spxentry{module}!pyfdempp.pyfdempp@\spxentry{pyfdempp.pyfdempp}|hyperpage}{7}
+\indexentry{pyfdempp.pyfdempp@\spxentry{pyfdempp.pyfdempp}!module@\spxentry{module}|hyperpage}{7}
+\indexentry{Model (class in pyfdempp.pyfdempp)@\spxentry{Model}\spxextra{class in pyfdempp.pyfdempp}|hyperpage}{7}
+\indexentry{Eavg\_mod() (pyfdempp.pyfdempp.Model method)@\spxentry{Eavg\_mod()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{7}
+\indexentry{Esec\_mod() (pyfdempp.pyfdempp.Model method)@\spxentry{Esec\_mod()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{8}
+\indexentry{Etan50\_mod() (pyfdempp.pyfdempp.Model method)@\spxentry{Etan50\_mod()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{8}
+\indexentry{clip\_data() (pyfdempp.pyfdempp.Model method)@\spxentry{clip\_data()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{9}
+\indexentry{complete\_BD\_stress\_strain() (pyfdempp.pyfdempp.Model method)@\spxentry{complete\_BD\_stress\_strain()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{9}
+\indexentry{complete\_PLT\_stress\_strain() (pyfdempp.pyfdempp.Model method)@\spxentry{complete\_PLT\_stress\_strain()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{10}
+\indexentry{complete\_UCS\_stress\_strain() (pyfdempp.pyfdempp.Model method)@\spxentry{complete\_UCS\_stress\_strain()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{11}
+\indexentry{convert\_to\_xyz\_array() (pyfdempp.pyfdempp.Model method)@\spxentry{convert\_to\_xyz\_array()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{13}
+\indexentry{crack\_failure\_mode() (pyfdempp.pyfdempp.Model method)@\spxentry{crack\_failure\_mode()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{13}
+\indexentry{crack\_failure\_mode\_clustering() (pyfdempp.pyfdempp.Model method)@\spxentry{crack\_failure\_mode\_clustering()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{13}
+\indexentry{crack\_number() (pyfdempp.pyfdempp.Model method)@\spxentry{crack\_number()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{14}
+\indexentry{direct\_shear\_calculation() (pyfdempp.pyfdempp.Model method)@\spxentry{direct\_shear\_calculation()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{15}
+\indexentry{draw\_rose\_diagram() (pyfdempp.pyfdempp.Model method)@\spxentry{draw\_rose\_diagram()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{16}
+\indexentry{extract\_based\_coord() (pyfdempp.pyfdempp.Model method)@\spxentry{extract\_based\_coord()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{16}
+\indexentry{extract\_cell\_info() (pyfdempp.pyfdempp.Model method)@\spxentry{extract\_cell\_info()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{17}
+\indexentry{extract\_crack\_info() (pyfdempp.pyfdempp.Model method)@\spxentry{extract\_crack\_info()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{18}
+\indexentry{extract\_threshold\_info() (pyfdempp.pyfdempp.Model method)@\spxentry{extract\_threshold\_info()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{19}
+\indexentry{find\_cell() (pyfdempp.pyfdempp.Model method)@\spxentry{find\_cell()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{19}
+\indexentry{mesh\_geometry() (pyfdempp.pyfdempp.Model method)@\spxentry{mesh\_geometry()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{20}
+\indexentry{model\_dimensions() (pyfdempp.pyfdempp.Model method)@\spxentry{model\_dimensions()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{20}
+\indexentry{model\_domain() (pyfdempp.pyfdempp.Model method)@\spxentry{model\_domain()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{21}
+\indexentry{model\_vertices() (pyfdempp.pyfdempp.Model method)@\spxentry{model\_vertices()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{21}
+\indexentry{openfdem\_att\_check() (pyfdempp.pyfdempp.Model method)@\spxentry{openfdem\_att\_check()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{22}
+\indexentry{platen\_info() (pyfdempp.pyfdempp.Model method)@\spxentry{platen\_info()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{22}
+\indexentry{plot\_stress\_strain() (pyfdempp.pyfdempp.Model method)@\spxentry{plot\_stress\_strain()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{22}
+\indexentry{rock\_sample\_dimensions() (pyfdempp.pyfdempp.Model method)@\spxentry{rock\_sample\_dimensions()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{23}
+\indexentry{simulation\_type() (pyfdempp.pyfdempp.Model method)@\spxentry{simulation\_type()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{24}
+\indexentry{slice\_dataset() (pyfdempp.pyfdempp.Model method)@\spxentry{slice\_dataset()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{24}
+\indexentry{threshold\_bound\_check() (pyfdempp.pyfdempp.Model method)@\spxentry{threshold\_bound\_check()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{24}
+\indexentry{unpack\_DataFrame() (pyfdempp.pyfdempp.Model method)@\spxentry{unpack\_DataFrame()}\spxextra{pyfdempp.pyfdempp.Model method}|hyperpage}{25}
+\indexentry{Timestep (class in pyfdempp.pyfdempp)@\spxentry{Timestep}\spxextra{class in pyfdempp.pyfdempp}|hyperpage}{25}
+\indexentry{module@\spxentry{module}!pyfdempp.aggregate\_storage@\spxentry{pyfdempp.aggregate\_storage}|hyperpage}{25}
+\indexentry{pyfdempp.aggregate\_storage@\spxentry{pyfdempp.aggregate\_storage}!module@\spxentry{module}|hyperpage}{25}
+\indexentry{aggregate\_storage (class in pyfdempp.aggregate\_storage)@\spxentry{aggregate\_storage}\spxextra{class in pyfdempp.aggregate\_storage}|hyperpage}{25}
+\indexentry{file\_group\_key() (pyfdempp.aggregate\_storage.aggregate\_storage method)@\spxentry{file\_group\_key()}\spxextra{pyfdempp.aggregate\_storage.aggregate\_storage method}|hyperpage}{25}
+\indexentry{read\_file() (pyfdempp.aggregate\_storage.aggregate\_storage method)@\spxentry{read\_file()}\spxextra{pyfdempp.aggregate\_storage.aggregate\_storage method}|hyperpage}{25}
+\indexentry{store\_file() (pyfdempp.aggregate\_storage.aggregate\_storage method)@\spxentry{store\_file()}\spxextra{pyfdempp.aggregate\_storage.aggregate\_storage method}|hyperpage}{26}
+\indexentry{module@\spxentry{module}!pyfdempp.complete\_BD\_thread\_pool\_generators@\spxentry{pyfdempp.complete\_BD\_thread\_pool\_generators}|hyperpage}{26}
+\indexentry{pyfdempp.complete\_BD\_thread\_pool\_generators@\spxentry{pyfdempp.complete\_BD\_thread\_pool\_generators}!module@\spxentry{module}|hyperpage}{26}
+\indexentry{check\_loading\_direction() (in module pyfdempp.complete\_BD\_thread\_pool\_generators)@\spxentry{check\_loading\_direction()}\spxextra{in module pyfdempp.complete\_BD\_thread\_pool\_generators}|hyperpage}{26}
+\indexentry{history\_strain\_func() (in module pyfdempp.complete\_BD\_thread\_pool\_generators)@\spxentry{history\_strain\_func()}\spxextra{in module pyfdempp.complete\_BD\_thread\_pool\_generators}|hyperpage}{26}
+\indexentry{main() (in module pyfdempp.complete\_BD\_thread\_pool\_generators)@\spxentry{main()}\spxextra{in module pyfdempp.complete\_BD\_thread\_pool\_generators}|hyperpage}{26}
+\indexentry{set\_strain\_gauge() (in module pyfdempp.complete\_BD\_thread\_pool\_generators)@\spxentry{set\_strain\_gauge()}\spxextra{in module pyfdempp.complete\_BD\_thread\_pool\_generators}|hyperpage}{27}
+\indexentry{module@\spxentry{module}!pyfdempp.complete\_UCS\_thread\_pool\_generators@\spxentry{pyfdempp.complete\_UCS\_thread\_pool\_generators}|hyperpage}{27}
+\indexentry{pyfdempp.complete\_UCS\_thread\_pool\_generators@\spxentry{pyfdempp.complete\_UCS\_thread\_pool\_generators}!module@\spxentry{module}|hyperpage}{27}
+\indexentry{check\_loading\_direction() (in module pyfdempp.complete\_UCS\_thread\_pool\_generators)@\spxentry{check\_loading\_direction()}\spxextra{in module pyfdempp.complete\_UCS\_thread\_pool\_generators}|hyperpage}{27}
+\indexentry{history\_strain\_func() (in module pyfdempp.complete\_UCS\_thread\_pool\_generators)@\spxentry{history\_strain\_func()}\spxextra{in module pyfdempp.complete\_UCS\_thread\_pool\_generators}|hyperpage}{27}
+\indexentry{main() (in module pyfdempp.complete\_UCS\_thread\_pool\_generators)@\spxentry{main()}\spxextra{in module pyfdempp.complete\_UCS\_thread\_pool\_generators}|hyperpage}{27}
+\indexentry{set\_strain\_gauge() (in module pyfdempp.complete\_UCS\_thread\_pool\_generators)@\spxentry{set\_strain\_gauge()}\spxextra{in module pyfdempp.complete\_UCS\_thread\_pool\_generators}|hyperpage}{28}
+\indexentry{module@\spxentry{module}!pyfdempp.extract\_cell\_thread\_pool\_generators@\spxentry{pyfdempp.extract\_cell\_thread\_pool\_generators}|hyperpage}{28}
+\indexentry{pyfdempp.extract\_cell\_thread\_pool\_generators@\spxentry{pyfdempp.extract\_cell\_thread\_pool\_generators}!module@\spxentry{module}|hyperpage}{28}
+\indexentry{history\_cellinfo\_func() (in module pyfdempp.extract\_cell\_thread\_pool\_generators)@\spxentry{history\_cellinfo\_func()}\spxextra{in module pyfdempp.extract\_cell\_thread\_pool\_generators}|hyperpage}{28}
+\indexentry{main() (in module pyfdempp.extract\_cell\_thread\_pool\_generators)@\spxentry{main()}\spxextra{in module pyfdempp.extract\_cell\_thread\_pool\_generators}|hyperpage}{29}
+\indexentry{module@\spxentry{module}!pyfdempp.formatting\_codes@\spxentry{pyfdempp.formatting\_codes}|hyperpage}{29}
+\indexentry{pyfdempp.formatting\_codes@\spxentry{pyfdempp.formatting\_codes}!module@\spxentry{module}|hyperpage}{29}
+\indexentry{bold\_text() (in module pyfdempp.formatting\_codes)@\spxentry{bold\_text()}\spxextra{in module pyfdempp.formatting\_codes}|hyperpage}{29}
+\indexentry{calc\_timer\_values() (in module pyfdempp.formatting\_codes)@\spxentry{calc\_timer\_values()}\spxextra{in module pyfdempp.formatting\_codes}|hyperpage}{29}
+\indexentry{docstring\_creator() (in module pyfdempp.formatting\_codes)@\spxentry{docstring\_creator()}\spxextra{in module pyfdempp.formatting\_codes}|hyperpage}{29}
+\indexentry{green\_text() (in module pyfdempp.formatting\_codes)@\spxentry{green\_text()}\spxextra{in module pyfdempp.formatting\_codes}|hyperpage}{30}
+\indexentry{print\_progress() (in module pyfdempp.formatting\_codes)@\spxentry{print\_progress()}\spxextra{in module pyfdempp.formatting\_codes}|hyperpage}{30}
+\indexentry{red\_text() (in module pyfdempp.formatting\_codes)@\spxentry{red\_text()}\spxextra{in module pyfdempp.formatting\_codes}|hyperpage}{30}
+\indexentry{module@\spxentry{module}!pyfdempp.model\_reader@\spxentry{pyfdempp.model\_reader}|hyperpage}{30}
+\indexentry{pyfdempp.model\_reader@\spxentry{pyfdempp.model\_reader}!module@\spxentry{module}|hyperpage}{30}
+\indexentry{mp\_read() (in module pyfdempp.model\_reader)@\spxentry{mp\_read()}\spxextra{in module pyfdempp.model\_reader}|hyperpage}{30}
+\indexentry{multiprocess\_async() (in module pyfdempp.model\_reader)@\spxentry{multiprocess\_async()}\spxextra{in module pyfdempp.model\_reader}|hyperpage}{30}
+\indexentry{multiprocess\_lib\_read() (in module pyfdempp.model\_reader)@\spxentry{multiprocess\_lib\_read()}\spxextra{in module pyfdempp.model\_reader}|hyperpage}{30}
+\indexentry{normal\_read() (in module pyfdempp.model\_reader)@\spxentry{normal\_read()}\spxextra{in module pyfdempp.model\_reader}|hyperpage}{30}
+\indexentry{pv\_read() (in module pyfdempp.model\_reader)@\spxentry{pv\_read()}\spxextra{in module pyfdempp.model\_reader}|hyperpage}{30}
+\indexentry{pv\_read\_queue() (in module pyfdempp.model\_reader)@\spxentry{pv\_read\_queue()}\spxextra{in module pyfdempp.model\_reader}|hyperpage}{30}
+\indexentry{timed() (in module pyfdempp.model\_reader)@\spxentry{timed()}\spxextra{in module pyfdempp.model\_reader}|hyperpage}{31}
+\indexentry{module@\spxentry{module}!pyfdempp@\spxentry{pyfdempp}|hyperpage}{31}
+\indexentry{pyfdempp@\spxentry{pyfdempp}!module@\spxentry{module}|hyperpage}{31}

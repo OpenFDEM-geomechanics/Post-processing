@@ -3,12 +3,12 @@ OpenFDEM post-processing is uploaded to testpypi for simpler user download, whic
 
 The current .whl distribution is found at: 
 
-- [About.md] (About.md) has the main description of the wheel file 
+- [./pyfdempp/README.md] (About.md) has the main description of the wheel file 
 - [setup.py] (setup.py) contains package build information, links, dependencies
 
 To recreate the wheel using the setup file, use the following two terminal commands:
 
-- `python setup.py bdist_wheel --universal`
+- `python3 setup.py bdist_wheel --universal`
 
 To push the wheel to TestPyPi, use `twine`:
 

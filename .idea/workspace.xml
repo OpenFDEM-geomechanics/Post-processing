@@ -7,35 +7,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="37700c31-0cd6-4add-9b6f-b066e40d9550" name="Default Changelist" comment="Added Sphinx documentation into post-processing repository">
-      <change afterPath="$PROJECT_DIR$/About.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/OpenFDEM-Post-Processing.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/OpenFDEM-Post-Processing.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+    <list default="true" id="37700c31-0cd6-4add-9b6f-b066e40d9550" name="Default Changelist" comment="Fixed BD bug. Calculations now provide the indirect tensile strength. Also supports BD in 3D.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/openfdem/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/openfdem/aa_test_fdem.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/openfdem/aggregate_storage.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/openfdem/complete_BD_thread_pool_generators.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/openfdem/complete_PLT_thread_pool_generators.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/openfdem/complete_UCS_thread_pool_generators.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/openfdem/direct_shear_thread_pool_generators.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/openfdem/extract_cell_thread_pool_generators.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/openfdem/extract_threshold_thread_pool_generators.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/openfdem/formatting_codes.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/openfdem/model_reader.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/openfdem/openfdem.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/openfdem/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/openfdem/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wheel_setup/About.md" beforeDir="false" afterPath="$PROJECT_DIR$/wheel_setup/About.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wheel_setup/dist/fdem_visualizer-1.0-py2.py3-none-any.whl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/wheel_setup/fdem_visualizer.egg-info/PKG-INFO" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/wheel_setup/fdem_visualizer.egg-info/SOURCES.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/wheel_setup/fdem_visualizer.egg-info/dependency_links.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/wheel_setup/fdem_visualizer.egg-info/requires.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/wheel_setup/fdem_visualizer.egg-info/top_level.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/wheel_setup/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/wheel_setup/setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/complete_BD_thread_pool_generators.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/complete_BD_thread_pool_generators.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/doctrees/Readme.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/doctrees/Readme.doctree" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/doctrees/environment.pickle" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/doctrees/environment.pickle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/doctrees/pyfdempp.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/doctrees/pyfdempp.doctree" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.aux" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.aux" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.fdb_latexmk" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.fdb_latexmk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.fls" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.fls" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.idx" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.idx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.ilg" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.ilg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.ind" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.ind" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.log" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.out" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.tex" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.tex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.toc" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.toc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/conf.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/conf.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/pyfdempp.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/pyfdempp.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,6 +66,10 @@
               <option name="branches">
                 <list>
                   <RecentBranch>
+                    <option name="branchName" value="202212_pypi_Production" />
+                    <option name="lastUsedInstant" value="1670521842" />
+                  </RecentBranch>
+                  <RecentBranch>
                     <option name="branchName" value="master" />
                     <option name="lastUsedInstant" value="1670372959" />
                   </RecentBranch>
@@ -101,32 +95,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/hdd/home/aly/Desktop/Dropbox/Python_Codes/OpenFDEM-Post-Processing",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/hdd/home/aly/Desktop/Dropbox/Python_Codes/OpenFDEM-Post-Processing/pyfdempp/docs_sphinx/images&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "Python"
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;Python&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/pyfdempp/docs_sphinx/images" />
       <recent name="$PROJECT_DIR$/openfdem" />
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/example_outputs/OpenFDEM_BD" />
       <recent name="$PROJECT_DIR$/openfdem/docs_sphinx" />
-      <recent name="$PROJECT_DIR$/openfdem/docs_sphinx/images" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/openfdem/docs_sphinx" />
@@ -136,8 +131,8 @@
       <recent name="$PROJECT_DIR$/sphinx-intro-tutorial/docs" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.scratch_24">
-    <configuration name="AA_tests" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python.scratch_36">
+    <configuration name="AP_Crack_count" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="OpenFDEM-Post-Processing" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -145,12 +140,34 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/openfdem/tests" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/pyfdempp/tests" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/openfdem/tests/AA_tests.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pyfdempp/tests/AP_Crack_count.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="complete_BD_thread_pool_generators" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="OpenFDEM-Post-Processing" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/pyfdempp" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pyfdempp/complete_BD_thread_pool_generators.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -159,7 +176,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="extract_thread_pool_generators" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="scratch_26" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="OpenFDEM-Post-Processing" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -167,12 +184,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/openfdem" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="WORKING_DIRECTORY" value="$APPLICATION_CONFIG_DIR$/scratches" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/openfdem/extract_thread_pool_generators.py" />
+      <option name="SCRIPT_NAME" value="$APPLICATION_CONFIG_DIR$/scratches/scratch_26.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -181,83 +198,62 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="scratch_23" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="scratch_29" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="OpenFDEM-Post-Processing" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$APPLICATION_CONFIG_DIR$/scratches" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$APPLICATION_CONFIG_DIR$/scratches/scratch_29.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="scratch_36" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="OpenFDEM-Post-Processing" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
       <option name="SDK_HOME" value="/usr/bin/python3.8" />
+      <option name="SDK_NAME" value="Python 3.8" />
       <option name="WORKING_DIRECTORY" value="$APPLICATION_CONFIG_DIR$/scratches" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$APPLICATION_CONFIG_DIR$/scratches/scratch_23.py" />
+      <option name="SCRIPT_NAME" value="$APPLICATION_CONFIG_DIR$/scratches/scratch_36.py" />
       <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
       <option name="REDIRECT_INPUT" value="false" />
       <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="scratch_24" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="OpenFDEM-Post-Processing" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$APPLICATION_CONFIG_DIR$/scratches" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$APPLICATION_CONFIG_DIR$/scratches/scratch_24.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Doctest Model.extract_crack_info" type="tests" factoryName="Doctests" temporary="true" nameIsGenerated="true">
-      <module name="OpenFDEM-Post-Processing" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/openfdem" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/openfdem/openfdem.py" />
-      <option name="CLASS_NAME" value="Model" />
-      <option name="METHOD_NAME" value="extract_crack_info" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_METHOD" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.scratch_24" />
-      <item itemvalue="Python.scratch_23" />
-      <item itemvalue="Python.extract_thread_pool_generators" />
-      <item itemvalue="Python.AA_tests" />
-      <item itemvalue="Python tests.Doctest Model.extract_crack_info" />
+      <item itemvalue="Python.complete_BD_thread_pool_generators" />
+      <item itemvalue="Python.scratch_36" />
+      <item itemvalue="Python.AP_Crack_count" />
+      <item itemvalue="Python.scratch_29" />
+      <item itemvalue="Python.scratch_26" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.scratch_24" />
-        <item itemvalue="Python.scratch_23" />
-        <item itemvalue="Python.AA_tests" />
-        <item itemvalue="Python tests.Doctest Model.extract_crack_info" />
-        <item itemvalue="Python.extract_thread_pool_generators" />
+        <item itemvalue="Python.scratch_36" />
+        <item itemvalue="Python.complete_BD_thread_pool_generators" />
+        <item itemvalue="Python.AP_Crack_count" />
+        <item itemvalue="Python.scratch_29" />
+        <item itemvalue="Python.scratch_26" />
       </list>
     </recent_temporary>
   </component>
@@ -274,7 +270,28 @@
       <workItem from="1670338592690" duration="26456000" />
       <workItem from="1670372329481" duration="1573000" />
       <workItem from="1670373913822" duration="2395000" />
-      <workItem from="1670382071327" duration="7067000" />
+      <workItem from="1670382071327" duration="8032000" />
+      <workItem from="1670521744439" duration="2986000" />
+      <workItem from="1670883313606" duration="4151000" />
+      <workItem from="1671037772764" duration="6069000" />
+      <workItem from="1671468897669" duration="1806000" />
+      <workItem from="1671550216953" duration="1215000" />
+      <workItem from="1672172934464" duration="5989000" />
+      <workItem from="1672243490154" duration="96000" />
+      <workItem from="1672243602650" duration="362000" />
+      <workItem from="1672244152777" duration="297000" />
+      <workItem from="1672244461946" duration="370000" />
+      <workItem from="1672244843060" duration="182000" />
+      <workItem from="1672245035270" duration="9137000" />
+      <workItem from="1672334764312" duration="1913000" />
+      <workItem from="1672710825996" duration="172000" />
+      <workItem from="1672711442241" duration="1205000" />
+      <workItem from="1674748113311" duration="11941000" />
+      <workItem from="1674776912371" duration="2552000" />
+      <workItem from="1674843744143" duration="607000" />
+      <workItem from="1677104805867" duration="648000" />
+      <workItem from="1677173963890" duration="1864000" />
+      <workItem from="1677212308753" duration="5397000" />
     </task>
     <task id="LOCAL-00001" summary="Adding multi processing (based on cpu_count present in machine running). Lines 406 to 418.">
       <created>1626222013559</created>
@@ -423,7 +440,28 @@
       <option name="project" value="LOCAL" />
       <updated>1632230170873</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="Added Sphinx documentation into post-processing repository">
+      <created>1677176922930</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1677176922930</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Added Sphinx documentation into post-processing repository">
+      <created>1677177216806</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1677177216806</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Fixed BD bug. Calculations now provide the indirect tensile strength. Also supports BD in 3D.">
+      <created>1677216634989</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1677216634989</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -434,7 +472,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="202212_pypi_Production" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -454,64 +504,72 @@
     <MESSAGE value="added displacement_thread_pool.py which uses the threadpoolexecutor&#10;also, added a break statement in displacement.py to make the executor map function work" />
     <MESSAGE value="Fixed formatting of break statement when chunksize &lt;=1" />
     <MESSAGE value="Added generator and iterable to thread pool generator" />
-    <MESSAGE value="Added Sphinx documentation into post-processing repository" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Sphinx documentation into post-processing repository" />
+    <MESSAGE value="Changed default requirement for pyvista" />
+    <MESSAGE value="Restructured Sphinx documentation into post-processing repository" />
+    <MESSAGE value="Fixed BD bug. Calculations now provide the indirect tensile strength. Also supports BD in 3D." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed BD bug. Calculations now provide the indirect tensile strength. Also supports BD in 3D." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/openfdem/openfdem.py</url>
-          <line>1044</line>
+          <url>file://$PROJECT_DIR$/pyfdempp/pyfdempp.py</url>
+          <line>1052</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_Eavg_mod.coverage" NAME="Doctest Model.Eavg_mod Coverage Results" MODIFIED="1670362069945" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$scratch_152.coverage" NAME="scratch_152 Coverage Results" MODIFIED="1648154950858" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_plot_stress_strain.coverage" NAME="Doctest Model.plot_stress_strain Coverage Results" MODIFIED="1670361993327" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_threshold_bound_check.coverage" NAME="Doctest Model.threshold_bound_check Coverage Results" MODIFIED="1670353692527" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_model_vertices.coverage" NAME="Doctest Model.model_vertices Coverage Results" MODIFIED="1670362311468" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_extract_crack_info.coverage" NAME="Doctest Model.extract_crack_info Coverage Results" MODIFIED="1670365474837" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$scratch_149.coverage" NAME="scratch_149 Coverage Results" MODIFIED="1639672438858" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_convert_to_xyz_array.coverage" NAME="Doctest Model.convert_to_xyz_array Coverage Results" MODIFIED="1670357560680" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_crack_number.coverage" NAME="Doctest Model.crack_number Coverage Results" MODIFIED="1670362438471" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_rock_sample_dimensions.coverage" NAME="Doctest Model.rock_sample_dimensions Coverage Results" MODIFIED="1670356129300" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$scratch_52.coverage" NAME="scratch_52 Coverage Results" MODIFIED="1632233519362" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_Etan50_mod.coverage" NAME="Doctest Model.Etan50_mod Coverage Results" MODIFIED="1670362026612" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Rotary_DS_calculations.coverage" NAME="rotary_ds_thread_pool_generators Coverage Results" MODIFIED="1632000989695" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_extract_cell_info.coverage" NAME="Doctest Model.extract_cell_info Coverage Results" MODIFIED="1670357304654" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_direct_shear_calculation.coverage" NAME="Doctest Model.direct_shear_calculation Coverage Results" MODIFIED="1670362174365" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_draw_rose_diagram.coverage" NAME="Doctest Model.draw_rose_diagram Coverage Results" MODIFIED="1670362348329" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_complete_UCS_stress_strain.coverage" NAME="Doctest Model.complete_UCS_stress_strain Coverage Results" MODIFIED="1670358124633" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$complete_UCS_thread_pool_generators.coverage" NAME="complete_UCS_thread_pool_generators Coverage Results" MODIFIED="1640633428267" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctests_in_Model.coverage" NAME="Doctests in Model Coverage Results" MODIFIED="1670357239895" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_rotary_shear_calculation.coverage" NAME="Doctest Model.rotary_shear_calculation Coverage Results" MODIFIED="1632003536105" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$AA_tests.coverage" NAME="AA_tests Coverage Results" MODIFIED="1670365657428" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem/tests" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$scratch_53.coverage" NAME="scratch_53 Coverage Results" MODIFIED="1632490062288" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$aa_test_fdem.coverage" NAME="aa_test_fdem Coverage Results" MODIFIED="1640811385323" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$KA_Temp_OpenFDEM.coverage" NAME="KA_Temp_OpenFDEM Coverage Results" MODIFIED="1638306993611" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$scratch_151.coverage" NAME="scratch_151 Coverage Results" MODIFIED="1640712802417" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_complete_stress_strain.coverage" NAME="Doctest Model.complete_stress_strain Coverage Results" MODIFIED="1631851594961" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$extract_threshold_thread_pool_generators.coverage" NAME="extract_threshold_thread_pool_generators Coverage Results" MODIFIED="1640301950260" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_simulation_type.coverage" NAME="Doctest Model.simulation_type Coverage Results" MODIFIED="1670360206110" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$extract_thread_pool_generators.coverage" NAME="extract_thread_pool_generators Coverage Results" MODIFIED="1670365213848" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$scratch_24.coverage" NAME="scratch_24 Coverage Results" MODIFIED="1670461760419" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_find_cell.coverage" NAME="Doctest Model.find_cell Coverage Results" MODIFIED="1670357282739" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_complete_BD_stress_strain.coverage" NAME="Doctest Model.complete_BD_stress_strain Coverage Results" MODIFIED="1670360465957" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_crack_failure_mode_clustering.coverage" NAME="Doctest Model.crack_failure_mode_clustering Coverage Results" MODIFIED="1670362648099" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_extract_based_coord.coverage" NAME="Doctest Model.extract_based_coord Coverage Results" MODIFIED="1670362138481" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_mesh_geometry.coverage" NAME="Doctest Model.mesh_geometry Coverage Results" MODIFIED="1670362330639" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$aa_test.coverage" NAME="aa_test Coverage Results" MODIFIED="1649967335408" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem/tests" />
     <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_crack_failure_mode.coverage" NAME="Doctest Model.crack_failure_mode Coverage Results" MODIFIED="1670362473880" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$scratch_160.coverage" NAME="scratch_160 Coverage Results" MODIFIED="1649347775134" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_Esec_mod.coverage" NAME="Doctest Model.Esec_mod Coverage Results" MODIFIED="1670362054180" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$scratch_23.coverage" NAME="scratch_23 Coverage Results" MODIFIED="1670377352662" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_extract_threshold_info.coverage" NAME="Doctest Model.extract_threshold_info Coverage Results" MODIFIED="1670357644256" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_find_cell.coverage" NAME="Doctest Model.find_cell Coverage Results" MODIFIED="1670357282739" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$extract_thread_pool_generators.coverage" NAME="extract_thread_pool_generators Coverage Results" MODIFIED="1670365213848" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_draw_rose_diagram.coverage" NAME="Doctest Model.draw_rose_diagram Coverage Results" MODIFIED="1670362348329" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$AA_tests__1_.coverage" NAME="AA_tests (1) Coverage Results" MODIFIED="1670886474383" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pyfdempp/tests" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctests_in_Model.coverage" NAME="Doctests in Model Coverage Results" MODIFIED="1670357239895" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$scratch_53.coverage" NAME="scratch_53 Coverage Results" MODIFIED="1632490062288" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_complete_UCS_stress_strain.coverage" NAME="Doctest Model.complete_UCS_stress_strain Coverage Results" MODIFIED="1670358124633" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$scratch_29.coverage" NAME="scratch_29 Coverage Results" MODIFIED="1672174273822" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
     <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_openfdem_att_check.coverage" NAME="Doctest Model.openfdem_att_check Coverage Results" MODIFIED="1670364546467" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
-    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$scratch_148.coverage" NAME="scratch_148 Coverage Results" MODIFIED="1638313061128" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
     <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_model_dimensions.coverage" NAME="Doctest Model.model_dimensions Coverage Results" MODIFIED="1670353582322" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_complete_BD_stress_strain.coverage" NAME="Doctest Model.complete_BD_stress_strain Coverage Results" MODIFIED="1670360465957" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_extract_based_coord.coverage" NAME="Doctest Model.extract_based_coord Coverage Results" MODIFIED="1670362138481" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$complete_BD_thread_pool_generators.coverage" NAME="complete_BD_thread_pool_generators Coverage Results" MODIFIED="1677215587536" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pyfdempp" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$scratch_26.coverage" NAME="scratch_26 Coverage Results" MODIFIED="1670885159905" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$aa_test.coverage" NAME="aa_test Coverage Results" MODIFIED="1649967335408" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem/tests" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$scratch_148.coverage" NAME="scratch_148 Coverage Results" MODIFIED="1638313061128" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_rock_sample_dimensions.coverage" NAME="Doctest Model.rock_sample_dimensions Coverage Results" MODIFIED="1670356129300" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$scratch_23.coverage" NAME="scratch_23 Coverage Results" MODIFIED="1670377352662" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_crack_number.coverage" NAME="Doctest Model.crack_number Coverage Results" MODIFIED="1670362438471" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$scratch_160.coverage" NAME="scratch_160 Coverage Results" MODIFIED="1649347775134" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$scratch_151.coverage" NAME="scratch_151 Coverage Results" MODIFIED="1640712802417" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_mesh_geometry.coverage" NAME="Doctest Model.mesh_geometry Coverage Results" MODIFIED="1670362330639" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$scratch_152.coverage" NAME="scratch_152 Coverage Results" MODIFIED="1648154950858" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$AP_Crack_count.coverage" NAME="AP_Crack_count Coverage Results" MODIFIED="1672174006662" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/pyfdempp/tests" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$AA_tests.coverage" NAME="AA_tests Coverage Results" MODIFIED="1670365657428" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem/tests" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_complete_stress_strain.coverage" NAME="Doctest Model.complete_stress_strain Coverage Results" MODIFIED="1631851594961" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$KA_Temp_OpenFDEM.coverage" NAME="KA_Temp_OpenFDEM Coverage Results" MODIFIED="1638306993611" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_convert_to_xyz_array.coverage" NAME="Doctest Model.convert_to_xyz_array Coverage Results" MODIFIED="1670357560680" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_model_vertices.coverage" NAME="Doctest Model.model_vertices Coverage Results" MODIFIED="1670362311468" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_plot_stress_strain.coverage" NAME="Doctest Model.plot_stress_strain Coverage Results" MODIFIED="1670361993327" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_Esec_mod.coverage" NAME="Doctest Model.Esec_mod Coverage Results" MODIFIED="1670362054180" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_direct_shear_calculation.coverage" NAME="Doctest Model.direct_shear_calculation Coverage Results" MODIFIED="1670362174365" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$extract_threshold_thread_pool_generators.coverage" NAME="extract_threshold_thread_pool_generators Coverage Results" MODIFIED="1640301950260" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_Eavg_mod.coverage" NAME="Doctest Model.Eavg_mod Coverage Results" MODIFIED="1670362069945" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_extract_crack_info.coverage" NAME="Doctest Model.extract_crack_info Coverage Results" MODIFIED="1670365474837" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$scratch_52.coverage" NAME="scratch_52 Coverage Results" MODIFIED="1632233519362" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$complete_UCS_thread_pool_generators.coverage" NAME="complete_UCS_thread_pool_generators Coverage Results" MODIFIED="1640633428267" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_rotary_shear_calculation.coverage" NAME="Doctest Model.rotary_shear_calculation Coverage Results" MODIFIED="1632003536105" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_simulation_type.coverage" NAME="Doctest Model.simulation_type Coverage Results" MODIFIED="1670360206110" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_Etan50_mod.coverage" NAME="Doctest Model.Etan50_mod Coverage Results" MODIFIED="1670362026612" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$aa_test_fdem.coverage" NAME="aa_test_fdem Coverage Results" MODIFIED="1640811385323" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$scratch_149.coverage" NAME="scratch_149 Coverage Results" MODIFIED="1639672438858" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_extract_cell_info.coverage" NAME="Doctest Model.extract_cell_info Coverage Results" MODIFIED="1670357304654" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_crack_failure_mode_clustering.coverage" NAME="Doctest Model.crack_failure_mode_clustering Coverage Results" MODIFIED="1670362648099" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Rotary_DS_calculations.coverage" NAME="rotary_ds_thread_pool_generators Coverage Results" MODIFIED="1632000989695" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$scratch_36.coverage" NAME="scratch_36 Coverage Results" MODIFIED="1677214441757" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_extract_threshold_info.coverage" NAME="Doctest Model.extract_threshold_info Coverage Results" MODIFIED="1670357644256" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$Doctest_Model_threshold_bound_check.coverage" NAME="Doctest Model.threshold_bound_check Coverage Results" MODIFIED="1670353692527" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/openfdem" />
+    <SUITE FILE_PATH="coverage/OpenFDEM_Post_Processing$scratch_24.coverage" NAME="scratch_24 Coverage Results" MODIFIED="1670461760419" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
   </component>
 </project>
