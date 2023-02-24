@@ -48,9 +48,12 @@ def history_strain_func(f_name, model, cv, ch, axis):
     :param model: FDEM Model Class
     :type model:  openfdem.pyfdempp.Model
     :param cv: list of cells at the corner of the vertical strain gauge
-    :type cv: list
+    :type cv: list[int]
     :param ch: list of cells at the corner of the horizontal strain gauge
-    :type ch: list
+    :type ch: list[int]
+    :param axis: the axis of load application
+    :type axis: list[int]
+
     :return: Stress, Platen Strain, SG Strain, SG Lateral Strain
     :rtype: Generator[Tuple[list, list, list, list], Any, None]
     """
@@ -213,14 +216,22 @@ def main(model, platen_id, st_status, axis_of_loading, gauge_width, gauge_length
 
     :param model: FDEM Model Class
     :type model:  openfdem.pyfdempp.Model
+    :param platen_id: Manual override of Platen ID
+    :type platen_id: None or int
     :param st_status: Enable/Disable SG Calculations
     :type st_status: bool
+    :param axis_of_loading: Enable/Disable SG
+    :type axis_of_loading: None or int
     :param gauge_width: SG width
     :type gauge_width:  float
     :param gauge_length: SG length
     :type gauge_length: float
     :param c_center: User-defined center of the SG
     :type c_center: None or list[float, float, float]
+    :param user_samp_A: Sample Thickness
+    :type user_samp_A: None or float
+    :param user_samp_L: Sample Diameter
+    :type user_samp_L: None or float
     :param progress_bar: Show/Hide progress bar
     :type progress_bar: bool
 

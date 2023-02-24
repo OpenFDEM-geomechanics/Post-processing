@@ -7,10 +7,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="37700c31-0cd6-4add-9b6f-b066e40d9550" name="Default Changelist" comment="Added Sphinx documentation into post-processing repository">
+    <list default="true" id="37700c31-0cd6-4add-9b6f-b066e40d9550" name="Default Changelist" comment="Fixed BD bug. Calculations now provide the indirect tensile strength. Also supports BD in 3D.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pyfdempp/complete_BD_thread_pool_generators.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/complete_BD_thread_pool_generators.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyfdempp/complete_UCS_thread_pool_generators.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/complete_UCS_thread_pool_generators.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/doctrees/Readme.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/doctrees/Readme.doctree" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/doctrees/environment.pickle" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/doctrees/environment.pickle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/doctrees/pyfdempp.doctree" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/doctrees/pyfdempp.doctree" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.aux" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.aux" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.fdb_latexmk" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.fdb_latexmk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.fls" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.fls" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.idx" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.idx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.ilg" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.ilg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.ind" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.ind" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.log" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.out" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.tex" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.tex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.toc" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/_build/latex/fdempost-processing.toc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyfdempp/docs_sphinx/conf.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/docs_sphinx/conf.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pyfdempp/pyfdempp.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyfdempp/pyfdempp.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -277,7 +291,7 @@
       <workItem from="1674843744143" duration="607000" />
       <workItem from="1677104805867" duration="648000" />
       <workItem from="1677173963890" duration="1864000" />
-      <workItem from="1677212308753" duration="4274000" />
+      <workItem from="1677212308753" duration="5397000" />
     </task>
     <task id="LOCAL-00001" summary="Adding multi processing (based on cpu_count present in machine running). Lines 406 to 418.">
       <created>1626222013559</created>
@@ -440,7 +454,14 @@
       <option name="project" value="LOCAL" />
       <updated>1677177216806</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="Fixed BD bug. Calculations now provide the indirect tensile strength. Also supports BD in 3D.">
+      <created>1677216634989</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1677216634989</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -485,14 +506,15 @@
     <MESSAGE value="Added generator and iterable to thread pool generator" />
     <MESSAGE value="Changed default requirement for pyvista" />
     <MESSAGE value="Restructured Sphinx documentation into post-processing repository" />
-    <option name="LAST_COMMIT_MESSAGE" value="Restructured Sphinx documentation into post-processing repository" />
+    <MESSAGE value="Fixed BD bug. Calculations now provide the indirect tensile strength. Also supports BD in 3D." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed BD bug. Calculations now provide the indirect tensile strength. Also supports BD in 3D." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/pyfdempp/pyfdempp.py</url>
-          <line>1044</line>
+          <line>1052</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>

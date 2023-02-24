@@ -947,14 +947,22 @@ class Model:
         """
         Calculate the full stress-strain curve for an indirect tensile simulation.
 
+        :param platen_id: Manual override of Platen ID
+        :type platen_id: None or int
         :param st_status: Enable/Disable SG
         :type st_status: bool
+        :param axis_of_loading: Loading Direction
+        :type axis_of_loading: None or int
         :param gauge_width: width of the virtual strain gauge
         :type gauge_width: float
         :param gauge_length: length of the virtual strain gauge
         :type gauge_length: float
         :param c_center: User-defined center of the SG
         :type c_center: None or list[float, float, float]
+        :param samp_A: Sample Thickness
+        :type samp_A: None or float
+        :param samp_L: Sample Diameter
+        :type samp_L: None or float
         :param progress_bar: Show/Hide progress bar
         :type progress_bar: bool
 

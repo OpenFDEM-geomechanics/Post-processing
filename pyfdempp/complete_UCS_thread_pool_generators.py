@@ -25,6 +25,8 @@ def history_strain_func(f_name, model, cv, ch, axis):
     :type cv: list[int]
     :param ch: list of cells at the corner of the horizontal strain gauge
     :type ch: list[int]
+    :param axis: the axis of load application
+    :type axis: list[int]
 
     :return: Stress, Platen Strain, SG Strain, SG Lateral Strain
     :rtype: Generator[Tuple[list, list, list, list], Any, None]

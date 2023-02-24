@@ -61,8 +61,8 @@
 
 
 \title{FDEM Post\sphinxhyphen{}Processing}
-\date{Dec 28, 2022}
-\release{0.0}
+\date{Feb 24, 2023}
+\release{0.2}
 \author{Grasselli\textquotesingle{}s Geomechanics Group \sphinxhyphen{} University of Toronto}
 \newcommand{\sphinxlogo}{\vbox{}}
 \renewcommand{\releasename}{Release}
@@ -482,12 +482,21 @@ list{[}float{]}
 
 \end{fulllineitems}
 
+\index{clip\_data() (pyfdempp.pyfdempp.Model method)@\spxentry{clip\_data()}\spxextra{pyfdempp.pyfdempp.Model method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pyfdempp:pyfdempp.pyfdempp.Model.clip_data}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{clip\_data}}}{\emph{\DUrole{n}{progress\_bar}\DUrole{o}{=}\DUrole{default_value}{True}}}{}
+\pysigstopsignatures
+\end{fulllineitems}
+
 \index{complete\_BD\_stress\_strain() (pyfdempp.pyfdempp.Model method)@\spxentry{complete\_BD\_stress\_strain()}\spxextra{pyfdempp.pyfdempp.Model method}}
 
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{pyfdempp:pyfdempp.pyfdempp.Model.complete_BD_stress_strain}}
 \pysigstartsignatures
-\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{complete\_BD\_stress\_strain}}}{\emph{\DUrole{n}{st\_status}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{gauge\_width}\DUrole{o}{=}\DUrole{default_value}{0}}, \emph{\DUrole{n}{gauge\_length}\DUrole{o}{=}\DUrole{default_value}{0}}, \emph{\DUrole{n}{c\_center}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{progress\_bar}\DUrole{o}{=}\DUrole{default_value}{True}}}{}
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{complete\_BD\_stress\_strain}}}{\emph{\DUrole{n}{platen\_id}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{st\_status}\DUrole{o}{=}\DUrole{default_value}{False}}, \emph{\DUrole{n}{axis\_of\_loading}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{gauge\_width}\DUrole{o}{=}\DUrole{default_value}{0}}, \emph{\DUrole{n}{gauge\_length}\DUrole{o}{=}\DUrole{default_value}{0}}, \emph{\DUrole{n}{c\_center}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{user\_samp\_A}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{user\_samp\_L}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{progress\_bar}\DUrole{o}{=}\DUrole{default_value}{True}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Calculate the full stress\sphinxhyphen{}strain curve for an indirect tensile simulation.
@@ -495,7 +504,15 @@ Calculate the full stress\sphinxhyphen{}strain curve for an indirect tensile sim
 \sphinxlineitem{Parameters}\begin{itemize}
 \item {} 
 \sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{platen\_id}} (\sphinxstyleliteralemphasis{\sphinxupquote{None}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} Manual override of Platen ID
+
+\item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{st\_status}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} Enable/Disable SG
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{axis\_of\_loading}} (\sphinxstyleliteralemphasis{\sphinxupquote{None}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} Loading Direction
 
 \item {} 
 \sphinxAtStartPar
@@ -508,6 +525,14 @@ Calculate the full stress\sphinxhyphen{}strain curve for an indirect tensile sim
 \item {} 
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{c\_center}} (\sphinxstyleliteralemphasis{\sphinxupquote{None}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{list}}\sphinxstyleliteralemphasis{\sphinxupquote{{[}}}\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}) \textendash{} User\sphinxhyphen{}defined center of the SG
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{samp\_A}} (\sphinxstyleliteralemphasis{\sphinxupquote{None}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} Sample Thickness
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{samp\_L}} (\sphinxstyleliteralemphasis{\sphinxupquote{None}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} Sample Diameter
 
 \item {} 
 \sphinxAtStartPar
@@ -528,7 +553,7 @@ pandas.DataFrame
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k+kn}{import} \PYG{n+nn}{pyfdempp} \PYG{k}{as} \PYG{n+nn}{fdem}
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{data} \PYG{o}{=} \PYG{n}{fdem}\PYG{o}{.}\PYG{n}{Model}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{/external/Speed\PYGZus{}Cal\PYGZus{}Using\PYGZus{}Flowstone/BD/BD\PYGZus{}c\PYGZus{}17\PYGZus{}5\PYGZus{}ts\PYGZus{}2\PYGZus{}55\PYGZus{}GII\PYGZus{}90000\PYGZus{}v\PYGZus{}0\PYGZus{}6}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
 \PYG{g+go}{\PYGZsh{} full stress\PYGZhy{}strain without SG}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{df\PYGZus{}wo\PYGZus{}SG} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{complete\PYGZus{}BD\PYGZus{}stress\PYGZus{}strain}\PYG{p}{(}\PYG{k+kc}{False}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{df\PYGZus{}wo\PYGZus{}SG} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{complete\PYGZus{}BD\PYGZus{}stress\PYGZus{}strain}\PYG{p}{(}\PYG{n}{st\PYGZus{}status}\PYG{o}{=}\PYG{k+kc}{False}\PYG{p}{)}
 \PYG{g+go}{Columns:}
 \PYG{g+go}{    Name: Platen Stress, dtype=float64, nullable: False}
 \PYG{g+go}{    Name: Platen Strain, dtype=float64, nullable: False}
@@ -536,7 +561,7 @@ pandas.DataFrame
 \PYG{g+go}{    Platen Material ID found as [1]}
 \PYG{g+go}{Progress: |//////////////////////////////////////////////////| 100.0\PYGZpc{} Complete}
 \PYG{g+go}{\PYGZsh{} full stress\PYGZhy{}strain with SG and default dimensions}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{df\PYGZus{}Def\PYGZus{}SG} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{complete\PYGZus{}BD\PYGZus{}stress\PYGZus{}strain}\PYG{p}{(}\PYG{k+kc}{True}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{df\PYGZus{}Def\PYGZus{}SG} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{complete\PYGZus{}BD\PYGZus{}stress\PYGZus{}strain}\PYG{p}{(}\PYG{n}{st\PYGZus{}status}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
 \PYG{g+go}{Columns:}
 \PYG{g+go}{    Name: Platen Stress, dtype=float64, nullable: False}
 \PYG{g+go}{    Name: Platen Strain, dtype=float64, nullable: False}
@@ -553,7 +578,7 @@ pandas.DataFrame
 \PYG{g+go}{    cover cells ID [4635, 3644, 2872, 7481]}
 \PYG{g+go}{Progress: |//////////////////////////////////////////////////| 100.0\PYGZpc{} Complete}
 \PYG{g+go}{\PYGZsh{} full stress\PYGZhy{}strain with SG and user\PYGZhy{}defined dimensions}
-\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{df\PYGZus{}userdf\PYGZus{}SG} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{complete\PYGZus{}BD\PYGZus{}stress\PYGZus{}strain}\PYG{p}{(}\PYG{k+kc}{True}\PYG{p}{,} \PYG{l+m+mi}{10}\PYG{p}{,} \PYG{l+m+mi}{10}\PYG{p}{)}
+\PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{n}{df\PYGZus{}userdf\PYGZus{}SG} \PYG{o}{=} \PYG{n}{data}\PYG{o}{.}\PYG{n}{complete\PYGZus{}BD\PYGZus{}stress\PYGZus{}strain}\PYG{p}{(}\PYG{n}{st\PYGZus{}status}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{,} \PYG{n}{gauge\PYGZus{}width}\PYG{o}{=}\PYG{l+m+mi}{10}\PYG{p}{,} \PYG{n}{gauge\PYGZus{}length}\PYG{o}{=}\PYG{l+m+mi}{10}\PYG{p}{)}
 \PYG{g+go}{Columns:}
 \PYG{g+go}{    Name: Platen Stress, dtype=float64, nullable: False}
 \PYG{g+go}{    Name: Platen Strain, dtype=float64, nullable: False}
@@ -1762,6 +1787,15 @@ str
 
 \end{fulllineitems}
 
+\index{slice\_dataset() (pyfdempp.pyfdempp.Model method)@\spxentry{slice\_dataset()}\spxextra{pyfdempp.pyfdempp.Model method}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pyfdempp:pyfdempp.pyfdempp.Model.slice_dataset}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxbfcode{\sphinxupquote{slice\_dataset}}}{\emph{\DUrole{n}{cell\_inds}}, \emph{\DUrole{n}{i\_array\_needed}}, \emph{\DUrole{n}{progress\_bar}\DUrole{o}{=}\DUrole{default_value}{True}}}{}
+\pysigstopsignatures
+\end{fulllineitems}
+
 \index{threshold\_bound\_check() (pyfdempp.pyfdempp.Model method)@\spxentry{threshold\_bound\_check()}\spxextra{pyfdempp.pyfdempp.Model method}}
 
 \begin{fulllineitems}
@@ -1963,12 +1997,21 @@ Stores VTK file into HDF5 file
 
 
 \subsubsection{pyfdempp.complete\_BD\_thread\_pool\_generators module}
-\label{\detokenize{pyfdempp:module-pyfdempp.complete_BD_thread_pool_generators}}\label{\detokenize{pyfdempp:pyfdempp-complete-bd-thread-pool-generators-module}}\index{module@\spxentry{module}!pyfdempp.complete\_BD\_thread\_pool\_generators@\spxentry{pyfdempp.complete\_BD\_thread\_pool\_generators}}\index{pyfdempp.complete\_BD\_thread\_pool\_generators@\spxentry{pyfdempp.complete\_BD\_thread\_pool\_generators}!module@\spxentry{module}}\index{history\_strain\_func() (in module pyfdempp.complete\_BD\_thread\_pool\_generators)@\spxentry{history\_strain\_func()}\spxextra{in module pyfdempp.complete\_BD\_thread\_pool\_generators}}
+\label{\detokenize{pyfdempp:module-pyfdempp.complete_BD_thread_pool_generators}}\label{\detokenize{pyfdempp:pyfdempp-complete-bd-thread-pool-generators-module}}\index{module@\spxentry{module}!pyfdempp.complete\_BD\_thread\_pool\_generators@\spxentry{pyfdempp.complete\_BD\_thread\_pool\_generators}}\index{pyfdempp.complete\_BD\_thread\_pool\_generators@\spxentry{pyfdempp.complete\_BD\_thread\_pool\_generators}!module@\spxentry{module}}\index{check\_loading\_direction() (in module pyfdempp.complete\_BD\_thread\_pool\_generators)@\spxentry{check\_loading\_direction()}\spxextra{in module pyfdempp.complete\_BD\_thread\_pool\_generators}}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{pyfdempp:pyfdempp.complete_BD_thread_pool_generators.check_loading_direction}}
+\pysigstartsignatures
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pyfdempp.complete\_BD\_thread\_pool\_generators.}}\sphinxbfcode{\sphinxupquote{check\_loading\_direction}}}{\emph{\DUrole{n}{model}}, \emph{\DUrole{n}{f1}}, \emph{\DUrole{n}{f2}}}{}
+\pysigstopsignatures
+\end{fulllineitems}
+
+\index{history\_strain\_func() (in module pyfdempp.complete\_BD\_thread\_pool\_generators)@\spxentry{history\_strain\_func()}\spxextra{in module pyfdempp.complete\_BD\_thread\_pool\_generators}}
 
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{pyfdempp:pyfdempp.complete_BD_thread_pool_generators.history_strain_func}}
 \pysigstartsignatures
-\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pyfdempp.complete\_BD\_thread\_pool\_generators.}}\sphinxbfcode{\sphinxupquote{history\_strain\_func}}}{\emph{\DUrole{n}{f\_name}}, \emph{\DUrole{n}{model}}, \emph{\DUrole{n}{cv}}, \emph{\DUrole{n}{ch}}}{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pyfdempp.complete\_BD\_thread\_pool\_generators.}}\sphinxbfcode{\sphinxupquote{history\_strain\_func}}}{\emph{\DUrole{n}{f\_name}}, \emph{\DUrole{n}{model}}, \emph{\DUrole{n}{cv}}, \emph{\DUrole{n}{ch}}, \emph{\DUrole{n}{axis}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Calculate the axial stress from platens, axial strain from platens and SG as well as lateral strain from SG
@@ -1984,11 +2027,15 @@ Calculate the axial stress from platens, axial strain from platens and SG as wel
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{cv}} (\sphinxstyleliteralemphasis{\sphinxupquote{list}}) \textendash{} list of cells at the corner of the vertical strain gauge
+\sphinxstyleliteralstrong{\sphinxupquote{cv}} (\sphinxstyleliteralemphasis{\sphinxupquote{list}}\sphinxstyleliteralemphasis{\sphinxupquote{{[}}}\sphinxstyleliteralemphasis{\sphinxupquote{int}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}) \textendash{} list of cells at the corner of the vertical strain gauge
 
 \item {} 
 \sphinxAtStartPar
-\sphinxstyleliteralstrong{\sphinxupquote{ch}} (\sphinxstyleliteralemphasis{\sphinxupquote{list}}) \textendash{} list of cells at the corner of the horizontal strain gauge
+\sphinxstyleliteralstrong{\sphinxupquote{ch}} (\sphinxstyleliteralemphasis{\sphinxupquote{list}}\sphinxstyleliteralemphasis{\sphinxupquote{{[}}}\sphinxstyleliteralemphasis{\sphinxupquote{int}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}) \textendash{} list of cells at the corner of the horizontal strain gauge
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{axis}} (\sphinxstyleliteralemphasis{\sphinxupquote{list}}\sphinxstyleliteralemphasis{\sphinxupquote{{[}}}\sphinxstyleliteralemphasis{\sphinxupquote{int}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}) \textendash{} the axis of load application
 
 \end{itemize}
 
@@ -2009,7 +2056,7 @@ Generator{[}Tuple{[}list, list, list, list{]}, Any, None{]}
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{pyfdempp:pyfdempp.complete_BD_thread_pool_generators.main}}
 \pysigstartsignatures
-\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pyfdempp.complete\_BD\_thread\_pool\_generators.}}\sphinxbfcode{\sphinxupquote{main}}}{\emph{\DUrole{n}{model}}, \emph{\DUrole{n}{st\_status}}, \emph{\DUrole{n}{gauge\_width}}, \emph{\DUrole{n}{gauge\_length}}, \emph{\DUrole{n}{c\_center}}, \emph{\DUrole{n}{progress\_bar}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
+\pysiglinewithargsret{\sphinxcode{\sphinxupquote{pyfdempp.complete\_BD\_thread\_pool\_generators.}}\sphinxbfcode{\sphinxupquote{main}}}{\emph{\DUrole{n}{model}}, \emph{\DUrole{n}{platen\_id}}, \emph{\DUrole{n}{st\_status}}, \emph{\DUrole{n}{axis\_of\_loading}}, \emph{\DUrole{n}{gauge\_width}}, \emph{\DUrole{n}{gauge\_length}}, \emph{\DUrole{n}{c\_center}}, \emph{\DUrole{n}{user\_samp\_A}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{user\_samp\_L}\DUrole{o}{=}\DUrole{default_value}{None}}, \emph{\DUrole{n}{progress\_bar}\DUrole{o}{=}\DUrole{default_value}{False}}}{}
 \pysigstopsignatures
 \sphinxAtStartPar
 Main concurrent Thread Pool to calculate the full stress\sphinxhyphen{}strain
@@ -2021,7 +2068,15 @@ Main concurrent Thread Pool to calculate the full stress\sphinxhyphen{}strain
 
 \item {} 
 \sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{platen\_id}} (\sphinxstyleliteralemphasis{\sphinxupquote{None}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} Manual override of Platen ID
+
+\item {} 
+\sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{st\_status}} (\sphinxstyleliteralemphasis{\sphinxupquote{bool}}) \textendash{} Enable/Disable SG Calculations
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{axis\_of\_loading}} (\sphinxstyleliteralemphasis{\sphinxupquote{None}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{int}}) \textendash{} Enable/Disable SG
 
 \item {} 
 \sphinxAtStartPar
@@ -2034,6 +2089,14 @@ Main concurrent Thread Pool to calculate the full stress\sphinxhyphen{}strain
 \item {} 
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{c\_center}} (\sphinxstyleliteralemphasis{\sphinxupquote{None}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{list}}\sphinxstyleliteralemphasis{\sphinxupquote{{[}}}\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{, }}\sphinxstyleliteralemphasis{\sphinxupquote{float}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}) \textendash{} User\sphinxhyphen{}defined center of the SG
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{user\_samp\_A}} (\sphinxstyleliteralemphasis{\sphinxupquote{None}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} Sample Thickness
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{user\_samp\_L}} (\sphinxstyleliteralemphasis{\sphinxupquote{None}}\sphinxstyleliteralemphasis{\sphinxupquote{ or }}\sphinxstyleliteralemphasis{\sphinxupquote{float}}) \textendash{} Sample Diameter
 
 \item {} 
 \sphinxAtStartPar
@@ -2133,6 +2196,10 @@ Calculate the axial stress from platens, axial strain from platens and SG as wel
 \item {} 
 \sphinxAtStartPar
 \sphinxstyleliteralstrong{\sphinxupquote{ch}} (\sphinxstyleliteralemphasis{\sphinxupquote{list}}\sphinxstyleliteralemphasis{\sphinxupquote{{[}}}\sphinxstyleliteralemphasis{\sphinxupquote{int}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}) \textendash{} list of cells at the corner of the horizontal strain gauge
+
+\item {} 
+\sphinxAtStartPar
+\sphinxstyleliteralstrong{\sphinxupquote{axis}} (\sphinxstyleliteralemphasis{\sphinxupquote{list}}\sphinxstyleliteralemphasis{\sphinxupquote{{[}}}\sphinxstyleliteralemphasis{\sphinxupquote{int}}\sphinxstyleliteralemphasis{\sphinxupquote{{]}}}) \textendash{} the axis of load application
 
 \end{itemize}
 
